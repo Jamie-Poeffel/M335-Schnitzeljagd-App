@@ -11,11 +11,7 @@ import { IonicModule } from "@ionic/angular";
   imports: [NgClass, IonicModule],
 })
 export class ButtonComponent implements OnInit {
-  @Input() variant:
-    | 'filled'
-    | 'outline'
-    | 'outline-icon'
-    | 'text' = 'filled';
+  @Input() variant: 'filled' | 'outline' | 'outline-icon' | 'text' = 'filled';
 
   @Output() clicked = new EventEmitter<void>();
 
