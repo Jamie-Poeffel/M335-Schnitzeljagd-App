@@ -17,6 +17,7 @@ export class HomePage {
   name: string = "";
 
   navigateToWelcome() {
-    this.router.navigate(['welcome'])
+    this.router.navigateByUrl('/welcome').then(res => console.log(res));
   }
+
 }

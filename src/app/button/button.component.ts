@@ -1,7 +1,8 @@
 import { NgClass } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { addIcons } from 'ionicons';
+import { chevronBackOutline } from 'ionicons/icons';
 import { IonicModule } from "@ionic/angular";
-
 @Component({
   selector: 'app-button',
   templateUrl: './button.component.html',
@@ -18,7 +19,9 @@ export class ButtonComponent implements OnInit {
 
   @Output() clicked = new EventEmitter<void>();
 
-  constructor() { }
+  constructor() {
+    addIcons({ chevronBackOutline })
+  }
   ngOnInit() { }
 
   onClick() {

@@ -1,8 +1,6 @@
-<button class="btn" [ngClass]="variant">
+<button class="btn" [ngClass]="variant" (click)="onClick()">
   @if (variant === 'outline-icon') {
-  <ng-container>
-    <ion-icon name="chevron-back-outline" style="color: #DE6430;"></ion-icon>
-  </ng-container>
+  <ion-icon name="chevron-back-outline" style="color: #DE6430;"></ion-icon>
   }
 
   <span class="label">
