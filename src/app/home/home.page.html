@@ -1,22 +1,17 @@
-<ion-header [translucent]="true">
+<ion-header collapse="condense">
   <ion-toolbar>
-    <ion-title>Gregory</ion-title>
+    <ion-title size="large">Blank</ion-title>
   </ion-toolbar>
 </ion-header>
-
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
 
-  <div id="container">
-    <app-button state="normal">
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <h5 style="text-align: center; font-weight: bold;">Bitte gib deinen Name ein</h5>
+    <input type="text" class="input" placeholder="name" style="margin-top: 16px;">
+    <app-button variant="outline-icon" (clicked)="navigateToWelcome()">
       <p>Weiter</p>
     </app-button>
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer"
-        href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
-</ion-content>
+  </ion-toolbar>
+</ion-footer>

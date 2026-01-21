@@ -1,24 +1,57 @@
-@use './../../theme/variables.scss' as *;
+$orange: #DE6430;
 
 .btn {
-    --ion-color-primary-contrast: #fff;
-    border: 1px solid $primary;
-    transition: background 0.2s ease, color 0.2s ease;
+    width: calc(100% - 40px);
+    margin: 10px 20px;
+    padding: 0 0;
 
-    &:hover {
-        background: $white;
-        color: $primary;
-    }
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 500;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    cursor: pointer;
+    border: none;
+    box-sizing: border-box;
 }
 
-.btn-outline {
-    background: transparent;
-    border: 1px solid $primary;
-    color: $primary;
-    transition: background 0.2s ease, color 0.2s ease;
+/* FILLED */
+.filled {
+    background-color: $orange;
+    color: white;
+}
 
-    &:hover {
-        background: $primary;
-        color: $white;
-    }
+/* OUTLINE */
+.outline {
+    background-color: transparent;
+    color: $orange;
+    border: 1.5px solid $orange;
+}
+
+/* OUTLINE WITH ICON */
+.outline-icon {
+    @extend .outline;
+}
+
+/* ICON */
+.icon {
+    font-size: 20px;
+    line-height: 1;
+}
+
+/* TEXT ONLY */
+.text {
+    background: transparent;
+    border: none;
+    color: $orange;
+    padding: 8px 0;
+}
+
+/* ACTIVE / PRESS */
+.btn:active {
+    transform: scale(0.98);
 }
