@@ -1,4 +1,11 @@
-<ion-button color="favorite" [fill]="state === 'outline' ? 'outline' : 'solid'"
-  [class.btn-outline]="state === 'outline'" shape="round" (click)="onClick()">
-  <ng-content></ng-content>
-</ion-button>
+<button class="btn" [ngClass]="variant">
+  @if (variant === 'outline-icon') {
+  <ng-container>
+    <ion-icon name="chevron-back-outline" style="color: #DE6430;"></ion-icon>
+  </ng-container>
+  }
+
+  <span class="label">
+    <ng-content></ng-content>
+  </span>
+</button>

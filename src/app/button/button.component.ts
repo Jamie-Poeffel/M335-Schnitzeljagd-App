@@ -1,16 +1,20 @@
+import { NgClass } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { IonButton } from '@ionic/angular/standalone';
+import { IonicModule } from "@ionic/angular";
 
 @Component({
   selector: 'app-button',
   templateUrl: './button.component.html',
   standalone: true,
   styleUrls: ['./button.component.scss'],
-  imports: [IonButton],
+  imports: [NgClass, IonicModule],
 })
 export class ButtonComponent implements OnInit {
-  @Input() state: 'normal' | 'outline' = 'normal';
-  @Input() label: string = 'Button';
+  @Input() variant:
+    | 'filled'
+    | 'outline'
+    | 'outline-icon'
+    | 'text' = 'filled';
 
   @Output() clicked = new EventEmitter<void>();
 
