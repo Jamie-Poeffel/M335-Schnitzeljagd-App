@@ -32,5 +32,9 @@ export const routes: Routes = [
     path: 'qr-scanner',
     loadComponent: () =>
       import('./qr-scanner/qr-scanner.page').then((m) => m.QrScannerPage),
+  },  {
+    path: 'wifi',
+    loadComponent: () => import('./wifi/wifi.page').then( m => m.WifiPage)
   },
+
 ];
