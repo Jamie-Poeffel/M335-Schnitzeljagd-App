@@ -1,10 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import {
   IonContent,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButton,
+  IonIcon,
 } from '@ionic/angular/standalone';
-import { IonicModule } from "@ionic/angular";
-import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
 @Component({
   standalone: true,
@@ -12,14 +17,15 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './leaderboard.page.html',
   styleUrls: ['./leaderboard.page.scss'],
   imports: [
-    IonContent,
     CommonModule,
     FormsModule,
-    IonicModule
+    RouterLink,
+    IonContent,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonButton,
+    IonIcon,
   ],
 })
-export class LeaderboardPage implements OnInit {
-  constructor() { }
-
-  ngOnInit() { }
-}
+export class LeaderboardPage {}
