@@ -5,12 +5,12 @@ import { IonButton } from "@ionic/angular/standalone";
   selector: 'app-button',
   templateUrl: './button.component.html',
   styleUrls: ['./button.component.scss'],
+  standalone: true,
   imports: [IonButton],
 })
 export class ButtonComponent implements OnInit {
   @Input() state: 'normal' | 'outline' = 'normal';
   @Input() label: string = 'Button';
-  @Input() children: HTMLElement | string = "";
 
   @Output() clicked = new EventEmitter<void>();
 
