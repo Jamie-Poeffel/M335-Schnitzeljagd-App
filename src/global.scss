@@ -36,31 +36,29 @@
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 // @import '@ionic/angular/css/palettes/dark.system.css';
 
-
-
 .input {
-    $orange: #DE6430;
-    width: calc(100% - 40px);
-    margin: 0 20px;
-    padding: 12px 18px;
+  $orange: #de6430;
+  width: calc(100% - 40px);
+  margin: 0 20px;
+  padding: 12px 18px;
 
-    background-color: transparent;
-    border: 1.5px solid $orange;
-    border-radius: 999px;
+  background-color: transparent;
+  border: 1.5px solid $orange;
+  border-radius: 999px;
 
+  color: $orange;
+  font-size: 15px;
+
+  box-sizing: border-box;
+
+  &::placeholder {
     color: $orange;
-    font-size: 15px;
+    opacity: 1;
+  }
 
-    box-sizing: border-box;
-
-    &::placeholder {
-        color: $orange;
-        opacity: 1;
-    }
-
-    &:focus,
-    &:focus-visible {
-        outline: none;
-        border-color: $orange;
-    }
+  &:focus,
+  &:focus-visible {
+    outline: none;
+    border-color: $orange;
+  }
 }

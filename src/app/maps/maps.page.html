@@ -13,7 +13,6 @@
 
       <!-- header text -->
       <h1 class="title">Jagd den Schwein</h1>
-
       <div class="stats">
         <div>Zeit Verbleibend: <b> Put ya variable </b></div>
         <div>Schnitzel : <b>0x</b></div>
@@ -44,12 +43,9 @@
     </section>
 
     <!-- bottom back button -->
-    <div class="bottom">
-      <a class="back-btn" routerLink="/home">
-        <span class="chev">‹</span>
-        Zurück
-      </a>
-    </div>
+    <app-button class="bottom" variant="outline-icon" routerLink="/welcome">
+      <p>Zurück</p>
+    </app-button>
   </div>
 
   <style>
@@ -160,36 +156,27 @@
       margin-top: 10px;
       background: transparent;
       border: none;
-      color: #c97a3e;
+      color: #e53935;
       text-decoration: underline;
       font-size: 14px;
       padding: 10px 0 4px;
       cursor: pointer;
     }
-
     /* bottom back button */
     .bottom {
       width: min(420px, 100%);
       display: flex;
       justify-content: center;
       padding-bottom: 6px;
-    }
-    .back-btn {
-      width: 100%;
-      background: #fff;
-      border: 2px solid #c97a3e;
+      text-decoration: none;
       color: #c97a3e;
-      border-radius: 999px;
-      height: 52px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
       font-size: 16px;
       font-weight: 600;
-      text-decoration: none;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
+
     .chev {
       font-size: 26px;
       line-height: 0;
