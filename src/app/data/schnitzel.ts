@@ -1,12 +1,12 @@
-import { Schnitzel } from "src/app/types/schnitzel";
+import { Schnitzel } from 'src/app/types/schnitzel';
 
 export const SCHNITZELS: Schnitzel[] = [
   {
     id: 1,
-    title: "Jagd den Schwein",
-    timeLeft: "1 Tag",
+    title: 'Jagd den Schwein',
+    timeLeft: '1 Tag',
     reward: 6,
     durationMinutes: 30,
-    image: "🐷"
+    image: 'assets/pictures/pig.png',
   },
 ];
