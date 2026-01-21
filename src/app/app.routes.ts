@@ -14,9 +14,13 @@ export const routes: Routes = [
     path: 'leaderboard',
     loadComponent: () =>
       import('./leaderboard/leaderboard.page').then((m) => m.LeaderboardPage),
-  },  {
+  },
+  {
     path: 'maps',
     loadComponent: () => import('./maps/maps.page').then( m => m.MapsPage)
   },
-
+  {
+    path: 'welcome',
+    loadComponent: () => import('./welcome/welcome.page').then( m => m.WelcomePage)
+  },
 ];

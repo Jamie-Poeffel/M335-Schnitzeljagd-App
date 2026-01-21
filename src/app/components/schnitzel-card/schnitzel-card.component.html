@@ -1,0 +1,23 @@
+<div class="card" (click)="onStart()">
+  <div class="card-inner">
+    <div class="title">{{ schnitzel.title }}</div>
+
+    <div class="meta">
+      <div>Zeit Verbleibend: {{ schnitzel.timeLeft }}</div>
+      <div>Belohnung : {{ schnitzel.reward }}x</div>
+      <div>Zeit: {{ schnitzel.durationMinutes }} minuten</div>
+    </div>
+
+    <div class="art">
+      <!-- emoji mode -->
+      <span class="emoji" *ngIf="!isImage">{{ schnitzel.image }}</span>
+
+      <!-- image mode (if you switch to png later) -->
+      <img class="img" *ngIf="isImage" [src]="schnitzel.image" alt="schnitzel" />
+    </div>
+
+    <app-button variant="filled" (click)="onStart(); $event.stopPropagation()">
+      Start
+    </app-button>
+  </div>
+</div>

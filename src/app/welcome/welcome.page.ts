@@ -1,20 +1,36 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { IonicModule } from '@ionic/angular';
+
+import { USER } from 'src/app/data/user';
+import { SCHNITZELS } from 'src/app/data/schnitzel';
+
+import { Schnitzel } from 'src/app/types/schnitzel';
+import { User } from 'src/app/types/user';
+
+import { SchnitzelCardComponent } from 'src/app/components/schnitzel-card/schnitzel-card.component';
 
 @Component({
   selector: 'app-welcome',
+  standalone: true,
   templateUrl: './welcome.page.html',
   styleUrls: ['./welcome.page.scss'],
-  standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [
+    CommonModule,
+    IonicModule,
+    SchnitzelCardComponent
+  ],
 })
-export class WelcomePage implements OnInit {
+export class WelcomePage {
 
-  constructor() { }
+  user: User = USER;                
+  schnitzels: Schnitzel[] = SCHNITZELS;
 
-  ngOnInit() {
+  get initial(): string {           
+    return this.user.name.charAt(0).toUpperCase();
   }
 
+  startHunt(s: Schnitzel) {
+    console.log('Starting hunt:', s.title);
+  }
 }

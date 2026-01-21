@@ -1,13 +1,31 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>Welcome</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="home">
+  <div class="panel">
+    <div class="welcome">
+      <div class="welcome-left">
+        <div class="avatar">
+          <div class="avatar-inner">{{ initial }}</div>
+        </div>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Welcome</ion-title>
-    </ion-toolbar>
-  </ion-header>
+        <div class="welcome-text">
+          <div class="welcome-title">Welcome Back,</div>
+          <div class="welcome-name">{{ user.name }} !</div>
+        </div>
+      </div>
+
+      <div class="welcome-cta">To the Leaderboards</div>
+    </div>
+
+    <div class="section-divider">
+      <span>Available Schnitzel</span>
+    </div>
+  </div>
+
+  <!-- Schnitzel cards -->
+  <div class="schnitzel-list">
+    <app-schnitzel-card
+      *ngFor="let s of schnitzels"
+      [schnitzel]="s"
+      (start)="startHunt($event)"
+    ></app-schnitzel-card>
+  </div>
 </ion-content>
