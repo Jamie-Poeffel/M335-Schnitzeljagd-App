@@ -4,6 +4,11 @@ $primary: #DE6430;
 $black: #03071e;
 $white: #f8f9fa;
 
-:root {
-    --ion-color-primary: #DE6430;
+:root {}
+
+.ion-color-favorite {
+    --ion-color-base: $primary;
+    --ion-color-contrast: $white;
+    --ion-color-shade: $black;
+    --ion-color-tint: $black;
 }

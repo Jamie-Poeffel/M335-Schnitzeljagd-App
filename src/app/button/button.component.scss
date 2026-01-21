@@ -1,7 +1,7 @@
 @use './../../theme/variables.scss' as *;
 
 .btn {
-    color: #fff;
+    --ion-color-primary-contrast: #fff;
     border: 1px solid $primary;
     transition: background 0.2s ease, color 0.2s ease;
 
