@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 :host {
   display: inline-block;
 }
@@ -18,3 +19,29 @@
 .btn:active {
   transform: translateY(1px);
 }
+=======
+@use './../../theme/variables.scss' as *;
+
+.btn {
+    color: #fff;
+    border: 1px solid $primary;
+    transition: background 0.2s ease, color 0.2s ease;
+
+    &:hover {
+        background: $white;
+        color: $primary;
+    }
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid $primary;
+    color: $primary;
+    transition: background 0.2s ease, color 0.2s ease;
+
+    &:hover {
+        background: $primary;
+        color: $white;
+    }
+}
+>>>>>>> d385935b4b7821f90bebe87830b3a422b24aa86e

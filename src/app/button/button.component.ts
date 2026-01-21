@@ -11,12 +11,11 @@ import { IonButton } from '@ionic/angular/standalone';
 export class ButtonComponent implements OnInit {
   @Input() state: 'normal' | 'outline' = 'normal';
   @Input() label: string = 'Button';
-  @Input() children: HTMLElement | string = '';
 
   @Output() clicked = new EventEmitter<void>();
 
-  constructor() {}
-  ngOnInit() {}
+  constructor() { }
+  ngOnInit() { }
 
   onClick() {
     this.clicked.emit();

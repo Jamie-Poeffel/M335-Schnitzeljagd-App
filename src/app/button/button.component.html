@@ -1,11 +1,4 @@
-@if (state == "normal") {
-<ion-button class="btn" shape="round">
-  {{children}}
+<ion-button [fill]="state === 'outline' ? 'outline' : 'solid'" [class.btn-outline]="state === 'outline'" shape="round"
+  (click)="onClick()">
+  <ng-content></ng-content>
 </ion-button>
-}
-
-@if (state == "outline") {
-<ion-button class="btn-outline" shape="round">
-  {{children}}
-</ion-button>
-}
