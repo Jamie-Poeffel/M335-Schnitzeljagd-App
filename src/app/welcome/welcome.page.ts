@@ -16,11 +16,7 @@ import { Router } from '@angular/router';
   standalone: true,
   templateUrl: './welcome.page.html',
   styleUrls: ['./welcome.page.scss'],
-  imports: [
-    CommonModule,
-    IonicModule,
-    SchnitzelCardComponent
-  ],
+  imports: [CommonModule, IonicModule, SchnitzelCardComponent],
 })
 export class WelcomePage {
   private router = inject(Router);

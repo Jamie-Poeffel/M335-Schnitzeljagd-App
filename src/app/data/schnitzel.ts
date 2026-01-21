@@ -1,4 +1,4 @@
-import { Schnitzel } from "src/app/types/schnitzel";
+import { Schnitzel } from 'src/app/types/schnitzel';
 
 export const SCHNITZELS: Schnitzel[] = [
   {
@@ -7,6 +7,6 @@ export const SCHNITZELS: Schnitzel[] = [
     timeLeft: "1 Tag",
     reward: 6,
     durationMinutes: 30,
-    image: "🐷"
+    image: 'assets/pictures/pig.png',
   },
 ];

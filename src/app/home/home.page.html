@@ -4,13 +4,32 @@
   </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
+  <img
+    src="assets/pictures/dancing-potato.gif"
+    alt="Dancing Potato"
+    style="
+      display: block;
+      margin-left: 90px;
+      margin-top: 250px;
+      width: 200px;
+      height: auto;
+    "
+  />
 
-</ion-content>
+  ></ion-content
+>
 <ion-footer>
   <ion-toolbar>
-    <h5 style="text-align: center; font-weight: bold;">Bitte gib deinen Name ein</h5>
-    <input type="text" class="input" placeholder="name" style="margin-top: 16px;">
-    <app-button variant="filled" (clicked)="navigateToWelcome()">
+    <h5 style="text-align: center; font-weight: bold">
+      Bitte gib deinen Name ein
+    </h5>
+    <input
+      type="text"
+      class="input"
+      placeholder="name"
+      style="margin-top: 16px"
+    />
+    <app-button variant="outline-icon" (clicked)="navigateToWelcome()">
       <p>Weiter</p>
     </app-button>
   </ion-toolbar>
