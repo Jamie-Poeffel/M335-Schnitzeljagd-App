@@ -1,0 +1,55 @@
+<ion-content [fullscreen]="true" scroll-y="false" class="no-scroll">
+  <div class="screen">
+    <section class="card">
+      <!-- progress dots -->
+      <div class="dots" aria-label="Progress">
+        <span class="dot active"></span>
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+
+      <!-- header -->
+      <h1 class="title">QR Code Scan</h1>
+
+      <div class="stats">
+        <div>Zeit Verbleibend: <b>{{ timeLeft }}</b></div>
+        <div>Schnitzel : <b>{{ reward }}x</b></div>
+      </div>
+
+      <!-- scanner frame -->
+      <div class="scan-frame">
+        <div class="scan-placeholder">
+          <div class="scan-box"></div>
+          <div class="scan-text">Hold QR inside the box</div>
+
+          <button class="scan-btn" type="button" (click)="onScanMock()">
+            Scan (mock)
+          </button>
+        </div>
+      </div>
+
+      <!-- mission -->
+      <div class="mission">
+        <h2>Scan the QR Code</h2>
+        <p class="hint">
+          Find the QR code at the location and scan it to continue.
+        </p>
+
+        <div class="redline">Status: {{ status }}</div>
+        <div class="redline">Last Result: {{ lastResult || '—' }}</div>
+
+        <button class="skip" type="button" (click)="onSkip()">
+          Überspringen
+        </button>
+      </div>
+    </section>
+
+    <!-- bottom button -->
+    <app-button class="bottom" variant="outline-icon" routerLink="/welcome">
+      <p>Zurück</p>
+    </app-button>
+  </div>
+</ion-content>

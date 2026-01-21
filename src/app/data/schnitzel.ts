@@ -9,12 +9,4 @@ export const SCHNITZELS: Schnitzel[] = [
     durationMinutes: 30,
     image: "🐷"
   },
-  {
-    id: 2,
-    title: "Findet Nemo",
-    timeLeft: "6h",
-    reward: 6,
-    durationMinutes: 20,
-    image: "🐠"
-  }
 ];
