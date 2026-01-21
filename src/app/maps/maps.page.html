@@ -1,4 +1,4 @@
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" scroll-y="false" class="no-scroll">
   <div class="screen">
     <section class="card">
       <!-- progress dots -->
@@ -194,6 +194,16 @@
       font-size: 26px;
       line-height: 0;
       margin-top: -2px;
+    }
+    .no-scroll {
+      --overflow: hidden;
+    }
+    .no-scroll::part(scroll) {
+      overflow: hidden !important;
+    }
+
+    .screen {
+      overflow: hidden;
     }
   </style>
 </ion-content>
