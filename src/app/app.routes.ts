@@ -27,4 +27,8 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./leaderboard/leaderboard.page').then((m) => m.LeaderboardPage),
   },
+  
+   path: 'qr-scanner',
+    loadComponent: () => import('./qr-scanner/qr-scanner.page').then( m => m.QrScannerPage)
+  },
 ];
