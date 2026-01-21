@@ -1,3 +1,25 @@
+<<<<<<< HEAD
+:host {
+  display: inline-block;
+}
+
+.btn {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 0;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  background: var(--ion-color-primary);
+  color: var(--ion-color-primary-contrast);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+=======
 @use './../../theme/variables.scss' as *;
 
 .btn {
@@ -22,3 +44,4 @@
         color: $white;
     }
 }
+>>>>>>> d385935b4b7821f90bebe87830b3a422b24aa86e
