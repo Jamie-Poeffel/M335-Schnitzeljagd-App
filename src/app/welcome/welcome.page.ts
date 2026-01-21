@@ -15,18 +15,13 @@ import { SchnitzelCardComponent } from 'src/app/components/schnitzel-card/schnit
   standalone: true,
   templateUrl: './welcome.page.html',
   styleUrls: ['./welcome.page.scss'],
-  imports: [
-    CommonModule,
-    IonicModule,
-    SchnitzelCardComponent
-  ],
+  imports: [CommonModule, IonicModule, SchnitzelCardComponent],
 })
 export class WelcomePage {
-
-  user: User = USER;                
+  user: User = USER;
   schnitzels: Schnitzel[] = SCHNITZELS;
 
-  get initial(): string {           
+  get initial(): string {
     return this.user.name.charAt(0).toUpperCase();
   }
 
