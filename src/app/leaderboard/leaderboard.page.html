@@ -1,0 +1,68 @@
+<ion-content class="sj-page">
+  <div class="sj-center">
+    <div class="sj-list-card">
+      <div class="sj-row">
+        <div style="display: flex; align-items: center; gap: 10px">
+          <div style="font-size: 22px">🏆</div>
+          <div>
+            <div style="font-weight: 900; color: var(--sj-accent)">
+              LeaderBoard
+            </div>
+            <div class="sj-subline">Top Schnitzeljagd Jäger</div>
+          </div>
+        </div>
+
+        <a class="sj-link" routerLink="/home">Back</a>
+      </div>
+    </div>
+
+    <div style="height: 16px"></div>
+
+    <!-- EMPTY STATE -->
+    <div
+      class="sj-card soft"
+      style="opacity: 0.55; text-align: center; padding: 22px 16px"
+    >
+      <div style="font-size: 36px">🏆</div>
+      <div style="font-weight: 900; margin-top: 8px">Noch keine Einträge</div>
+      <div class="sj-subline" style="margin-top: 8px">
+        Sei der Erste, der eine Schnitzeljagd beendet!
+      </div>
+    </div>
+
+    <!-- LIST STATE (wenn du später Daten hast) -->
+    <!--
+    <div style="height: 18px"></div>
+    <div style="width: min(360px, 92vw)">
+      <div style="text-align:center; color: var(--sj-accent); font-weight: 900; font-size: 22px">
+        Top Platzierungen
+      </div>
+      <div class="sj-divider"></div>
+
+      <div class="sj-item">
+        <div class="sj-badge">J</div>
+        <div class="sj-item-name">Joe</div>
+      </div>
+      <div class="sj-item">
+        <div class="sj-badge">K</div>
+        <div class="sj-item-name">Kaytlin</div>
+      </div>
+      <div class="sj-item">
+        <div class="sj-badge">B</div>
+        <div class="sj-item-name">Barbabara</div>
+      </div>
+      <div class="sj-item">
+        <div class="sj-badge">R</div>
+        <div class="sj-item-name">Ruedi</div>
+      </div>
+    </div>
+    -->
+
+    <div class="sj-bottom-back">
+      <button class="sj-back-pill" routerLink="/home" type="button">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+        Zurück
+      </button>
+    </div>
+  </div>
+</ion-content>

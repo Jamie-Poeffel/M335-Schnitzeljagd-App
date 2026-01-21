@@ -34,4 +34,241 @@
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+@import "@ionic/angular/css/palettes/dark.system.css";
+
+/* global.scss */
+
+:root {
+  --sj-bg: #ffffff;
+  --sj-card: #ffffff;
+  --sj-accent: #d96a2f; /* orange wie in Figma */
+  --sj-accent-soft: rgba(217, 106, 47, 0.15);
+  --sj-text: #111827;
+  --sj-muted: #6b7280;
+  --sj-danger: #dc2626;
+  --sj-success: #16a34a;
+
+  --sj-radius-xl: 28px;
+  --sj-radius-lg: 18px;
+
+  --sj-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
+  --sj-shadow-soft: 0 12px 35px rgba(0, 0, 0, 0.12);
+}
+
+.sj-page {
+  --background: var(--sj-bg);
+  background: var(--sj-bg);
+}
+
+.sj-center {
+  display: grid;
+  place-items: center;
+  min-height: 100%;
+  padding: 18px;
+}
+
+.sj-title-top {
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  margin-top: 10px;
+  margin-bottom: 16px;
+  color: var(--sj-text);
+}
+
+.sj-card {
+  width: min(360px, 92vw);
+  background: var(--sj-card);
+  border-radius: var(--sj-radius-xl);
+  box-shadow: var(--sj-shadow);
+  padding: 16px 16px 14px;
+}
+
+.sj-card.soft {
+  box-shadow: var(--sj-shadow-soft);
+}
+
+.sj-card-header {
+  text-align: center;
+  font-weight: 700;
+  margin: 4px 0 10px;
+  color: var(--sj-text);
+}
+
+.sj-subline {
+  color: var(--sj-muted);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.sj-divider {
+  margin: 14px 0;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.sj-input {
+  --background: transparent;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  border: 1px solid rgba(217, 106, 47, 0.65);
+  border-radius: 14px;
+  overflow: hidden;
+  height: 42px;
+}
+
+.sj-primary-btn {
+  --background: var(--sj-accent);
+  --border-radius: 999px;
+  --box-shadow: none;
+  height: 44px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  width: 100%;
+}
+
+.sj-primary-btn[disabled] {
+  --background: rgba(217, 106, 47, 0.25);
+}
+
+.sj-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--sj-accent);
+  text-decoration: underline;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.sj-bottom-back {
+  position: sticky;
+  bottom: 12px;
+  margin-top: 18px;
+  display: grid;
+  place-items: center;
+}
+
+.sj-back-pill {
+  width: min(360px, 92vw);
+  border: 1px solid rgba(217, 106, 47, 0.6);
+  border-radius: 999px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--sj-accent);
+  background: transparent;
+  font-weight: 700;
+}
+
+.sj-back-pill ion-icon {
+  font-size: 18px;
+}
+
+.sj-progress {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 6px 0 10px;
+}
+
+.sj-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(217, 106, 47, 0.25);
+}
+
+.sj-dot.on {
+  background: var(--sj-accent);
+}
+
+.sj-hero-img {
+  display: grid;
+  place-items: center;
+  margin: 12px 0 10px;
+}
+
+.sj-hero-img img {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+}
+
+.sj-meta-top {
+  display: grid;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--sj-muted);
+}
+
+.sj-meta-top b {
+  color: var(--sj-text);
+}
+
+.sj-status-danger {
+  color: var(--sj-danger);
+  font-weight: 700;
+}
+.sj-status-success {
+  color: var(--sj-success);
+  font-weight: 700;
+}
+
+.sj-map {
+  width: 100%;
+  height: 170px;
+  border-radius: 14px;
+  background: #e5e7eb;
+  overflow: hidden;
+}
+
+.sj-map img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sj-list-card {
+  width: min(360px, 92vw);
+  background: var(--sj-card);
+  border-radius: var(--sj-radius-xl);
+  box-shadow: var(--sj-shadow-soft);
+  padding: 14px;
+}
+
+.sj-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sj-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: rgba(255, 122, 0, 0.85);
+  color: #fff;
+  font-weight: 800;
+}
+
+.sj-item {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: #fff;
+  border-radius: 999px;
+  padding: 10px 12px;
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.12);
+  margin: 12px 0;
+}
+
+.sj-item-name {
+  font-weight: 800;
+  color: var(--sj-text);
+}
