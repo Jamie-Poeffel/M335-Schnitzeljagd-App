@@ -8,6 +8,15 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./welcome/welcome.page').then((m) => m.WelcomePage),
   },
+  {
+    path: 'rotate',
+    loadComponent: () => import('./rotate/rotate.page').then( m => m.RotatePage)
+  },
+  {
+    path: 'speedometer',
+    loadComponent: () => import('./speedometer/speedometer.page').then( m => m.SpeedoMeterPage)
+  },
+
 
   {
     path: 'accept-cam-loc',

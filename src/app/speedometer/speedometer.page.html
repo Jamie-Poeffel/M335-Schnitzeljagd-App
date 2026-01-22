@@ -1,0 +1,39 @@
+<ion-content class="page">
+  <div class="card">
+    <div class="dots">
+      <span class="dot active"></span>
+      <span class="dot active"></span>
+      <span class="dot active"></span>
+      <span class="dot active"></span>
+      <span class="dot active"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+
+    <div class="header-title">{{ title }}</div>
+
+    <div class="meta">
+      <div>Zeit Verbleibend: {{ timeLeft }}</div>
+      <div>Schnitzel : {{ reward }}</div>
+    </div>
+
+    <div class="icon-wrap">
+      <img src="assets/pictures/run.png" alt="runner" class="runner" />
+    </div>
+
+    <div class="task">
+      <div class="task-title">{{ taskTitle }}</div>
+      <div class="task-desc">{{ taskDesc }}</div>
+      <div class="task-speed">Aktuelle Geschwindigkeit: {{ currentSpeed }}</div>
+    </div>
+
+    <button class="skip" (click)="skip()">Überspringen</button>
+  </div>
+
+  <div class="bottom">
+    <ion-button class="back-btn" expand="block" fill="outline" (click)="back()">
+      <ion-icon slot="start" name="chevron-back-outline"></ion-icon>
+      Zurück
+    </ion-button>
+  </div>
+</ion-content>
