@@ -21,6 +21,17 @@
 
   margin: 0;
 }
+/* keep your existing stuff if you want; this is minimal */
+
+.input {
+  width: calc(100% - 32px);
+  margin: 0 16px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,0.12);
+  outline: none;
+  font-size: 14px;
+}
 
 #container a {
   text-decoration: none;
