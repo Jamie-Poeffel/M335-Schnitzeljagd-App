@@ -34,7 +34,7 @@ export class AcceptCamLocPage implements OnInit {
 
     if (platform === 'android') {
       NativeSettings.openAndroid({
-        option: AndroidSettings.ApplicationDetails
+        option: AndroidSettings.ApplicationDetails,
       });
     } else if (platform === 'ios') {
       NativeSettings.openIOS({
@@ -55,11 +55,10 @@ export class AcceptCamLocPage implements OnInit {
     });
   }
 
-
   async checkCameraPermission(prompt: boolean = false) {
     let perm = await Camera.checkPermissions();
 
-    if (perm.camera === "granted") {
+    if (perm.camera === 'granted') {
       return true;
     }
 
@@ -67,15 +66,13 @@ export class AcceptCamLocPage implements OnInit {
       return false;
     }
 
-
     perm = await Camera.requestPermissions();
 
-
-    if (perm.camera !== "granted") {
-      return false
+    if (perm.camera !== 'granted') {
+      return false;
     }
 
-    return true
+    return true;
   }
 
   async checkLocationPermission(prompt: boolean = false): Promise<boolean> {
@@ -91,14 +88,12 @@ export class AcceptCamLocPage implements OnInit {
 
     const perm = await Geolocation.requestPermissions();
 
-    if (perm.location !== "granted") {
-      return false
+    if (perm.location !== 'granted') {
+      return false;
     }
 
     return true;
-
   }
-
 
   toggleLoc(): void {
     this.checkLocationPermission(true).then((ok) => {
