@@ -63,7 +63,7 @@ export class SpeedoMeterPage {
     this.progress.completeTask(this.TASK_INDEX, secondsTaken);
 
     // go to next task
-    this.router.navigate(['/qr-scanner']);
+    this.router.navigate(['/wifi']);
   }
 
   back() {
