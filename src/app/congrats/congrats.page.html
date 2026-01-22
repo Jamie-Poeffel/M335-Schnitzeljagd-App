@@ -1,0 +1,78 @@
+<ion-content [fullscreen]="true" scroll-y="false" class="no-scroll">
+  <div class="screen">
+    <div class="main">
+      <section class="card">
+
+        <!-- top card -->
+        <div class="top-card">
+          <div class="small-title">Jagd den Schwein</div>
+          <h1 class="headline">Glückwunsch</h1>
+          <div class="sub">
+            Du hast die Jagd beendet und bekommst<br />
+            als Belohnung <b>6 SCHNITZELN!!</b>
+          </div>
+
+          <div class="trophy">
+            <!-- replace with your image if you have one -->
+            <img src="assets/pictures/trophy.png" alt="Trophäe" />
+            <div class="badge">6x</div>
+          </div>
+
+          <div class="small-footer">Dauer: 21min 15 sek</div>
+        </div>
+
+        <!-- task list -->
+        <div class="task-list">
+          @for (i of [].constructor(totalTasks); track $index) {
+            @let idx = $index + 1;
+            @let r = getResult(idx);
+
+            <div class="task-row">
+              <div class="task-left">
+                <div class="task-title">Aufgabe {{ idx }}</div>
+                <div class="task-reward">+1x</div>
+
+                @if (r?.potatoEarned) {
+                  <div class="task-penalty">+1 🥔</div>
+                }
+              </div>
+
+              <div class="task-right">
+                <img class="schnitzel" src="assets/pictures/schnitzel.png" alt="Schnitzel" />
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- account -->
+        <div class="account">
+          <div class="account-title">Dein Konto</div>
+
+          <div class="account-row">
+            <div class="acc-item">
+              <div class="acc-value">{{ totalSchnitzel }}</div>
+              <img class="acc-icon" src="assets/pictures/schnitzel.png" alt="Schnitzel" />
+            </div>
+
+            <div class="acc-item">
+              <div class="acc-value">{{ totalPotatoes }}</div>
+              <img class="acc-icon" src="assets/pictures/potato.png" alt="Kartoffel" />
+            </div>
+          </div>
+        </div>
+
+      </section>
+    </div>
+
+    <!-- bottom actions -->
+    <div class="actions">
+      <app-button class="outline" variant="outline" (click)="goLeaderboard()">
+        <p>Platzierung</p>
+      </app-button>
+
+      <app-button class="filled" variant="filled" (click)="goNext()">
+        <p>Weiter</p>
+      </app-button>
+    </div>
+  </div>
+</ion-content>
