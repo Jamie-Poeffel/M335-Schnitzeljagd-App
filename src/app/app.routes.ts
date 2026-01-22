@@ -1,14 +1,24 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'welcome', pathMatch: 'full' },
-
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  {
+    path: 'home',
+    loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
+  },
   {
     path: 'welcome',
     loadComponent: () =>
       import('./welcome/welcome.page').then((m) => m.WelcomePage),
   },
-
+  {
+    path: 'rotate',
+    loadComponent: () => import('./rotate/rotate.page').then(m => m.RotatePage)
+  },
+  {
+    path: 'speedometer',
+    loadComponent: () => import('./speedometer/speedometer.page').then(m => m.SpeedoMeterPage)
+  },
   {
     path: 'accept-cam-loc',
     loadComponent: () =>
@@ -16,7 +26,6 @@ export const routes: Routes = [
         (m) => m.AcceptCamLocPage,
       ),
   },
-
   {
     path: 'maps',
     loadComponent: () => import('./maps/maps.page').then((m) => m.MapsPage),
@@ -32,18 +41,10 @@ export const routes: Routes = [
     path: 'qr-scanner',
     loadComponent: () =>
       import('./qr-scanner/qr-scanner.page').then((m) => m.QrScannerPage),
-  },  {
+  },
+  {
     path: 'wifi',
-    loadComponent: () => import('./wifi/wifi.page').then( m => m.WifiPage)
+    loadComponent: () => import('./wifi/wifi.page').then(m => m.WifiPage)
   },
-  {
-    path: 'rotate',
-    loadComponent: () => import('./rotate/rotate.page').then( m => m.RotatePage)
-  },
-  {
-    path: 'speedometer',
-    loadComponent: () => import('./speedometer/speedometer.page').then( m => m.SpeedoMeterPage)
-  },
-
 
 ];

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../button/button.component';
@@ -9,7 +9,7 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/angular/standalone';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Geolocation, Position, PositionOptions } from '@capacitor/geolocation';
 
 @Component({
@@ -29,6 +29,7 @@ import { Geolocation, Position, PositionOptions } from '@capacitor/geolocation';
   ],
 })
 export class MapsPage implements OnInit, OnDestroy {
+  private router = inject(Router);
   // Target destination (McDonald's in Lucerne)
   readonly TARGET_LATITUDE = 47.027369922645896;
   readonly TARGET_LONGITUDE = 8.30021649416533;
@@ -64,6 +65,8 @@ export class MapsPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.stopLocationTracking();
   }
+
+
 
   /**
    * Initialize location tracking with permission check
@@ -281,10 +284,7 @@ export class MapsPage implements OnInit, OnDestroy {
    * Handle continue button click
    */
   onContinue() {
-    // Navigate to next step
-    console.log('continue to next step');
-    // Add your navigation logic here
-    // Example: this.router.navigate(['/next-page']);
+    this.router.navigateByUrl('qr-scanner');
   }
 
   onSkip() {
