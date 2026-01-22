@@ -16,7 +16,6 @@ export const routes: Routes = [
         (m) => m.AcceptCamLocPage,
       ),
   },
-
   {
     path: 'maps',
     loadComponent: () => import('./maps/maps.page').then((m) => m.MapsPage),
@@ -32,9 +31,10 @@ export const routes: Routes = [
     path: 'qr-scanner',
     loadComponent: () =>
       import('./qr-scanner/qr-scanner.page').then((m) => m.QrScannerPage),
-  },  {
+  },
+  {
     path: 'wifi',
-    loadComponent: () => import('./wifi/wifi.page').then( m => m.WifiPage)
+    loadComponent: () => import('./wifi/wifi.page').then(m => m.WifiPage)
   },
 
 ];
