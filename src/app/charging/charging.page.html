@@ -35,15 +35,16 @@
         </div>
       </div>
 
-      <!-- end button (changes style depending on charging)
-      <button
-        class="end-btn"
-        type="button"
-        [class.filled]="isCharging"
-        (click)="onEnd()"
-      >
+      @if (!isCharging) {
+      <app-button variant="text" (clicked)="onSkip()">
+        Überspringen
+      </app-button>
+      }
+
+
+      <button class="end-btn" type="button" [class.filled]="isCharging" (click)="onEnd()">
         Beenden
-      </button> -->
+      </button>
     </section>
 
     <!-- bottom back button -->
