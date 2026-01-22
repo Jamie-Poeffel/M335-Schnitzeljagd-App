@@ -1,8 +1,8 @@
 // src/app/running/speedometer.page.ts
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import {
   IonContent,
@@ -12,6 +12,8 @@ import {
 } from '@ionic/angular/standalone';
 
 import { ButtonComponent } from '../button/button.component';
+import { HuntProgressService } from '../hunt-progress-service';
+import { TimeService } from '../time';
 
 @Component({
   selector: 'app-speedometer',
@@ -30,17 +32,38 @@ import { ButtonComponent } from '../button/button.component';
   ],
 })
 export class SpeedoMeterPage {
-  // placeholders
+  // ===== injected services =====
+  private progress = inject(HuntProgressService);
+  private time = inject(TimeService);
+  private router = inject(Router);
+
+  // IMPORTANT: unique task number
+  private readonly TASK_INDEX = 3; // maps=1, rotate=2, speedometer=3
+
+  // ===== placeholders / UI data =====
   title = 'Jagd den Schwein';
   timeLeft = '10min 1 sek';
   reward = '3x';
 
   taskTitle = 'Renne 12km/h';
   taskDesc = 'Renne 12km/h in einer geraden Linie';
-  currentSpeed = '2 km/h';
+  currentSpeed = '2'; // km/h (placeholder)
 
-  skip() {
-    console.log('skip');
+  // ===== lifecycle =====
+  ionViewWillEnter() {
+    // start timer when page opens
+    this.time.start(this.TASK_INDEX);
+  }
+
+  // ===== actions =====
+  onSkip() {
+    const secondsTaken = this.time.stop(this.TASK_INDEX);
+
+    // save reward (+1 schnitzel, +potato if >5min)
+    this.progress.completeTask(this.TASK_INDEX, secondsTaken);
+
+    // go to next task
+    this.router.navigate(['/wifi']);
   }
 
   back() {

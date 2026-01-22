@@ -16,8 +16,12 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/angular/standalone';
+
 import { Router, RouterLink } from '@angular/router';
 import { Geolocation, Position, PositionOptions } from '@capacitor/geolocation';
+
+import { HuntProgressService } from '../hunt-progress-service';
+import { TimeService } from '../time';
 
 @Component({
   selector: 'app-maps',
@@ -36,38 +40,35 @@ import { Geolocation, Position, PositionOptions } from '@capacitor/geolocation';
 })
 export class MapsPage implements OnInit, OnDestroy {
   private router = inject(Router);
+  private progress = inject(HuntProgressService);
+  private time = inject(TimeService);
   private ngZone = inject(NgZone);
   private cdr = inject(ChangeDetectorRef);
+
+  private readonly TASK_INDEX = 1; // maps task = 1
 
   // Target destination ()
   readonly TARGET_LATITUDE = 47.02745752832616;
   readonly TARGET_LONGITUDE = 8.30138651362293;
   readonly TARGET_DISTANCE_THRESHOLD = 10; // meters
 
-  // User's current position
   userLatitude: number | null = null;
   userLongitude: number | null = null;
 
-  // Distance to target in meters
   distanceToTarget: number | null = null;
-
-  // Geolocation tracking identifier
   geolocationWatchId: string | null = null;
 
-  // Timer display
-  timeRemaining = '29:20';
+  timeRemaining = '5:00';
 
-  // Location tracking status
   isTrackingLocation = false;
   locationError: string | null = null;
   permissionStatus: string = 'checking';
 
-  // Target reached status
   isWithinTargetDistance = false;
 
-  constructor() {}
-
   ngOnInit() {
+    // start task timer + start tracking
+    this.time.start(this.TASK_INDEX);
     this.initializeLocationTracking();
   }
 
@@ -75,14 +76,10 @@ export class MapsPage implements OnInit, OnDestroy {
     this.stopLocationTracking();
   }
 
-  /**
-   * Initialize location tracking with permission check
-   */
+
   async initializeLocationTracking() {
     try {
-      // Check current permission status
       const permissionStatus = await Geolocation.checkPermissions();
-      console.log('Permission status:', permissionStatus);
 
       if (permissionStatus.location === 'granted') {
         this.permissionStatus = 'granted';
@@ -91,9 +88,7 @@ export class MapsPage implements OnInit, OnDestroy {
         permissionStatus.location === 'prompt' ||
         permissionStatus.location === 'prompt-with-rationale'
       ) {
-        // Request permission
         const requestResult = await Geolocation.requestPermissions();
-        console.log('Permission request result:', requestResult);
 
         if (requestResult.location === 'granted') {
           this.permissionStatus = 'granted';
@@ -114,9 +109,6 @@ export class MapsPage implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Start tracking user's location in real-time
-   */
   async startLocationTracking() {
     try {
       this.isTrackingLocation = true;
@@ -128,7 +120,6 @@ export class MapsPage implements OnInit, OnDestroy {
         maximumAge: 0,
       };
 
-      // Watch position changes
       this.geolocationWatchId = await Geolocation.watchPosition(
         options,
         (position, error) => {
@@ -139,11 +130,6 @@ export class MapsPage implements OnInit, OnDestroy {
           }
         },
       );
-
-      console.log(
-        'Location tracking started with ID:',
-        this.geolocationWatchId,
-      );
     } catch (error) {
       console.error('Error starting location tracking:', error);
       this.locationError = 'Fehler beim Starten der Standortverfolgung.';
@@ -151,14 +137,10 @@ export class MapsPage implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Stop tracking user's location
-   */
   async stopLocationTracking() {
     if (this.geolocationWatchId !== null) {
       try {
         await Geolocation.clearWatch({ id: this.geolocationWatchId });
-        console.log('Location tracking stopped');
       } catch (error) {
         console.error('Error stopping location tracking:', error);
       }
@@ -167,6 +149,7 @@ export class MapsPage implements OnInit, OnDestroy {
     }
   }
 
+<<<<<<< HEAD
   /**
    * Handle successful location update
    */
@@ -180,6 +163,8 @@ export class MapsPage implements OnInit, OnDestroy {
    * Handle successful location update
    * Wrapped in NgZone to ensure automatic change detection
    */
+=======
+>>>>>>> f89f640ebecb8571cad11b28cc695023fc1122ad
   private handleLocationUpdate(position: Position | null) {
     if (!position || !position.coords) {
       console.warn('Invalid position data received');
@@ -207,14 +192,16 @@ export class MapsPage implements OnInit, OnDestroy {
         console.log('🎯 Target reached! Within threshold distance.');
       }
 
-      // Force change detection to ensure UI updates
       this.cdr.detectChanges();
     });
   }
 
+<<<<<<< HEAD
   /**
    * Handle location tracking errors
    */
+=======
+>>>>>>> f89f640ebecb8571cad11b28cc695023fc1122ad
   private handleLocationError(error: any) {
     this.ngZone.run(() => {
       this.isTrackingLocation = false;
@@ -229,12 +216,7 @@ export class MapsPage implements OnInit, OnDestroy {
       this.cdr.detectChanges();
     });
   }
-  /**
-   * Calculate distance from user to target using Haversine formula
-   */
-  /**
-   * Calculate distance from user to target using Haversine formula
-   */
+
   calculateDistanceToTarget() {
     if (this.userLatitude === null || this.userLongitude === null) {
       console.warn('Cannot calculate distance: coordinates not available');
@@ -267,14 +249,16 @@ export class MapsPage implements OnInit, OnDestroy {
 
     this.distanceToTarget = Math.round(EARTH_RADIUS_METERS * haversineC);
 
+<<<<<<< HEAD
     // Check if user is within target distance
     this.isWithinTargetDistance =
       this.distanceToTarget <= this.TARGET_DISTANCE_THRESHOLD;
+=======
+>>>>>>> f89f640ebecb8571cad11b28cc695023fc1122ad
     const previousStatus = this.isWithinTargetDistance;
     this.isWithinTargetDistance =
       this.distanceToTarget <= this.TARGET_DISTANCE_THRESHOLD;
 
-    // Log when status changes
     if (previousStatus !== this.isWithinTargetDistance) {
       console.log(
         `Distance status changed: ${this.isWithinTargetDistance ? 'WITHIN' : 'OUTSIDE'} target range`,
@@ -286,48 +270,26 @@ export class MapsPage implements OnInit, OnDestroy {
     return (degrees * Math.PI) / 180;
   }
 
-  /**
-   * Format coordinates for display
-   */
-  getFormattedCoordinates(): string {
-    if (this.userLatitude === null || this.userLongitude === null) {
-      return 'Warte auf Standort...';
-    }
-
-    const latitudeDirection = this.userLatitude >= 0 ? 'N' : 'S';
-    const longitudeDirection = this.userLongitude >= 0 ? 'E' : 'W';
-
-    return `${Math.abs(this.userLatitude).toFixed(4)}° ${latitudeDirection}, ${Math.abs(this.userLongitude).toFixed(4)}° ${longitudeDirection}`;
-  }
-
-  /**
-   * Get formatted distance string
-   */
   getFormattedDistance(): string {
-    if (this.distanceToTarget === null) {
-      return 'Berechnung...';
-    }
+    if (this.distanceToTarget === null) return 'Berechnung...';
     return `${this.distanceToTarget} m`;
   }
 
-  /**
-   * Get distance text color class
-   */
   getDistanceColorClass(): string {
     return this.isWithinTargetDistance ? 'greenline' : 'redline';
   }
 
-  /**
-   * Manually retry location permission request
-   */
   async retryLocationPermission() {
     this.locationError = null;
     await this.initializeLocationTracking();
   }
 
-  /**
-   * Get current position once (not watching)
-   */
+  private finishTaskAndGoNext() {
+    const secondsTaken = this.time.stop(this.TASK_INDEX);
+    this.progress.completeTask(this.TASK_INDEX, secondsTaken);
+    this.router.navigate(['/qr-scanner']);
+  }
+
   async getCurrentPosition() {
     try {
       const position = await Geolocation.getCurrentPosition({
@@ -342,14 +304,11 @@ export class MapsPage implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Handle continue button click
-   */
   onContinue() {
-    this.router.navigateByUrl('qr-scanner');
+    this.finishTaskAndGoNext();
   }
 
   onSkip() {
-    this.router.navigateByUrl('qr-scanner');
+    this.finishTaskAndGoNext();
   }
 }

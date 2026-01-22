@@ -1,7 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import {
   IonContent,
@@ -9,10 +9,14 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/angular/standalone';
+
 import { ButtonComponent } from '../button/button.component';
 
 import { Motion } from '@capacitor/motion';
 import type { PluginListenerHandle } from '@capacitor/core';
+
+import { HuntProgressService } from '../hunt-progress-service';
+import { TimeService } from '../time';
 
 @Component({
   selector: 'app-rotate',
@@ -31,6 +35,12 @@ import type { PluginListenerHandle } from '@capacitor/core';
   ],
 })
 export class RotatePage implements OnInit, OnDestroy {
+  private router = inject(Router);
+  private progress = inject(HuntProgressService);
+  private time = inject(TimeService);
+
+  private readonly TASK_INDEX = 2; // rotate task = 2
+
   timeLeft = '1 Tag';
   reward = 6;
 
@@ -46,13 +56,17 @@ export class RotatePage implements OnInit, OnDestroy {
   private holdInterval?: ReturnType<typeof setInterval>;
 
   async ngOnInit() {
+    // timer starten, sobald page offen ist
+    this.time.start(this.TASK_INDEX);
+
+    // Sensor listener
     this.motionListener = await Motion.addListener('accel', (event) => {
       if (this.completed) return;
 
       const x = event.accelerationIncludingGravity?.x ?? 0;
       const y = event.accelerationIncludingGravity?.y ?? 0;
 
-      // Querformat-Erkennung
+      // Querformat-Erkennung: x stark + dominiert y
       const landscapeNow = Math.abs(x) > 7 && Math.abs(x) > Math.abs(y);
 
       if (landscapeNow !== this.isLandscape) {
@@ -69,9 +83,19 @@ export class RotatePage implements OnInit, OnDestroy {
     });
   }
 
+  private finishTaskAndGoNext() {
+    const secondsTaken = this.time.stop(this.TASK_INDEX);
+    this.progress.completeTask(this.TASK_INDEX, secondsTaken);
+    this.router.navigate(['/speedometer']);
+  }
+
+  onSkip() {
+    this.finishTaskAndGoNext();
+  }
+
   onDone() {
     if (!this.completed) return;
-    console.log('Fertig → weiter');
+    this.finishTaskAndGoNext();
   }
 
   private startHoldTimer() {
@@ -87,19 +111,26 @@ export class RotatePage implements OnInit, OnDestroy {
   }
 
   private resetHold() {
-    clearInterval(this.holdInterval);
-    this.holdInterval = undefined;
+    if (this.holdInterval) {
+      clearInterval(this.holdInterval);
+      this.holdInterval = undefined;
+    }
     this.holdTime = 0;
   }
 
   private completeTask() {
-    clearInterval(this.holdInterval);
-    this.holdInterval = undefined;
+    if (this.holdInterval) {
+      clearInterval(this.holdInterval);
+      this.holdInterval = undefined;
+    }
 
     this.completed = true;
     this.status = 'Erledigt';
 
-    console.log('5 Sekunden gehalten ✅');
+    // optional: mini delay für "Erledigt" anzeigen
+    setTimeout(() => {
+      this.finishTaskAndGoNext();
+    }, 600);
   }
 
   get progressPercent() {
@@ -108,6 +139,6 @@ export class RotatePage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.motionListener?.remove();
-    clearInterval(this.holdInterval);
+    if (this.holdInterval) clearInterval(this.holdInterval);
   }
 }
