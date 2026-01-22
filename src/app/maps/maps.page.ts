@@ -1,4 +1,11 @@
-import { Component, OnInit, OnDestroy, inject, NgZone, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  inject,
+  NgZone,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../button/button.component';
@@ -166,9 +173,9 @@ export class MapsPage implements OnInit, OnDestroy {
   /**
    * Handle successful location update
    * Wrapped in NgZone to ensure automatic change detection
-   */  /**
-* Handle location tracking errors
-*/
+   */ /**
+   * Handle location tracking errors
+   */
   /**
    * Handle successful location update
    * Wrapped in NgZone to ensure automatic change detection
@@ -185,14 +192,6 @@ export class MapsPage implements OnInit, OnDestroy {
       this.userLongitude = position.coords.longitude;
       this.locationError = null;
 
-<<<<<<< HEAD
-    console.log('Location updated:', {
-      latitude: this.userLatitude,
-      longitude: this.userLongitude,
-      accuracy: position.coords.accuracy,
-      distance: this.distanceToTarget,
-      withinRange: this.isWithinTargetDistance,
-=======
       // Always recalculate distance when position updates
       this.calculateDistanceToTarget();
 
@@ -201,7 +200,7 @@ export class MapsPage implements OnInit, OnDestroy {
         longitude: this.userLongitude,
         accuracy: position.coords.accuracy,
         distance: this.distanceToTarget,
-        withinRange: this.isWithinTargetDistance
+        withinRange: this.isWithinTargetDistance,
       });
 
       if (this.isWithinTargetDistance) {
@@ -210,13 +209,12 @@ export class MapsPage implements OnInit, OnDestroy {
 
       // Force change detection to ensure UI updates
       this.cdr.detectChanges();
->>>>>>> d11c1ce7cd9aff4f178df5346d0e2fc1d7a5c9b8
     });
   }
 
   /**
- * Handle location tracking errors
- */
+   * Handle location tracking errors
+   */
   private handleLocationError(error: any) {
     this.ngZone.run(() => {
       this.isTrackingLocation = false;
@@ -270,18 +268,18 @@ export class MapsPage implements OnInit, OnDestroy {
     this.distanceToTarget = Math.round(EARTH_RADIUS_METERS * haversineC);
 
     // Check if user is within target distance
-<<<<<<< HEAD
     this.isWithinTargetDistance =
       this.distanceToTarget <= this.TARGET_DISTANCE_THRESHOLD;
-=======
     const previousStatus = this.isWithinTargetDistance;
-    this.isWithinTargetDistance = this.distanceToTarget <= this.TARGET_DISTANCE_THRESHOLD;
+    this.isWithinTargetDistance =
+      this.distanceToTarget <= this.TARGET_DISTANCE_THRESHOLD;
 
     // Log when status changes
     if (previousStatus !== this.isWithinTargetDistance) {
-      console.log(`Distance status changed: ${this.isWithinTargetDistance ? 'WITHIN' : 'OUTSIDE'} target range`);
+      console.log(
+        `Distance status changed: ${this.isWithinTargetDistance ? 'WITHIN' : 'OUTSIDE'} target range`,
+      );
     }
->>>>>>> d11c1ce7cd9aff4f178df5346d0e2fc1d7a5c9b8
   }
 
   private degreesToRadians(degrees: number): number {

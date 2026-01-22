@@ -2,53 +2,84 @@
   <div class="screen">
     <div class="main">
       <section class="card">
-    
-      <div class="dots" aria-label="Fortschritt">
-        <span class="dot active"></span>
-        <span class="dot active"></span>
-        <span class="dot active"></span>
-        <span class="dot"></span>
-        <span class="dot"></span>
-        <span class="dot"></span>
-      </div>
-
-      <h1 class="title">Jagt das Schwein</h1>
-
-      <div class="stats">
-        <div>Zeit Verbleibend: <b>{{ timeLeft }}</b></div>
-        <div>Schnitzel : <b>{{ reward }}x</b></div>
-      </div>
-
-      <div class="rotate-frame">
-        <div class="rotate-placeholder" aria-label="Telefon drehen Hinweis">
-         <div class="rotate-illustration">
-  <img src="assets/pictures/RotatePhone.png" alt="Handy drehen" />
-</div>
-
-          <div class="rotate-text">
-            Drehe dein Handy ins <b>Querformat</b>.
-          </div>
-
-          <button class="done-btn" type="button" (click)="onDone()">
-            Erledigt
-          </button>
+        <div class="dots" aria-label="Fortschritt">
+          <span class="dot active"></span>
+          <span class="dot active"></span>
+          <span class="dot active"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
         </div>
-      </div>
 
-      <div class="mission">
-        <h2>Aufgabe</h2>
-        <p class="hint">
-          Diese Aufgabe zählt erst, wenn du das Gerät drehst und kurz wartest.
-        </p>
+        <h1 class="title">Jagt das Schwein</h1>
 
-        <div class="redline">Status: {{ status }}</div>
-        <div class="redline">Hinweis: Querformat aktiviert</div>
+        <div class="stats">
+          <div>Zeit Verbleibend: <b>{{ timeLeft }}</b></div>
+          <div>Schnitzel : <b>{{ reward }}x</b></div>
+        </div>
 
-        <app-button variant="text" routerLink="/speedometer">
-  Überspringen
-</app-button>
-      </div>
-    </section>
+        <!-- ROTATE BOX -->
+        <div class="rotate-frame">
+          <div class="rotate-placeholder">
+            <div class="rotate-illustration">
+              <img src="assets/pictures/RotatePhone.png" alt="Handy drehen" />
+            </div>
+
+            <div class="rotate-text">
+              <ng-container *ngIf="!completed; else doneTpl">
+                <ng-container *ngIf="isLandscape; else rotateTpl">
+                  Halte so… <b>{{ (HOLD_DURATION - holdTime).toFixed(1) }}s</b>
+                </ng-container>
+
+                <ng-template #rotateTpl>
+                  Drehe dein Handy ins <b>Querformat</b>.
+                </ng-template>
+              </ng-container>
+
+              <ng-template #doneTpl>
+                <b>Perfekt!</b> Aufgabe abgeschlossen!
+              </ng-template>
+            </div>
+
+            <!-- Progress -->
+            <div *ngIf="isLandscape && !completed" class="hold-box">
+              <div class="hold-row">
+                <span>Halte Position</span>
+                <span
+                  ><b>{{ holdTime.toFixed(1) }}s</b> / {{ HOLD_DURATION
+                  }}s</span
+                >
+              </div>
+
+              <div class="hold-bar">
+                <div
+                  class="hold-bar-inner"
+                  [style.width.%]="progressPercent"
+                ></div>
+              </div>
+            </div>
+
+            <!-- Button -->
+            <button class="done-btn" (click)="onDone()" [disabled]="!completed">
+              Erledigt
+            </button>
+          </div>
+        </div>
+
+        <!-- Mission -->
+        <div class="mission">
+          <h2>Aufgabe</h2>
+          <p class="hint">
+            Diese Aufgabe zählt erst, wenn du das Gerät drehst und kurz wartest.
+          </p>
+
+          <div class="redline">Status: {{ status }}</div>
+
+          <app-button variant="text" routerLink="/speedometer">
+            Überspringen
+          </app-button>
+        </div>
+      </section>
     </div>
 
     <app-button class="bottom" variant="outline-icon" routerLink="/welcome">
