@@ -1,8 +1,11 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'welcome', pathMatch: 'full' },
-
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  {
+    path: 'home',
+    loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
+  },
   {
     path: 'welcome',
     loadComponent: () =>
@@ -10,14 +13,12 @@ export const routes: Routes = [
   },
   {
     path: 'rotate',
-    loadComponent: () => import('./rotate/rotate.page').then( m => m.RotatePage)
+    loadComponent: () => import('./rotate/rotate.page').then(m => m.RotatePage)
   },
   {
     path: 'speedometer',
-    loadComponent: () => import('./speedometer/speedometer.page').then( m => m.SpeedoMeterPage)
+    loadComponent: () => import('./speedometer/speedometer.page').then(m => m.SpeedoMeterPage)
   },
-
-
   {
     path: 'accept-cam-loc',
     loadComponent: () =>

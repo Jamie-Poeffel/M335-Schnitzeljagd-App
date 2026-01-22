@@ -31,8 +31,6 @@
         <p class="hint">Find this point in the map and walk towards it</p>
 
         <div [class]="getDistanceColorClass()">Distanz: {{ getFormattedDistance() }}</div>
-        <div [class]="getDistanceColorClass()">{{ getFormattedCoordinates() }}</div>
-
         <!-- Success message when within range -->
         @if (isWithinTargetDistance) {
         <div class="success-message">
