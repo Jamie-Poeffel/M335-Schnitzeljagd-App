@@ -1,0 +1,57 @@
+<ion-content>
+  <div class="screen">
+    <section class="card">
+      <!-- progress dots -->
+      <div class="dots" aria-label="Progress">
+        <span class="dot active"></span>
+        <span class="dot active"></span>
+        <span class="dot active"></span>
+        <span class="dot active"></span>
+        <span class="dot active"></span>
+        <span class="dot active"></span>
+      </div>
+
+      <div class="header">
+        <div class="title-small">Jagd den Schwein</div>
+
+        <div class="stats">
+          <div>Zeit Verbleibend: <b>{{ timeLeft }}</b></div>
+          <div>Schnitzel : <b>{{ schnitzelCount }}x</b></div>
+        </div>
+      </div>
+
+      <!-- image -->
+      <div class="img-wrap" aria-hidden="true">
+        <img src="assets/pictures/battery.jpg" alt="Battery" />
+      </div>
+
+      <!-- text -->
+      <div class="content">
+        <h2 class="title">Lade Dein Händy</h2>
+        <p class="desc">Lade dein Händy auf</p>
+
+        <div class="status" [class.bad]="!isCharging" [class.good]="isCharging">
+          {{ isCharging ? 'Charging' : 'NOT CHARGING' }}
+        </div>
+      </div>
+
+      <!-- end button (changes style depending on charging) -->
+      <button
+        class="end-btn"
+        type="button"
+        [class.filled]="isCharging"
+        (click)="onEnd()"
+      >
+        Beenden
+      </button>
+    </section>
+
+    <!-- bottom back button -->
+    <div class="bottom">
+      <a class="back-btn" routerLink="/home">
+        <span class="chev">‹</span>
+        Zurück
+      </a>
+    </div>
+  </div>
+</ion-content>
