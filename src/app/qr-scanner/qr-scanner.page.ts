@@ -4,7 +4,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../button/button.component';
 
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import {
+  IonContent,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular/standalone';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -24,8 +29,8 @@ import { RouterLink } from '@angular/router';
   ],
 })
 export class QrScannerPage implements OnInit {
-  timeLeft = '1 Tag';
-  reward = 6;
+  timeLeft = ' 23:10';
+  reward = 1;
 
   status: 'Ready' | 'Scanning' | 'Success' | 'Error' = 'Ready';
   lastResult = '';

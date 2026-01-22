@@ -46,7 +46,7 @@ export class MapsPage implements OnInit, OnDestroy {
   geolocationWatchId: string | null = null;
 
   // Timer display
-  timeRemaining = '5:00';
+  timeRemaining = '29:20';
 
   // Location tracking status
   isTrackingLocation = false;
@@ -56,7 +56,7 @@ export class MapsPage implements OnInit, OnDestroy {
   // Target reached status
   isWithinTargetDistance = false;
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {
     this.initializeLocationTracking();
@@ -65,8 +65,6 @@ export class MapsPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.stopLocationTracking();
   }
-
-
 
   /**
    * Initialize location tracking with permission check
@@ -80,7 +78,10 @@ export class MapsPage implements OnInit, OnDestroy {
       if (permissionStatus.location === 'granted') {
         this.permissionStatus = 'granted';
         await this.startLocationTracking();
-      } else if (permissionStatus.location === 'prompt' || permissionStatus.location === 'prompt-with-rationale') {
+      } else if (
+        permissionStatus.location === 'prompt' ||
+        permissionStatus.location === 'prompt-with-rationale'
+      ) {
         // Request permission
         const requestResult = await Geolocation.requestPermissions();
         console.log('Permission request result:', requestResult);
@@ -90,11 +91,13 @@ export class MapsPage implements OnInit, OnDestroy {
           await this.startLocationTracking();
         } else {
           this.permissionStatus = 'denied';
-          this.locationError = 'Standortzugriff verweigert. Bitte aktivieren Sie die Standortberechtigung in den Einstellungen.';
+          this.locationError =
+            'Standortzugriff verweigert. Bitte aktivieren Sie die Standortberechtigung in den Einstellungen.';
         }
       } else {
         this.permissionStatus = 'denied';
-        this.locationError = 'Standortzugriff verweigert. Bitte aktivieren Sie die Standortberechtigung in den Einstellungen.';
+        this.locationError =
+          'Standortzugriff verweigert. Bitte aktivieren Sie die Standortberechtigung in den Einstellungen.';
       }
     } catch (error) {
       console.error('Error initializing location:', error);
@@ -113,7 +116,7 @@ export class MapsPage implements OnInit, OnDestroy {
       const options: PositionOptions = {
         enableHighAccuracy: true,
         timeout: 10000,
-        maximumAge: 0
+        maximumAge: 0,
       };
 
       // Watch position changes
@@ -125,10 +128,13 @@ export class MapsPage implements OnInit, OnDestroy {
           } else if (position) {
             this.handleLocationUpdate(position);
           }
-        }
+        },
       );
 
-      console.log('Location tracking started with ID:', this.geolocationWatchId);
+      console.log(
+        'Location tracking started with ID:',
+        this.geolocationWatchId,
+      );
     } catch (error) {
       console.error('Error starting location tracking:', error);
       this.locationError = 'Fehler beim Starten der Standortverfolgung.';
@@ -170,7 +176,7 @@ export class MapsPage implements OnInit, OnDestroy {
       longitude: this.userLongitude,
       accuracy: position.coords.accuracy,
       distance: this.distanceToTarget,
-      withinRange: this.isWithinTargetDistance
+      withinRange: this.isWithinTargetDistance,
     });
   }
 
@@ -201,27 +207,36 @@ export class MapsPage implements OnInit, OnDestroy {
 
     const userLatitudeRadians = this.degreesToRadians(this.userLatitude);
     const targetLatitudeRadians = this.degreesToRadians(this.TARGET_LATITUDE);
-    const latitudeDifferenceRadians = this.degreesToRadians(this.TARGET_LATITUDE - this.userLatitude);
-    const longitudeDifferenceRadians = this.degreesToRadians(this.TARGET_LONGITUDE - this.userLongitude);
+    const latitudeDifferenceRadians = this.degreesToRadians(
+      this.TARGET_LATITUDE - this.userLatitude,
+    );
+    const longitudeDifferenceRadians = this.degreesToRadians(
+      this.TARGET_LONGITUDE - this.userLongitude,
+    );
 
     const haversineA =
-      Math.sin(latitudeDifferenceRadians / 2) * Math.sin(latitudeDifferenceRadians / 2) +
-      Math.cos(userLatitudeRadians) * Math.cos(targetLatitudeRadians) *
-      Math.sin(longitudeDifferenceRadians / 2) * Math.sin(longitudeDifferenceRadians / 2);
+      Math.sin(latitudeDifferenceRadians / 2) *
+        Math.sin(latitudeDifferenceRadians / 2) +
+      Math.cos(userLatitudeRadians) *
+        Math.cos(targetLatitudeRadians) *
+        Math.sin(longitudeDifferenceRadians / 2) *
+        Math.sin(longitudeDifferenceRadians / 2);
 
-    const haversineC = 2 * Math.atan2(Math.sqrt(haversineA), Math.sqrt(1 - haversineA));
+    const haversineC =
+      2 * Math.atan2(Math.sqrt(haversineA), Math.sqrt(1 - haversineA));
 
     this.distanceToTarget = Math.round(EARTH_RADIUS_METERS * haversineC);
 
     // Check if user is within target distance
-    this.isWithinTargetDistance = this.distanceToTarget <= this.TARGET_DISTANCE_THRESHOLD;
+    this.isWithinTargetDistance =
+      this.distanceToTarget <= this.TARGET_DISTANCE_THRESHOLD;
   }
 
   /**
    * Convert degrees to radians
    */
   private degreesToRadians(degrees: number): number {
-    return degrees * Math.PI / 180;
+    return (degrees * Math.PI) / 180;
   }
 
   /**
@@ -270,7 +285,7 @@ export class MapsPage implements OnInit, OnDestroy {
     try {
       const position = await Geolocation.getCurrentPosition({
         enableHighAccuracy: true,
-        timeout: 10000
+        timeout: 10000,
       });
 
       this.handleLocationUpdate(position);
