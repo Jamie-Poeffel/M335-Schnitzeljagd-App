@@ -216,3 +216,19 @@
   margin: 12px auto 0;
   flex: 0 0 auto;
 }
+.rotate-illustration {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 10px 0;
+}
+
+.rotate-illustration img {
+  width: 80%;
+  max-width: 260px;  
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
