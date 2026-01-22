@@ -12,12 +12,13 @@
         </div>
       </div>
 
-      <button class="welcome-cta" (click)="goToLeaderboards()">
-        To the Leaderboards
-      </button>
+      <div class="welcome-actions">
+        <button class="welcome-cta" (click)="goToLeaderboards()">
+          Zum Leaderboards
+        </button>
 
-      <!-- changed class name so it doesn't clash with welcome-name -->
-      <button class="change-name" (click)="gotoName()">Change Name</button>
+        <button class="welcome-cta" (click)="gotoName()">Ändere Name</button>
+      </div>
     </div>
   </div>
 
