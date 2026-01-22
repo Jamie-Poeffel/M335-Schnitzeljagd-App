@@ -44,9 +44,10 @@
         <div class="redline">Status: {{ status }}</div>
         <div class="redline">Hinweis: Querformat aktiviert</div>
 
-        <app-button variant="text" routerLink="/speedometer">
+        <app-button variant="text" (click)="onSkip()">
   Überspringen
 </app-button>
+
       </div>
     </section>
     </div>

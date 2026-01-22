@@ -1,11 +1,14 @@
 // rotate.page.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../button/button.component';
 
 import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+
+import { HuntProgressService } from '../hunt-progress-service';
+import { TimeService } from '../time';
 
 @Component({
   selector: 'app-rotate',
@@ -24,17 +27,30 @@ import { RouterLink } from '@angular/router';
   ],
 })
 export class RotatePage implements OnInit {
+  private router = inject(Router);
+  private progress = inject(HuntProgressService);
+  private time = inject(TimeService);
+
+  private readonly TASK_INDEX = 2; // rotate task = 2
+
   timeLeft = '1 Tag';
   reward = 6;
 
   status: 'Bereit' | 'Warten' | 'Erledigt' = 'Bereit';
 
-  constructor() {}
+  ngOnInit() {
+    // start timer when page opens
+    this.time.start(this.TASK_INDEX);
+  }
 
-  ngOnInit() {}
+  private finishTaskAndGoNext() {
+    const secondsTaken = this.time.stop(this.TASK_INDEX);
+    this.progress.completeTask(this.TASK_INDEX, secondsTaken);
+    this.router.navigate(['/speedometer']);
+  }
 
   onSkip() {
-    console.log('überspringen');
+    this.finishTaskAndGoNext();
   }
 
   onDone() {
@@ -42,7 +58,8 @@ export class RotatePage implements OnInit {
 
     setTimeout(() => {
       this.status = 'Erledigt';
-      console.log('gerät gedreht (mock)');
+      // complete task + save rewards + go next
+      this.finishTaskAndGoNext();
     }, 600);
   }
 }
