@@ -1,4 +1,11 @@
-import { Component, OnInit, OnDestroy, inject, NgZone, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  inject,
+  NgZone,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../button/button.component';
@@ -76,7 +83,6 @@ export class MapsPage implements OnInit, OnDestroy {
     this.stopLocationTracking();
   }
 
-
   async initializeLocationTracking() {
     try {
       const permissionStatus = await Geolocation.checkPermissions();
@@ -149,6 +155,19 @@ export class MapsPage implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Handle successful location update
+   */
+  /**
+   * Handle successful location update
+   * Wrapped in NgZone to ensure automatic change detection
+   */ /**
+   * Handle location tracking errors
+   */
+  /**
+   * Handle successful location update
+   * Wrapped in NgZone to ensure automatic change detection
+   */
   private handleLocationUpdate(position: Position | null) {
     if (!position || !position.coords) {
       console.warn('Invalid position data received');
@@ -169,7 +188,7 @@ export class MapsPage implements OnInit, OnDestroy {
         longitude: this.userLongitude,
         accuracy: position.coords.accuracy,
         distance: this.distanceToTarget,
-        withinRange: this.isWithinTargetDistance
+        withinRange: this.isWithinTargetDistance,
       });
 
       if (this.isWithinTargetDistance) {
@@ -180,6 +199,9 @@ export class MapsPage implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Handle location tracking errors
+   */
   private handleLocationError(error: any) {
     this.ngZone.run(() => {
       this.isTrackingLocation = false;
@@ -227,11 +249,17 @@ export class MapsPage implements OnInit, OnDestroy {
 
     this.distanceToTarget = Math.round(EARTH_RADIUS_METERS * haversineC);
 
+    // Check if user is within target distance
+    this.isWithinTargetDistance =
+      this.distanceToTarget <= this.TARGET_DISTANCE_THRESHOLD;
     const previousStatus = this.isWithinTargetDistance;
-    this.isWithinTargetDistance = this.distanceToTarget <= this.TARGET_DISTANCE_THRESHOLD;
+    this.isWithinTargetDistance =
+      this.distanceToTarget <= this.TARGET_DISTANCE_THRESHOLD;
 
     if (previousStatus !== this.isWithinTargetDistance) {
-      console.log(`Distance status changed: ${this.isWithinTargetDistance ? 'WITHIN' : 'OUTSIDE'} target range`);
+      console.log(
+        `Distance status changed: ${this.isWithinTargetDistance ? 'WITHIN' : 'OUTSIDE'} target range`,
+      );
     }
   }
 
