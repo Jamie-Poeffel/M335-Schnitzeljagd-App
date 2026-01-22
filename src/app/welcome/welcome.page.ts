@@ -10,13 +10,14 @@ import { User } from 'src/app/types/user';
 
 import { SchnitzelCardComponent } from 'src/app/components/schnitzel-card/schnitzel-card.component';
 import { Router } from '@angular/router';
+import { LeaderboardPage } from '../leaderboard/leaderboard.page';
 
 @Component({
   selector: 'app-welcome',
   standalone: true,
   templateUrl: './welcome.page.html',
   styleUrls: ['./welcome.page.scss'],
-  imports: [CommonModule, IonicModule, SchnitzelCardComponent],
+  imports: [CommonModule, IonicModule, SchnitzelCardComponent, LeaderboardPage],
 })
 export class WelcomePage {
   private router = inject(Router);
@@ -28,6 +29,10 @@ export class WelcomePage {
   }
 
   startHunt(s: Schnitzel) {
-    this.router.navigateByUrl('maps')
+    this.router.navigateByUrl('accept-cam-loc');
+  }
+
+  goToLeaderboards() {
+    this.router.navigateByUrl('/leaderboard');
   }
 }
