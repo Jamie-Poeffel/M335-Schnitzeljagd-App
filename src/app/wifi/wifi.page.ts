@@ -2,13 +2,14 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { ButtonComponent } from '../button/button.component';
 
 @Component({
   selector: 'app-wifi',
   standalone: true,
   templateUrl: './wifi.page.html',
   styleUrls: ['./wifi.page.scss'],
-  imports: [CommonModule, IonicModule],
+  imports: [CommonModule, IonicModule, ButtonComponent],
 })
 export class WifiPage {
   // demo values (später ersetzt du das mit echten variablen)

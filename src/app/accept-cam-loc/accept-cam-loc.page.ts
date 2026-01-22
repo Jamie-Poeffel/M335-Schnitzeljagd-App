@@ -2,13 +2,14 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { RouterLink } from '@angular/router';
+import { ButtonComponent } from '../button/button.component';
 
 @Component({
   selector: 'app-accept-cam-loc',
   standalone: true,
   templateUrl: './accept-cam-loc.page.html',
   styleUrls: ['./accept-cam-loc.page.scss'],
-  imports: [CommonModule, IonicModule, RouterLink],
+  imports: [CommonModule, IonicModule, RouterLink, ButtonComponent],
 })
 export class AcceptCamLocPage {
   camOk = false;

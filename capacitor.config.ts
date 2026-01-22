@@ -3,11 +3,5 @@ import type { CapacitorConfig } from '@capacitor/cli';
 const config: CapacitorConfig = {
   appId: 'io.ionic.starter',
   appName: 'schnitzeljagt',
-  webDir: 'www'
+  webDir: 'www',
 };
-
-export default config;
-{
-  "webDir": "dist/M335-Schnitzeljagd-App",
-  "bundledWebRuntime": false
-}

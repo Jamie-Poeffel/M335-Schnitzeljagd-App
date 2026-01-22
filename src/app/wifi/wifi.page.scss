@@ -158,7 +158,7 @@ ion-content {
   padding-bottom: 6px;
 }
 
-.bottom {
+.back-btn {
   width: 100%;
   background: #fff;
   border: 2px solid #c97a3e;
@@ -176,17 +176,6 @@ ion-content {
   text-decoration: none;
 
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-  width: min(420px, 100%);
-  display: flex;
-  justify-content: center;
-  padding-bottom: 6px;
-  text-decoration: none;
-  color: #c97a3e;
-  font-size: 16px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 6px;
 }
 
 .chev {
