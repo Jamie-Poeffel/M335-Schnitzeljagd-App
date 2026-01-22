@@ -59,12 +59,14 @@ export class SpeedoMeterPage implements OnInit {
   ngOnInit() {
     this.time.start(this.TASK_INDEX);
     this.Timer();
+
+    this.storage.getObject(this.REWARD_COUNT_ID).then((reward) => { this.reward = reward });
   }
 
   // ===== UI data =====
   title = 'Jagd das Schwein';
   timeLeft = '10:00';
-  reward = this.storage.getObject(this.REWARD_COUNT_ID);
+  reward = "";
 
   taskTitle = 'Renne 12km/h';
   taskDesc = 'Renne 12km/h in einer geraden Linie';
@@ -137,7 +139,7 @@ export class SpeedoMeterPage implements OnInit {
         kmh = Math.max(0, Math.min(kmh, 60)); // 60 km/h cap fürs Rennen
 
         // simples smoothing (damit UI ruhiger ist)
-        const smooth = (this.lastShownKmh * 0.7 + kmh * 0.3) * 3.6; // m/s -> km/h
+        const smooth = Math.floor(kmh * 1.5); // m/s -> km/h
         this.lastShownKmh = smooth;
 
         this.currentSpeed = smooth.toFixed(1);
@@ -197,11 +199,11 @@ export class SpeedoMeterPage implements OnInit {
     return R * c;
   }
   getSchnitzelCount(): number {
-  return Number(localStorage.getItem('schnitzel_count') ?? 0);
-}
+    return Number(localStorage.getItem('schnitzel_count') ?? 0);
+  }
 
-addSchnitzel(amount: number = 1) {
-  const current = this.getSchnitzelCount();
-  localStorage.setItem('schnitzel_count', String(current + amount));
-}
+  addSchnitzel(amount: number = 1) {
+    const current = this.getSchnitzelCount();
+    localStorage.setItem('schnitzel_count', String(current + amount));
+  }
 }

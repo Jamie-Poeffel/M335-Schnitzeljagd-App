@@ -45,7 +45,7 @@ export class RotatePage implements OnInit, OnDestroy {
   private readonly MAX_TIME = 0.5;
 
   timeLeft = '0:30';
-  reward = this.storage.getObject(this.REWARD_COUNT_ID);
+  reward = "";
 
   Timer() {
     setInterval(() => {
@@ -69,6 +69,8 @@ export class RotatePage implements OnInit, OnDestroy {
   async ngOnInit() {
     this.time.start(this.TASK_INDEX);
     this.Timer();
+
+    this.storage.getObject(this.REWARD_COUNT_ID).then((reward) => { this.reward = reward });
 
     this.motionListener = await Motion.addListener('accel', (event: any) => {
       if (this.completed) return;
@@ -153,11 +155,11 @@ export class RotatePage implements OnInit, OnDestroy {
     if (this.holdInterval) clearInterval(this.holdInterval);
   }
   getSchnitzelCount(): number {
-  return Number(localStorage.getItem('schnitzel_count') ?? 0);
-}
+    return Number(localStorage.getItem('schnitzel_count') ?? 0);
+  }
 
-addSchnitzel(amount: number = 1) {
-  const current = this.getSchnitzelCount();
-  localStorage.setItem('schnitzel_count', String(current + amount));
-}
+  addSchnitzel(amount: number = 1) {
+    const current = this.getSchnitzelCount();
+    localStorage.setItem('schnitzel_count', String(current + amount));
+  }
 }

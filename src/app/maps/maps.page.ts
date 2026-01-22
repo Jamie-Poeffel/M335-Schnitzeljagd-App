@@ -22,6 +22,7 @@ import { Geolocation, Position, PositionOptions } from '@capacitor/geolocation';
 
 import { HuntProgressService } from '../hunt-progress-service';
 import { TimeService } from '../time';
+import { Storage } from '../storage';
 
 @Component({
   selector: 'app-maps',
@@ -44,8 +45,13 @@ export class MapsPage implements OnInit, OnDestroy {
   private time = inject(TimeService);
   private ngZone = inject(NgZone);
   private cdr = inject(ChangeDetectorRef);
+  private storage = inject(Storage);
 
-  private readonly TASK_INDEX = 1; // maps task = 1
+  private readonly TASK_INDEX = 1;
+  private readonly REWARD_COUNT_ID = `rw_${this.TASK_INDEX}`
+
+  reward = ""
+
 
   // Target destination ()
   readonly TARGET_LATITUDE = 47.02745752832616;
@@ -70,6 +76,8 @@ export class MapsPage implements OnInit, OnDestroy {
     // start task timer + start tracking
     this.time.start(this.TASK_INDEX);
     this.Timer();
+
+    this.storage.getObject(this.REWARD_COUNT_ID).then((reward) => { this.reward = reward });
     this.initializeLocationTracking();
   }
 
@@ -162,8 +170,8 @@ export class MapsPage implements OnInit, OnDestroy {
    * Handle successful location update
    * Wrapped in NgZone to ensure automatic change detection
    */ /**
-   * Handle location tracking errors
-   */
+* Handle location tracking errors
+*/
   /**
    * Handle successful location update
    * Wrapped in NgZone to ensure automatic change detection
@@ -198,14 +206,14 @@ export class MapsPage implements OnInit, OnDestroy {
       this.cdr.detectChanges();
     });
   }
-getSchnitzelCount(): number {
-  return Number(localStorage.getItem('schnitzel_count') ?? 0);
-}
+  getSchnitzelCount(): number {
+    return Number(localStorage.getItem('schnitzel_count') ?? 0);
+  }
 
-addSchnitzel(amount: number = 1) {
-  const current = this.getSchnitzelCount();
-  localStorage.setItem('schnitzel_count', String(current + amount));
-}
+  addSchnitzel(amount: number = 1) {
+    const current = this.getSchnitzelCount();
+    localStorage.setItem('schnitzel_count', String(current + amount));
+  }
   /**
    * Handle location tracking errors
    */
