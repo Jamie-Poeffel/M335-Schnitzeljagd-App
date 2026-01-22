@@ -7,17 +7,14 @@ export const routes: Routes = [
     loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
   },
   {
-    path: 'welcome',
-    loadComponent: () =>
-      import('./welcome/welcome.page').then((m) => m.WelcomePage),
-  },
-  {
     path: 'rotate',
-    loadComponent: () => import('./rotate/rotate.page').then(m => m.RotatePage)
+    loadComponent: () =>
+      import('./rotate/rotate.page').then((m) => m.RotatePage),
   },
   {
     path: 'speedometer',
-    loadComponent: () => import('./speedometer/speedometer.page').then(m => m.SpeedoMeterPage)
+    loadComponent: () =>
+      import('./speedometer/speedometer.page').then((m) => m.SpeedoMeterPage),
   },
   {
     path: 'accept-cam-loc',
@@ -44,15 +41,16 @@ export const routes: Routes = [
   },
   {
     path: 'wifi',
-    loadComponent: () => import('./wifi/wifi.page').then(m => m.WifiPage)
-  },  {
+    loadComponent: () => import('./wifi/wifi.page').then((m) => m.WifiPage),
+  },
+  {
     path: 'charging',
-    loadComponent: () => import('./charging/charging.page').then( m => m.ChargingPage)
+    loadComponent: () =>
+      import('./charging/charging.page').then((m) => m.ChargingPage),
   },
   {
     path: 'congrats',
-    loadComponent: () => import('./congrats/congrats.page').then( m => m.CongratsPage)
+    loadComponent: () =>
+      import('./congrats/congrats.page').then((m) => m.CongratsPage),
   },
-
-
 ];

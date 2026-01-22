@@ -27,6 +27,6 @@ export class HomePage {
     }
 
     localStorage.setItem('user_name', cleaned);
-    this.router.navigateByUrl('/welcome');
+    this.router.navigateByUrl('/leaderboard');
   }
 }
