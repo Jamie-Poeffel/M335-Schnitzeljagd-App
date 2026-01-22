@@ -1,8 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
+import { Geolocation } from '@capacitor/geolocation';
 import { RouterLink } from '@angular/router';
+import { Capacitor } from '@capacitor/core';
 import { ButtonComponent } from '../button/button.component';
+import {
+  NativeSettings,
+  AndroidSettings,
+  IOSSettings,
+} from 'capacitor-native-settings';
 
 @Component({
   selector: 'app-accept-cam-loc',
@@ -11,7 +18,7 @@ import { ButtonComponent } from '../button/button.component';
   styleUrls: ['./accept-cam-loc.page.scss'],
   imports: [CommonModule, IonicModule, RouterLink, ButtonComponent],
 })
-export class AcceptCamLocPage {
+export class AcceptCamLocPage implements OnInit {
   camOk = false;
   locOk = false;
 
@@ -19,8 +26,55 @@ export class AcceptCamLocPage {
     this.camOk = !this.camOk;
   }
 
+  async openLocationSettings() {
+    const platform = Capacitor.getPlatform();
+
+    if (platform === 'android') {
+      NativeSettings.openAndroid({
+        option: AndroidSettings.Location,
+      });
+    } else if (platform === 'ios') {
+      NativeSettings.openIOS({
+        option: IOSSettings.App,
+      });
+    } else {
+      console.log('Platform not supported or running in web');
+    }
+  }
+
+  ngOnInit() {
+    this.checkLocationPermission().then((ok) => {
+      this.locOk = ok;
+    });
+  }
+
+  checkCameraPermission(): void {}
+
+  async checkLocationPermission(prompt: boolean = false): Promise<boolean> {
+    const permissionStatus = await Geolocation.checkPermissions();
+
+    if (permissionStatus.location === 'granted') {
+      return true;
+    }
+
+    if (!prompt) {
+      return false;
+    }
+
+    if (permissionStatus.location !== 'prompt') {
+      this.openLocationSettings().then(async () =>
+        this.checkLocationPermission(),
+      );
+      return false;
+    }
+
+    return false;
+  }
+
   toggleLoc(): void {
-    this.locOk = !this.locOk;
+    this.checkLocationPermission().then((ok) => {
+      this.locOk = ok;
+    });
   }
 
   onStart(): void {

@@ -288,7 +288,6 @@ export class MapsPage implements OnInit, OnDestroy {
   }
 
   onSkip() {
-    // später: navigation / next step
-    console.log('skip');
+    this.router.navigateByUrl('qr-scanner');
   }
 }
