@@ -42,10 +42,9 @@ export class QrScannerPage implements OnInit {
   private readonly TASK_INDEX = 1;
   private readonly MAX_TIME = 10;
   private readonly REWARD_COUNT_ID = `rw_${this.TASK_INDEX}`
+  reward = "";
 
   private readonly RESULT = "djsdgzoezkhdkdgvkiwehtiugfi";
-
-  reward = this.storage.getObject(this.REWARD_COUNT_ID);
 
   Timer() {
     const intervalId = setInterval(() => {
@@ -68,6 +67,9 @@ export class QrScannerPage implements OnInit {
   ngOnInit() {
     this.timeService.start(this.TASK_INDEX);
     this.Timer();
+
+    this.storage.getObject(this.REWARD_COUNT_ID).then((reward) => { this.reward = reward });
+
   }
 
   async scanQR() {
@@ -103,11 +105,11 @@ export class QrScannerPage implements OnInit {
     }, 700);
   }
   getSchnitzelCount(): number {
-  return Number(localStorage.getItem('schnitzel_count') ?? 0);
-}
+    return Number(localStorage.getItem('schnitzel_count') ?? 0);
+  }
 
-addSchnitzel(amount: number = 1) {
-  const current = this.getSchnitzelCount();
-  localStorage.setItem('schnitzel_count', String(current + amount));
-}
+  addSchnitzel(amount: number = 1) {
+    const current = this.getSchnitzelCount();
+    localStorage.setItem('schnitzel_count', String(current + amount));
+  }
 }

@@ -4,6 +4,7 @@ import {
   OnDestroy,
   NgZone,
   ChangeDetectorRef,
+  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
@@ -11,17 +12,26 @@ import { Router } from '@angular/router';
 import { Network, ConnectionStatus } from '@capacitor/network';
 import { Haptics } from '@capacitor/haptics';
 import { ButtonComponent } from '../button/button.component';
+import { TimeService } from '../time';
+import { Storage } from '../storage';
 
 @Component({
   selector: 'app-wifi',
   standalone: true,
   templateUrl: './wifi.page.html',
   styleUrls: ['./wifi.page.scss'],
-  imports: [CommonModule, IonicModule, ButtonComponent],
+  imports: [IonicModule, ButtonComponent],
 })
 export class WifiPage implements OnInit, OnDestroy {
-  timeLeft = '8min 14 sek';
-  schnitzelCount = 4;
+  private time = inject(TimeService);
+  private storage = inject(Storage);
+
+  private readonly TASK_INDEX = 5;
+  private readonly MAX_TIME = 5;
+  private readonly REWARD_COUNT_ID = `rw_${this.TASK_INDEX}`
+
+  timeLeft = '5:00';
+  reward = "";
 
   ssid = 'ICT-KR6';
   password = 'EF-3A-03-AF-08-53';
@@ -35,9 +45,19 @@ export class WifiPage implements OnInit, OnDestroy {
     private router: Router,
     private ngZone: NgZone,
     private cdr: ChangeDetectorRef,
-  ) {}
+  ) { }
+
+  Timer() {
+    setInterval(() => {
+      this.timeLeft = this.time.getTimeRemaining(this.TASK_INDEX, this.MAX_TIME);
+    }, 1000);
+  }
 
   async ngOnInit() {
+    this.time.start(this.TASK_INDEX);
+    this.Timer();
+    this.storage.getObject(this.REWARD_COUNT_ID).then((reward) => { this.reward = reward });
+
     const status = await Network.getStatus();
     this.checkWifi(status);
 

@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { ButtonComponent } from '../button/button.component';
 import { TimeService } from '../time';
 import { Device } from '@capacitor/device';
+import { Storage } from '../storage';
 
 @Component({
   selector: 'app-charging',
@@ -14,11 +15,14 @@ import { Device } from '@capacitor/device';
 })
 export class ChargingPage implements OnInit {
   private router = inject(Router);
-  // demo values
   timeLeft = '5:00';
   private timeService = inject(TimeService);
+  private storage = inject(Storage)
   private readonly TASK_INDEX = 6;
   private readonly MAX_MINUTES = 5;
+  private readonly REWARD_COUNT_ID = `rw_${this.TASK_INDEX}`;
+
+  reward = ""
 
   Timer() {
     setInterval(async () => {
@@ -45,6 +49,7 @@ export class ChargingPage implements OnInit {
   ngOnInit() {
     this.timeService.start(this.TASK_INDEX);
     this.Timer();
+    this.storage.getObject(this.REWARD_COUNT_ID).then((reward) => { this.reward = reward });
   }
 
   onSkip() {
@@ -55,11 +60,11 @@ export class ChargingPage implements OnInit {
     this.router.navigateByUrl('congrats');
   }
   getSchnitzelCount(): number {
-  return Number(localStorage.getItem('schnitzel_count') ?? 0);
-}
+    return Number(localStorage.getItem('schnitzel_count') ?? 0);
+  }
 
-addSchnitzel(amount: number = 1) {
-  const current = this.getSchnitzelCount();
-  localStorage.setItem('schnitzel_count', String(current + amount));
-}
+  addSchnitzel(amount: number = 1) {
+    const current = this.getSchnitzelCount();
+    localStorage.setItem('schnitzel_count', String(current + amount));
+  }
 }
