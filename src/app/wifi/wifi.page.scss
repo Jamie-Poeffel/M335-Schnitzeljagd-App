@@ -1,36 +1,37 @@
-/* kein scroll */
-ion-content {
+.no-scroll {
   --overflow: hidden;
 }
+.no-scroll::part(scroll) {
+  overflow: hidden !important;
+}
 
+/* page layout like your other tasks */
 .screen {
   height: 100%;
-  width: 100%;
   padding: 26px 18px 18px;
-  background: #ffffff;
-
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-
+  background: #ffffff;
   overflow: hidden;
 }
 
-/* main card */
+.main {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+/* card looks same as rotate/speedometer */
 .card {
   width: min(420px, 100%);
+  margin: 0 auto;
   background: #f7f7f7;
-  border-radius: 34px;
-  padding: 18px 16px 18px;
+  border-radius: 30px;
+  padding: 18px 16px;
   box-shadow: 0 18px 45px rgba(0, 0, 0, 0.15);
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  overflow: hidden;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* dots */
@@ -38,8 +39,7 @@ ion-content {
   display: flex;
   justify-content: center;
   gap: 6px;
-  margin-top: 4px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 .dot {
   width: 8px;
@@ -54,100 +54,124 @@ ion-content {
 
 /* header */
 .header {
-  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
 }
+
 .title-small {
-  text-align: center;
-  font-weight: 600;
-  font-size: 14px;
+  font-size: 12px;
+  font-weight: 800;
   color: #222;
+  opacity: 0.9;
   margin-top: 2px;
 }
+
 .stats {
-  margin-top: 14px;
   font-size: 13px;
   color: #222;
-  line-height: 1.55;
+  line-height: 1.45;
+  text-align: right;
 }
 .stats b {
-  font-weight: 700;
+  font-weight: 800;
 }
 
-/* wifi icon */
+/* wifi icon block (same “frame” vibe as rotate area) */
 .wifi-wrap {
   width: 100%;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  margin-bottom: 14px;
+
   display: grid;
   place-items: center;
-  padding: 12px 0 8px;
-}
-.wifi-svg {
-  width: 240px;
-  max-width: 80%;
-  height: auto;
 }
 
-/* content */
-.content {
-  width: 100%;
-  margin-top: 8px;
-  padding: 0 6px;
+.wifi-svg {
+  width: min(190px, 55vw);
+  height: auto;
+  opacity: 0.95;
 }
-.title {
-  margin: 10px 0 6px;
+
+/* content block */
+.content {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 16px 14px 12px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.content .title {
+  margin: 0;
   font-size: 22px;
-  font-weight: 700;
+  font-weight: 800;
   color: #111;
 }
+
 .desc {
-  margin: 0 0 12px;
+  margin: 8px 0 12px;
   color: #333;
   font-size: 13px;
   line-height: 1.35;
 }
 
-/* name / pw layout */
+/* name/password grid */
 .grid {
   display: grid;
   grid-template-columns: 90px 1fr;
-  gap: 10px 12px;
+  gap: 10px 10px;
   align-items: center;
-  margin-top: 10px;
+  margin-bottom: 12px;
 }
+
 .label {
   font-size: 13px;
-  color: #222;
-  font-weight: 600;
+  font-weight: 800;
+  color: #111;
 }
+
 .value {
   font-size: 13px;
   color: #222;
-  text-align: left;
-  word-break: break-word;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-/* status */
+/* status pill */
 .status {
-  margin-top: 14px;
+  margin-top: 4px;
+  padding: 10px 12px;
+  border-radius: 999px;
   font-size: 13px;
-  font-weight: 700;
-}
-.status.bad {
-  color: #e53935;
-}
-.status.good {
-  color: #16a34a;
+  font-weight: 800;
+  text-align: center;
+  border: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-/* bottom */
+.status.good {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status.bad {
+  background: #ffebee;
+  color: #c62828;
+}
+
+/* bottom button always visible */
 .bottom {
   width: min(420px, 100%);
-  display: flex;
-  justify-content: center;
-  padding-bottom: 6px;
-}
-
-.chev {
-  font-size: 26px;
-  line-height: 0;
-  margin-top: -2px;
+  margin: 12px auto 0;
+  flex: 0 0 auto;
 }

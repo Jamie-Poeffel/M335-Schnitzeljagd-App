@@ -1,8 +1,10 @@
 // qr.page.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../button/button.component';
+import { CapacitorBarcodeScanner, CapacitorBarcodeScannerScanResult, CapacitorBarcodeScannerTypeHintALLOption } from '@capacitor/barcode-scanner';
+
 
 import {
   IonContent,
@@ -10,7 +12,8 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/angular/standalone';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { TimeService } from '../time';
 
 @Component({
   selector: 'app-qr',
@@ -22,25 +25,66 @@ import { RouterLink } from '@angular/router';
     IonHeader,
     IonTitle,
     IonToolbar,
-    CommonModule,
     FormsModule,
     RouterLink,
     ButtonComponent,
   ],
 })
 export class QrScannerPage implements OnInit {
-  timeLeft = ' 23:10';
-  reward = 1;
+  private timeService = inject(TimeService);
+  private router = inject(Router);
 
+  timeLeft = '10:00';
+
+  reward = 1;
+  private readonly TASK_INDEX = 1;
+  private readonly MAX_TIME = 10;
+  private readonly RESULT = "djsdgzoezkhdkdgvkiwehtiugfi";
+
+  Timer() {
+    const intervalId = setInterval(() => {
+      this.timeLeft = this.timeService.getTimeRemaining(this.TASK_INDEX, this.MAX_TIME);
+
+      if (this.status == "Success") {
+        this.timeService.stop(this.TASK_INDEX);
+
+        this.timeLeft = this.timeService.getTimeRemaining(this.TASK_INDEX, this.MAX_TIME);
+
+        clearInterval(intervalId);
+      }
+    }, 1000);
+  }
   status: 'Ready' | 'Scanning' | 'Success' | 'Error' = 'Ready';
   lastResult = '';
 
-  constructor() {}
+  constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.timeService.start(this.TASK_INDEX);
+    this.Timer();
+  }
+
+  async scanQR() {
+    const result = await CapacitorBarcodeScanner.scanBarcode({
+      hint: CapacitorBarcodeScannerTypeHintALLOption.ALL
+    });
+
+    if (result.ScanResult) {
+      this.lastResult = result.ScanResult;
+      if (this.lastResult === this.RESULT) {
+        this.status = "Success";
+        this.timeService.stop(this.TASK_INDEX);
+      }
+    }
+  }
+
 
   onSkip() {
-    console.log('skip');
+    this.router.navigateByUrl('rotate')
+  }
+
+  onMoveOn() {
+    this.router.navigateByUrl('rotate')
   }
 
   onScanMock() {

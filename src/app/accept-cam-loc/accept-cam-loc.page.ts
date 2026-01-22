@@ -9,6 +9,8 @@ import {
   AndroidSettings,
   IOSSettings,
 } from 'capacitor-native-settings';
+import { CapacitorBarcodeScanner } from '@capacitor/barcode-scanner';
+import { Camera } from '@capacitor/camera';
 
 @Component({
   selector: 'app-accept-cam-loc',
@@ -22,7 +24,9 @@ export class AcceptCamLocPage implements OnInit {
   locOk = false;
 
   toggleCam(): void {
-    this.camOk = !this.camOk;
+    this.checkLocationPermission(true).then((ok) => {
+      this.locOk = ok;
+    });
   }
 
   async openLocationSettings() {
@@ -45,9 +49,34 @@ export class AcceptCamLocPage implements OnInit {
     this.checkLocationPermission().then((ok) => {
       this.locOk = ok;
     });
+
+    this.checkCameraPermission().then((ok) => {
+      this.camOk = ok;
+    });
   }
 
-  checkCameraPermission(): void { }
+
+  async checkCameraPermission(prompt: boolean = false) {
+    let perm = await Camera.checkPermissions();
+
+    if (perm.camera === "granted") {
+      return true;
+    }
+
+    if (!prompt) {
+      return false;
+    }
+
+
+    perm = await Camera.requestPermissions();
+
+
+    if (perm.camera !== "granted") {
+      return false
+    }
+
+    return true
+  }
 
   async checkLocationPermission(prompt: boolean = false): Promise<boolean> {
     const permissionStatus = await Geolocation.checkPermissions();
@@ -60,12 +89,14 @@ export class AcceptCamLocPage implements OnInit {
       return false;
     }
 
-    if (permissionStatus.location !== "prompt") {
-      await this.openLocationSettings();
-      return this.checkLocationPermission();
+    const perm = await Geolocation.requestPermissions();
+
+    if (perm.location !== "granted") {
+      return false
     }
 
-    return false;
+    return true;
+
   }
 
 

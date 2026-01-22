@@ -1,5 +1,5 @@
+// rotate.page.ts
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
@@ -28,7 +28,6 @@ import { TimeService } from '../time';
     IonHeader,
     IonTitle,
     IonToolbar,
-    CommonModule,
     FormsModule,
     RouterLink,
     ButtonComponent,
@@ -60,7 +59,7 @@ export class RotatePage implements OnInit, OnDestroy {
   async ngOnInit() {
     this.time.start(this.TASK_INDEX);
 
-    this.motionListener = await Motion.addListener('accel', (event) => {
+    this.motionListener = await Motion.addListener('accel', (event: any) => {
       if (this.completed) return;
 
       const x = event.accelerationIncludingGravity?.x ?? 0;
@@ -88,8 +87,9 @@ export class RotatePage implements OnInit, OnDestroy {
   }
 
   private finishTaskAndGoNext() {
-    const secondsTaken = this.time.stop(this.TASK_INDEX);
-    this.progress.completeTask(this.TASK_INDEX, secondsTaken);
+    const time = this.time.stop(this.TASK_INDEX);
+    this.progress.completeTask(this.TASK_INDEX, time);
+    this.router.navigate(['/speedometer']);
   }
 
   onSkip() {
