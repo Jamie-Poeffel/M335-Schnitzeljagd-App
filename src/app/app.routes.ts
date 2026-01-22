@@ -45,6 +45,10 @@ export const routes: Routes = [
   {
     path: 'wifi',
     loadComponent: () => import('./wifi/wifi.page').then(m => m.WifiPage)
+  },  {
+    path: 'charging',
+    loadComponent: () => import('./charging/charging.page').then( m => m.ChargingPage)
   },
+
 
 ];

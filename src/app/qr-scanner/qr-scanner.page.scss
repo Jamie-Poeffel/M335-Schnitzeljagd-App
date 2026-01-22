@@ -6,25 +6,34 @@
   overflow: hidden !important;
 }
 
-/* page container */
+/* full page layout: card area + bottom button */
 .screen {
-  min-height: 100%;
+  height: 100%;
   padding: 26px 18px 18px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 18px;
   background: #ffffff;
   overflow: hidden;
 }
 
-/* main card */
+/* takes remaining space above bottom button */
+.main {
+  flex: 1;
+  min-height: 0; /* IMPORTANT for inner scrolling */
+  display: flex;
+}
+
+/* card scrolls internally if it gets too tall */
 .card {
   width: min(420px, 100%);
+  margin: 0 auto;
   background: #f7f7f7;
   border-radius: 30px;
   padding: 18px 16px;
   box-shadow: 0 18px 45px rgba(0, 0, 0, 0.15);
+
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* progress dots */
@@ -80,7 +89,7 @@
 }
 
 .scan-placeholder {
-  height: 320px;
+  height: clamp(200px, 34vh, 300px); /* responsive! */
   border-radius: 14px;
   background: linear-gradient(180deg, #ffffff, #f2f2f2);
   display: flex;
@@ -91,8 +100,8 @@
 }
 
 .scan-box {
-  width: 210px;
-  height: 210px;
+  width: min(210px, 70vw);
+  aspect-ratio: 1 / 1;
   border-radius: 18px;
   border: 3px solid rgba(201, 122, 62, 0.85);
   box-shadow: inset 0 0 0 9999px rgba(0, 0, 0, 0.06);
@@ -161,10 +170,6 @@
 /* bottom button */
 .bottom {
   width: min(420px, 100%);
-  display: flex;
-  justify-content: center;
-  padding-bottom: 6px;
-  color: #c97a3e;
-  font-size: 16px;
-  font-weight: 600;
+  margin: 12px auto 0;
+  flex: 0 0 auto;
 }
