@@ -69,6 +69,7 @@ export class MapsPage implements OnInit, OnDestroy {
     this.stopLocationTracking();
   }
 
+
   async initializeLocationTracking() {
     try {
       const permissionStatus = await Geolocation.checkPermissions();
@@ -120,7 +121,7 @@ export class MapsPage implements OnInit, OnDestroy {
           } else if (position) {
             this.handleLocationUpdate(position);
           }
-        }
+        },
       );
     } catch (error) {
       console.error('Error starting location tracking:', error);
@@ -141,19 +142,6 @@ export class MapsPage implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Handle successful location update
-   */
-  /**
-   * Handle successful location update
-   * Wrapped in NgZone to ensure automatic change detection
-   */  /**
-* Handle location tracking errors
-*/
-  /**
-   * Handle successful location update
-   * Wrapped in NgZone to ensure automatic change detection
-   */
   private handleLocationUpdate(position: Position | null) {
     if (!position || !position.coords) {
       console.warn('Invalid position data received');
@@ -181,14 +169,10 @@ export class MapsPage implements OnInit, OnDestroy {
         console.log('🎯 Target reached! Within threshold distance.');
       }
 
-      // Force change detection to ensure UI updates
       this.cdr.detectChanges();
     });
   }
 
-  /**
- * Handle location tracking errors
- */
   private handleLocationError(error: any) {
     this.ngZone.run(() => {
       this.isTrackingLocation = false;
@@ -203,12 +187,7 @@ export class MapsPage implements OnInit, OnDestroy {
       this.cdr.detectChanges();
     });
   }
-  /**
-   * Calculate distance from user to target using Haversine formula
-   */
-  /**
-   * Calculate distance from user to target using Haversine formula
-   */
+
   calculateDistanceToTarget() {
     if (this.userLatitude === null || this.userLongitude === null) {
       console.warn('Cannot calculate distance: coordinates not available');
@@ -219,32 +198,38 @@ export class MapsPage implements OnInit, OnDestroy {
 
     const EARTH_RADIUS_METERS = 6371e3;
 
-    const userLatRad = this.degreesToRadians(this.userLatitude);
-    const targetLatRad = this.degreesToRadians(this.TARGET_LATITUDE);
-    const dLat = this.degreesToRadians(this.TARGET_LATITUDE - this.userLatitude);
-    const dLon = this.degreesToRadians(this.TARGET_LONGITUDE - this.userLongitude);
+    const userLatitudeRadians = this.degreesToRadians(this.userLatitude);
+    const targetLatitudeRadians = this.degreesToRadians(this.TARGET_LATITUDE);
+    const latitudeDifferenceRadians = this.degreesToRadians(
+      this.TARGET_LATITUDE - this.userLatitude,
+    );
+    const longitudeDifferenceRadians = this.degreesToRadians(
+      this.TARGET_LONGITUDE - this.userLongitude,
+    );
 
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(userLatRad) * Math.cos(targetLatRad) *
-      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const haversineA =
+      Math.sin(latitudeDifferenceRadians / 2) *
+        Math.sin(latitudeDifferenceRadians / 2) +
+      Math.cos(userLatitudeRadians) *
+        Math.cos(targetLatitudeRadians) *
+        Math.sin(longitudeDifferenceRadians / 2) *
+        Math.sin(longitudeDifferenceRadians / 2);
 
-    const haversineC = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const haversineC =
+      2 * Math.atan2(Math.sqrt(haversineA), Math.sqrt(1 - haversineA));
 
     this.distanceToTarget = Math.round(EARTH_RADIUS_METERS * haversineC);
 
-    // Check if user is within target distance
     const previousStatus = this.isWithinTargetDistance;
     this.isWithinTargetDistance = this.distanceToTarget <= this.TARGET_DISTANCE_THRESHOLD;
 
-    // Log when status changes
     if (previousStatus !== this.isWithinTargetDistance) {
       console.log(`Distance status changed: ${this.isWithinTargetDistance ? 'WITHIN' : 'OUTSIDE'} target range`);
     }
   }
 
   private degreesToRadians(degrees: number): number {
-    return degrees * Math.PI / 180;
+    return (degrees * Math.PI) / 180;
   }
 
   getFormattedDistance(): string {
@@ -261,11 +246,24 @@ export class MapsPage implements OnInit, OnDestroy {
     await this.initializeLocationTracking();
   }
 
-  // ✅ completes task + stores schnitzel/potato + navigates
   private finishTaskAndGoNext() {
     const secondsTaken = this.time.stop(this.TASK_INDEX);
     this.progress.completeTask(this.TASK_INDEX, secondsTaken);
     this.router.navigate(['/qr-scanner']);
+  }
+
+  async getCurrentPosition() {
+    try {
+      const position = await Geolocation.getCurrentPosition({
+        enableHighAccuracy: true,
+        timeout: 10000,
+      });
+
+      this.handleLocationUpdate(position);
+    } catch (error) {
+      console.error('Error getting current position:', error);
+      this.locationError = 'Fehler beim Abrufen der aktuellen Position.';
+    }
   }
 
   onContinue() {
