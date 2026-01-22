@@ -65,11 +65,9 @@ export class RotatePage implements OnInit, OnDestroy {
       const x = event.accelerationIncludingGravity?.x ?? 0;
       const y = event.accelerationIncludingGravity?.y ?? 0;
 
-      // 👉 Icon live rotieren lassen
       const angle = Math.atan2(y, x) * (180 / Math.PI);
       this.phoneRotation = angle - 90;
 
-      // 👉 AUF KOPF erkennen (Y stark negativ)
       const upsideDownNow = y < -7 && Math.abs(y) > Math.abs(x);
 
       if (upsideDownNow !== this.isUpsideDown) {
@@ -86,19 +84,21 @@ export class RotatePage implements OnInit, OnDestroy {
     });
   }
 
-  private finishTaskAndGoNext() {
+  private finishTask() {
     const time = this.time.stop(this.TASK_INDEX);
     this.progress.completeTask(this.TASK_INDEX, time);
-    this.router.navigate(['/speedometer']);
   }
 
   onSkip() {
-    this.finishTaskAndGoNext();
+    this.finishTask();
+    this.router.navigate(['/speedometer']);
+
   }
 
   onDone() {
     if (!this.completed) return;
-    this.finishTaskAndGoNext();
+    this.finishTask();
+    this.router.navigate(['/speedometer']);
   }
 
   private startHoldTimer() {
@@ -130,9 +130,7 @@ export class RotatePage implements OnInit, OnDestroy {
     this.completed = true;
     this.status = 'Erledigt';
 
-    setTimeout(() => {
-      this.finishTaskAndGoNext();
-    }, 600);
+    this.finishTask();
   }
 
   get progressPercent() {
