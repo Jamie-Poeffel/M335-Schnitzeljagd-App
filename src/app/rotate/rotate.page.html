@@ -22,27 +22,34 @@
         <div class="rotate-frame">
           <div class="rotate-placeholder">
             <div class="rotate-illustration">
-              <img src="assets/pictures/RotatePhone.png" alt="Handy drehen" />
+              <div
+                class="phone-icon"
+                [style.transform]="'rotate(' + phoneRotation + 'deg)'"
+              >
+                <div class="speaker"></div>
+                <div class="screen-inner"></div>
+                <div class="home-dot"></div>
+              </div>
             </div>
 
             <div class="rotate-text">
               <ng-container *ngIf="!completed; else doneTpl">
-                <ng-container *ngIf="isLandscape; else rotateTpl">
+                <ng-container *ngIf="isUpsideDown; else rotateTpl">
                   Halte so… <b>{{ (HOLD_DURATION - holdTime).toFixed(1) }}s</b>
                 </ng-container>
 
                 <ng-template #rotateTpl>
-                  Drehe dein Handy ins <b>Querformat</b>.
+                  Drehe dein Handy ins <b>aufem Kopf</b>.
                 </ng-template>
               </ng-container>
 
               <ng-template #doneTpl>
-                <b>Perfekt!</b> Aufgabe abgeschlossen!
+                <b>Perfekt! </b> Aufgabe abgeschlossen!
               </ng-template>
             </div>
 
             <!-- Progress -->
-            <div *ngIf="isLandscape && !completed" class="hold-box">
+            <div *ngIf="isUpsideDown && !completed" class="hold-box">
               <div class="hold-row">
                 <span>Halte Position</span>
                 <span
@@ -60,9 +67,9 @@
             </div>
 
             <!-- Button -->
-            <button class="done-btn" (click)="onDone()" [disabled]="!completed">
-              Erledigt
-            </button>
+            @if (completed) {
+            <button class="done-btn" (click)="onDone()">Erledigt</button>
+            }
           </div>
         </div>
 

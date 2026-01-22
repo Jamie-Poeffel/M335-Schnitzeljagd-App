@@ -39,40 +39,44 @@ export class RotatePage implements OnInit, OnDestroy {
   private progress = inject(HuntProgressService);
   private time = inject(TimeService);
 
-  private readonly TASK_INDEX = 2; // rotate task = 2
+  private readonly TASK_INDEX = 2;
 
   timeLeft = '1 Tag';
   reward = 6;
 
   status: 'Bereit' | 'Warten' | 'Erledigt' = 'Bereit';
 
-  isLandscape = false;
+  isUpsideDown = false;
   holdTime = 0;
   completed = false;
 
   readonly HOLD_DURATION = 5;
 
+  phoneRotation = 0;
+
   private motionListener?: PluginListenerHandle;
   private holdInterval?: ReturnType<typeof setInterval>;
 
   async ngOnInit() {
-    // timer starten, sobald page offen ist
     this.time.start(this.TASK_INDEX);
 
-    // Sensor listener
     this.motionListener = await Motion.addListener('accel', (event) => {
       if (this.completed) return;
 
       const x = event.accelerationIncludingGravity?.x ?? 0;
       const y = event.accelerationIncludingGravity?.y ?? 0;
 
-      // Querformat-Erkennung: x stark + dominiert y
-      const landscapeNow = Math.abs(x) > 7 && Math.abs(x) > Math.abs(y);
+      // 👉 Icon live rotieren lassen
+      const angle = Math.atan2(y, x) * (180 / Math.PI);
+      this.phoneRotation = angle - 90;
 
-      if (landscapeNow !== this.isLandscape) {
-        this.isLandscape = landscapeNow;
+      // 👉 AUF KOPF erkennen (Y stark negativ)
+      const upsideDownNow = y < -7 && Math.abs(y) > Math.abs(x);
 
-        if (landscapeNow) {
+      if (upsideDownNow !== this.isUpsideDown) {
+        this.isUpsideDown = upsideDownNow;
+
+        if (upsideDownNow) {
           this.status = 'Warten';
           this.startHoldTimer();
         } else {
@@ -86,7 +90,6 @@ export class RotatePage implements OnInit, OnDestroy {
   private finishTaskAndGoNext() {
     const secondsTaken = this.time.stop(this.TASK_INDEX);
     this.progress.completeTask(this.TASK_INDEX, secondsTaken);
-    this.router.navigate(['/speedometer']);
   }
 
   onSkip() {
@@ -127,7 +130,6 @@ export class RotatePage implements OnInit, OnDestroy {
     this.completed = true;
     this.status = 'Erledigt';
 
-    // optional: mini delay für "Erledigt" anzeigen
     setTimeout(() => {
       this.finishTaskAndGoNext();
     }, 600);
