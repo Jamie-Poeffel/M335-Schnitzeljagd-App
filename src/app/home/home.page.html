@@ -1,23 +1,37 @@
 <ion-content>
-  <img src="assets/pictures/dancing-potato.gif" alt="Dancing Potato" style="
+  <img
+    src="assets/pictures/dancing-potato.gif"
+    alt="Dancing Potato"
+    style="
       display: block;
       margin-left: 90px;
       margin-top: 250px;
       width: 200px;
       height: auto;
-    " />
-
+    "
+  />
 </ion-content>
+
 <ion-footer>
   <ion-toolbar>
     <h5 style="text-align: center; font-weight: bold">
-      Bitte gib deinen Name ein
+      Bitte gib deinen Namen ein
     </h5>
-    <input type="text" class="input" placeholder="name" style="margin-top: 16px" />
-    <app-button variant="filled" (clicked)="navigateToWelcome()">
+
+    <input
+      type="text"
+      class="input"
+      placeholder="name"
+      style="margin-top: 16px"
+      [(ngModel)]="name"
+      (keyup.enter)="navigateToWelcome()"
+    />
+
+    <!-- IMPORTANT: use (click) unless your app-button really emits (clicked) -->
+    <app-button variant="filled" (click)="navigateToWelcome()">
       <p>Weiter</p>
     </app-button>
-    <div style="margin-bottom: 60px;">
-    </div>
+
+    <div style="margin-bottom: 60px"></div>
   </ion-toolbar>
 </ion-footer>

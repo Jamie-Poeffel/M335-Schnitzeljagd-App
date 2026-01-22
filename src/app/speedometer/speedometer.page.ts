@@ -1,4 +1,3 @@
-// src/app/running/speedometer.page.ts
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -11,9 +10,17 @@ import {
   IonToolbar,
 } from '@ionic/angular/standalone';
 
+import { Geolocation, Position } from '@capacitor/geolocation';
+
 import { ButtonComponent } from '../button/button.component';
 import { HuntProgressService } from '../hunt-progress-service';
 import { TimeService } from '../time';
+
+type Fix = {
+  lat: number;
+  lng: number;
+  timeMs: number;
+};
 
 @Component({
   selector: 'app-speedometer',
@@ -37,33 +44,144 @@ export class SpeedoMeterPage {
   private time = inject(TimeService);
   private router = inject(Router);
 
-  // IMPORTANT: unique task number
-  private readonly TASK_INDEX = 3; // maps=1, rotate=2, speedometer=3
+  private readonly TASK_INDEX = 3;
 
-  // ===== placeholders / UI data =====
+  // ===== UI data =====
   title = 'Jagd den Schwein';
   timeLeft = '10min 1 sek';
   reward = '3x';
 
   taskTitle = 'Renne 12km/h';
   taskDesc = 'Renne 12km/h in einer geraden Linie';
-  currentSpeed = '2'; // km/h (placeholder)
 
-  // ===== lifecycle =====
-  ionViewWillEnter() {
-    // start timer when page opens
+  // in deinem Template ist es ein string -> lassen wir so
+  currentSpeed = '0.0'; // km/h
+
+  // ===== intern =====
+  private watchId: string | null = null;
+  private lastFix: Fix | null = null;
+
+  // Filter, damit es nicht komplett rumzappelt
+  private lastShownKmh = 0;
+
+  async ionViewWillEnter() {
+    // Timer starten
     this.time.start(this.TASK_INDEX);
+
+    // Permissions
+    await Geolocation.requestPermissions();
+
+    // Optional: einmalig aktuelle Position holen (warm up)
+    try {
+      const pos = await Geolocation.getCurrentPosition({
+        enableHighAccuracy: true,
+        timeout: 10000,
+      });
+      this.lastFix = this.toFix(pos);
+    } catch {
+      // ignore
+    }
+
+    // Live tracking starten
+    this.watchId = await Geolocation.watchPosition(
+      {
+        enableHighAccuracy: true,
+        maximumAge: 0,
+        timeout: 10000,
+      },
+      (pos, err) => {
+        if (err || !pos) return;
+
+        const nowFix = this.toFix(pos);
+
+        // 1) Wenn OS speed liefert: nehmen (m/s -> km/h)
+        let kmh: number | null = null;
+        const speedMs = pos.coords.speed; // number | null (m/s)
+        if (typeof speedMs === 'number' && isFinite(speedMs) && speedMs >= 0) {
+          kmh = speedMs * 3.6;
+        }
+
+        // 2) Fallback: speed selbst berechnen (Distanz / Zeit)
+        if (kmh == null && this.lastFix) {
+          const dtSec = (nowFix.timeMs - this.lastFix.timeMs) / 1000;
+          if (dtSec >= 0.8) {
+            const meters = this.haversineMeters(
+              this.lastFix.lat,
+              this.lastFix.lng,
+              nowFix.lat,
+              nowFix.lng,
+            );
+            const ms = meters / dtSec;
+            kmh = ms * 3.6;
+          }
+        }
+
+        // lastFix updaten
+        this.lastFix = nowFix;
+
+        if (kmh == null || !isFinite(kmh)) return;
+
+        // bisschen clampen gegen GPS-Spikes (optional)
+        kmh = Math.max(0, Math.min(kmh, 60)); // 60 km/h cap fürs Rennen
+
+        // simples smoothing (damit UI ruhiger ist)
+        const smooth = this.lastShownKmh * 0.7 + kmh * 0.3;
+        this.lastShownKmh = smooth;
+
+        this.currentSpeed = smooth.toFixed(1);
+      },
+    );
+  }
+
+  ionViewWillLeave() {
+    // Watch stoppen
+    if (this.watchId) {
+      Geolocation.clearWatch({ id: this.watchId });
+      this.watchId = null;
+    }
   }
 
   // ===== actions =====
   onSkip() {
-    const time = this.time.stop(this.TASK_INDEX);
-    this.progress.completeTask(this.TASK_INDEX, time);
-    // go to next task
+    const t = this.time.stop(this.TASK_INDEX);
+    this.progress.completeTask(this.TASK_INDEX, t);
     this.router.navigate(['/wifi']);
   }
 
   back() {
     history.back();
+  }
+
+  // ===== helper =====
+  private toFix(pos: Position): Fix {
+    return {
+      lat: pos.coords.latitude,
+      lng: pos.coords.longitude,
+      timeMs: pos.timestamp ?? Date.now(),
+    };
+  }
+
+  // Haversine Distanz in Metern
+  private haversineMeters(
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number,
+  ): number {
+    const R = 6371000; // Earth radius in m
+    const toRad = (v: number) => (v * Math.PI) / 180;
+
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRad(lat1)) *
+        Math.cos(toRad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
   }
 }

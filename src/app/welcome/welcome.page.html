@@ -12,26 +12,22 @@
         </div>
       </div>
 
-      <div class="welcome-actions">
-        <button class="welcome-cta" (click)="goToLeaderboards()">
-          Zum Leaderboards
-        </button>
-
-        <button class="welcome-cta" (click)="gotoName()">Ändere Name</button>
-      </div>
+      <button class="welcome-cta" (click)="goToLeaderboards()">
+        Zum Leaderboard
+      </button>
     </div>
   </div>
+
   <div class="section-divider">
     <span>Available Schnitzel</span>
   </div>
 
-  <!-- Schnitzel cards -->
   <div class="schnitzel-list">
     @for (s of schnitzels; track s.id) {
-    <app-schnitzel-card
-      [schnitzel]="s"
-      (start)="startHunt(s)"
-    ></app-schnitzel-card>
+      <app-schnitzel-card
+        [schnitzel]="s"
+        (start)="startHunt(s)"
+      ></app-schnitzel-card>
     }
   </div>
 </ion-content>

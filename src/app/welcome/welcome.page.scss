@@ -10,7 +10,6 @@ ion-content.home {
   padding: 18px 16px 22px;
 }
 
-/* Welcome block */
 .welcome {
   display: flex;
   align-items: center;
@@ -49,18 +48,27 @@ ion-content.home {
   min-width: 0;
 }
 
-.welcome-title,
-.welcome-name {
+.welcome-title {
   color: #f26a00;
   font-weight: 900;
   font-size: 18px;
 }
 
 .welcome-name {
+  color: #f26a00;
+  font-weight: 900;
+  font-size: 18px;
   margin-top: 2px;
+
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 170px;
 }
 
 .welcome-cta {
+  background: transparent;
+  border: none;
   color: #f26a00;
   font-size: 11px;
   font-weight: 700;
@@ -68,8 +76,12 @@ ion-content.home {
   white-space: nowrap;
   align-self: flex-end;
   padding-bottom: 2px;
+  cursor: pointer;
 }
 
+<<<<<<< HEAD
+/* "Available Schnitzel" with lines */
+=======
 .welcome-change {
   color: #f26a00;
   font-size: 11px;
@@ -88,7 +100,7 @@ ion-content.home {
   gap: 6px;
 }
 
-/* "Available Schnitzel" with lines */
+>>>>>>> 652c72387e863c12beaf7bc22bb70548389c0885
 .section-divider {
   margin-top: 18px;
   margin-bottom: 14px;
@@ -112,11 +124,8 @@ ion-content.home {
   white-space: nowrap;
   opacity: 0.95;
 }
+
 .schnitzel-list {
   padding-top: 8px;
   padding-bottom: 16px;
-}
-
-button {
-  background-color: #fff;
 }
