@@ -11,7 +11,7 @@ import { ButtonComponent } from '../button/button.component';
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
-  imports: [IonicModule, CommonModule, ButtonComponent, FormsModule],
+  imports: [IonicModule, ButtonComponent, FormsModule],
 })
 export class HomePage {
   private router = inject(Router);
@@ -27,6 +27,6 @@ export class HomePage {
     }
 
     localStorage.setItem('user_name', cleaned);
-    this.router.navigateByUrl('/welcome');
+    this.router.navigateByUrl('leaderboard');
   }
 }
