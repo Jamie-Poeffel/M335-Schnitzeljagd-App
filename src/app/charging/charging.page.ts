@@ -5,7 +5,6 @@ import { ButtonComponent } from '../button/button.component';
 import { TimeService } from '../time';
 import { Device } from '@capacitor/device';
 
-
 @Component({
   selector: 'app-charging',
   standalone: true,
@@ -23,16 +22,21 @@ export class ChargingPage implements OnInit {
 
   Timer() {
     setInterval(async () => {
-      this.timeLeft = this.timeService.getTimeRemaining(this.TASK_INDEX, this.MAX_MINUTES);
+      this.timeLeft = this.timeService.getTimeRemaining(
+        this.TASK_INDEX,
+        this.MAX_MINUTES,
+      );
       this.checkBatteryStatus();
-    }, 1000)
+    }, 1000);
   }
   schnitzelCount = 5;
 
   async checkBatteryStatus() {
     const batteryStatus = await Device.getBatteryInfo();
 
-    batteryStatus.isCharging ? this.isCharging = true : this.isCharging = false;
+    batteryStatus.isCharging
+      ? (this.isCharging = true)
+      : (this.isCharging = false);
   }
 
   // toggle this to see both designs
@@ -40,7 +44,7 @@ export class ChargingPage implements OnInit {
 
   ngOnInit() {
     this.timeService.start(this.TASK_INDEX);
-    this.Timer()
+    this.Timer();
   }
 
   onSkip() {
