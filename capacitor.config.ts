@@ -7,7 +7,3 @@ const config: CapacitorConfig = {
 };
 
 export default config;
-{
-  "webDir": "dist/M335-Schnitzeljagd-App",
-  "bundledWebRuntime": false
-}
