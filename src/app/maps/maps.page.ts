@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, NgZone, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../button/button.component';
@@ -22,7 +22,6 @@ import { Geolocation, Position, PositionOptions } from '@capacitor/geolocation';
     IonHeader,
     IonTitle,
     IonToolbar,
-    CommonModule,
     FormsModule,
     RouterLink,
     ButtonComponent,
@@ -30,9 +29,12 @@ import { Geolocation, Position, PositionOptions } from '@capacitor/geolocation';
 })
 export class MapsPage implements OnInit, OnDestroy {
   private router = inject(Router);
-  // Target destination (McDonald's in Lucerne)
-  readonly TARGET_LATITUDE = 47.027369922645896;
-  readonly TARGET_LONGITUDE = 8.30021649416533;
+  private ngZone = inject(NgZone);
+  private cdr = inject(ChangeDetectorRef);
+
+  // Target destination ()
+  readonly TARGET_LATITUDE = 47.02745752832616;
+  readonly TARGET_LONGITUDE = 8.30138651362293;
   readonly TARGET_DISTANCE_THRESHOLD = 10; // meters
 
   // User's current position
@@ -155,45 +157,76 @@ export class MapsPage implements OnInit, OnDestroy {
   /**
    * Handle successful location update
    */
+  /**
+   * Handle successful location update
+   * Wrapped in NgZone to ensure automatic change detection
+   */  /**
+* Handle location tracking errors
+*/
+  /**
+   * Handle successful location update
+   * Wrapped in NgZone to ensure automatic change detection
+   */
   private handleLocationUpdate(position: Position | null) {
     if (!position || !position.coords) {
+      console.warn('Invalid position data received');
       return;
     }
 
-    this.userLatitude = position.coords.latitude;
-    this.userLongitude = position.coords.longitude;
-    this.locationError = null;
-    this.calculateDistanceToTarget();
+    // Run inside Angular zone to trigger automatic change detection
+    this.ngZone.run(() => {
+      this.userLatitude = position.coords.latitude;
+      this.userLongitude = position.coords.longitude;
+      this.locationError = null;
 
-    console.log('Location updated:', {
-      latitude: this.userLatitude,
-      longitude: this.userLongitude,
-      accuracy: position.coords.accuracy,
-      distance: this.distanceToTarget,
-      withinRange: this.isWithinTargetDistance
+      // Always recalculate distance when position updates
+      this.calculateDistanceToTarget();
+
+      console.log('Location updated:', {
+        latitude: this.userLatitude,
+        longitude: this.userLongitude,
+        accuracy: position.coords.accuracy,
+        distance: this.distanceToTarget,
+        withinRange: this.isWithinTargetDistance
+      });
+
+      if (this.isWithinTargetDistance) {
+        console.log('🎯 Target reached! Within threshold distance.');
+      }
+
+      // Force change detection to ensure UI updates
+      this.cdr.detectChanges();
     });
   }
 
   /**
-   * Handle location tracking errors
-   */
+ * Handle location tracking errors
+ */
   private handleLocationError(error: any) {
-    this.isTrackingLocation = false;
+    this.ngZone.run(() => {
+      this.isTrackingLocation = false;
+      console.error('Location error:', error);
 
-    console.error('Location error:', error);
+      if (error.message) {
+        this.locationError = `Standortfehler: ${error.message}`;
+      } else {
+        this.locationError = 'Fehler beim Abrufen des Standorts.';
+      }
 
-    if (error.message) {
-      this.locationError = `Standortfehler: ${error.message}`;
-    } else {
-      this.locationError = 'Fehler beim Abrufen des Standorts.';
-    }
+      this.cdr.detectChanges();
+    });
   }
-
+  /**
+   * Calculate distance from user to target using Haversine formula
+   */
   /**
    * Calculate distance from user to target using Haversine formula
    */
   calculateDistanceToTarget() {
     if (this.userLatitude === null || this.userLongitude === null) {
+      console.warn('Cannot calculate distance: coordinates not available');
+      this.distanceToTarget = null;
+      this.isWithinTargetDistance = false;
       return;
     }
 
@@ -214,12 +247,15 @@ export class MapsPage implements OnInit, OnDestroy {
     this.distanceToTarget = Math.round(EARTH_RADIUS_METERS * haversineC);
 
     // Check if user is within target distance
+    const previousStatus = this.isWithinTargetDistance;
     this.isWithinTargetDistance = this.distanceToTarget <= this.TARGET_DISTANCE_THRESHOLD;
+
+    // Log when status changes
+    if (previousStatus !== this.isWithinTargetDistance) {
+      console.log(`Distance status changed: ${this.isWithinTargetDistance ? 'WITHIN' : 'OUTSIDE'} target range`);
+    }
   }
 
-  /**
-   * Convert degrees to radians
-   */
   private degreesToRadians(degrees: number): number {
     return degrees * Math.PI / 180;
   }
