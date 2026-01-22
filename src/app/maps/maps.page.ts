@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, NgZone, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../button/button.component';
@@ -26,7 +26,6 @@ import { TimeService } from '../time';
     IonHeader,
     IonTitle,
     IonToolbar,
-    CommonModule,
     FormsModule,
     RouterLink,
     ButtonComponent,
@@ -36,12 +35,14 @@ export class MapsPage implements OnInit, OnDestroy {
   private router = inject(Router);
   private progress = inject(HuntProgressService);
   private time = inject(TimeService);
+  private ngZone = inject(NgZone);
+  private cdr = inject(ChangeDetectorRef);
 
   private readonly TASK_INDEX = 1; // maps task = 1
 
-  // Target destination
-  readonly TARGET_LATITUDE = 47.027369922645896;
-  readonly TARGET_LONGITUDE = 8.30021649416533;
+  // Target destination ()
+  readonly TARGET_LATITUDE = 47.02745752832616;
+  readonly TARGET_LONGITUDE = 8.30138651362293;
   readonly TARGET_DISTANCE_THRESHOLD = 10; // meters
 
   userLatitude: number | null = null;
@@ -140,26 +141,81 @@ export class MapsPage implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Handle successful location update
+   */
+  /**
+   * Handle successful location update
+   * Wrapped in NgZone to ensure automatic change detection
+   */  /**
+* Handle location tracking errors
+*/
+  /**
+   * Handle successful location update
+   * Wrapped in NgZone to ensure automatic change detection
+   */
   private handleLocationUpdate(position: Position | null) {
-    if (!position?.coords) return;
+    if (!position || !position.coords) {
+      console.warn('Invalid position data received');
+      return;
+    }
 
-    this.userLatitude = position.coords.latitude;
-    this.userLongitude = position.coords.longitude;
-    this.locationError = null;
-    this.calculateDistanceToTarget();
+    // Run inside Angular zone to trigger automatic change detection
+    this.ngZone.run(() => {
+      this.userLatitude = position.coords.latitude;
+      this.userLongitude = position.coords.longitude;
+      this.locationError = null;
+
+      // Always recalculate distance when position updates
+      this.calculateDistanceToTarget();
+
+      console.log('Location updated:', {
+        latitude: this.userLatitude,
+        longitude: this.userLongitude,
+        accuracy: position.coords.accuracy,
+        distance: this.distanceToTarget,
+        withinRange: this.isWithinTargetDistance
+      });
+
+      if (this.isWithinTargetDistance) {
+        console.log('🎯 Target reached! Within threshold distance.');
+      }
+
+      // Force change detection to ensure UI updates
+      this.cdr.detectChanges();
+    });
   }
 
+  /**
+ * Handle location tracking errors
+ */
   private handleLocationError(error: any) {
-    this.isTrackingLocation = false;
-    console.error('Location error:', error);
+    this.ngZone.run(() => {
+      this.isTrackingLocation = false;
+      console.error('Location error:', error);
 
-    this.locationError = error?.message
-      ? `Standortfehler: ${error.message}`
-      : 'Fehler beim Abrufen des Standorts.';
+      if (error.message) {
+        this.locationError = `Standortfehler: ${error.message}`;
+      } else {
+        this.locationError = 'Fehler beim Abrufen des Standorts.';
+      }
+
+      this.cdr.detectChanges();
+    });
   }
-
+  /**
+   * Calculate distance from user to target using Haversine formula
+   */
+  /**
+   * Calculate distance from user to target using Haversine formula
+   */
   calculateDistanceToTarget() {
-    if (this.userLatitude === null || this.userLongitude === null) return;
+    if (this.userLatitude === null || this.userLongitude === null) {
+      console.warn('Cannot calculate distance: coordinates not available');
+      this.distanceToTarget = null;
+      this.isWithinTargetDistance = false;
+      return;
+    }
 
     const EARTH_RADIUS_METERS = 6371e3;
 
@@ -173,10 +229,18 @@ export class MapsPage implements OnInit, OnDestroy {
       Math.cos(userLatRad) * Math.cos(targetLatRad) *
       Math.sin(dLon / 2) * Math.sin(dLon / 2);
 
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const haversineC = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-    this.distanceToTarget = Math.round(EARTH_RADIUS_METERS * c);
+    this.distanceToTarget = Math.round(EARTH_RADIUS_METERS * haversineC);
+
+    // Check if user is within target distance
+    const previousStatus = this.isWithinTargetDistance;
     this.isWithinTargetDistance = this.distanceToTarget <= this.TARGET_DISTANCE_THRESHOLD;
+
+    // Log when status changes
+    if (previousStatus !== this.isWithinTargetDistance) {
+      console.log(`Distance status changed: ${this.isWithinTargetDistance ? 'WITHIN' : 'OUTSIDE'} target range`);
+    }
   }
 
   private degreesToRadians(degrees: number): number {

@@ -60,12 +60,12 @@
       </div>
 
       <!-- skip link -->
-      <button class="skip" type="button" (click)="onSkip()">
+      <app-button variant="text" (click)="charging()">
         Überspringen
-      </button>
+      </app-button>
     </section>
 
-    <app-button class="bottom" variant="outline-icon">
+    <app-button class="bottom" variant="outline-icon" (click)="welcome()">
       <p>Abbrechen</p>
     </app-button>
   </div>
