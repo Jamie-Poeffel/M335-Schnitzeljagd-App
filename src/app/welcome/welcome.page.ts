@@ -35,8 +35,4 @@ export class WelcomePage {
   goToLeaderboards() {
     this.router.navigateByUrl('/leaderboard');
   }
-
-  gotoName() {
-    this.router.navigateByUrl('/home');
-  }
 }
