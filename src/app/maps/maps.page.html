@@ -2,8 +2,9 @@
   <div class="screen">
     <div class="main">
       <section class="card">
+
         <!-- progress dots -->
-        <div class="dots" aria-label="Progress">
+        <div class="dots">
           <span class="dot active"></span>
           <span class="dot"></span>
           <span class="dot"></span>
@@ -12,36 +13,30 @@
           <span class="dot"></span>
         </div>
 
-        <!-- header text -->
         <h1 class="title">Jagd den Schwein</h1>
+
         <div class="stats">
           <div>Zeit Verbleibend: <b>{{ timeRemaining }}</b></div>
           <div>Schnitzel : <b>0x</b></div>
         </div>
 
-        <!-- map frame -->
+        <!-- map -->
         <div class="map-frame">
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d480.5154300518746!2d8.30021649416533!3d47.027369922645896!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x478ffb411ab02b1d%3A0xcdc70e345e571fa9!2sMigros-Supermarkt%20-%20Kriens%20-%20Mattenhof!5e0!3m2!1sen!2sch!4v1769005412912!5m2!1sen!2sch"
+            src="https://www.google.com/maps/embed?pb=..."
             loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            allowfullscreen>
+            referrerpolicy="no-referrer-when-downgrade">
           </iframe>
         </div>
 
-        <!-- mission text -->
+        <!-- mission -->
         <div class="mission">
           <h2>Walk to the designated Area</h2>
           <p class="hint">Find this point in the map and walk towards it</p>
 
-        <!-- Skip button (hidden when target reached) -->
-        @if (!isWithinTargetDistance) {
-        <app-button variant="text" (click)="onSkip()">
-          Überspringen
-        </app-button>
-        }
-      </div>
-    </section>
+          <div [class]="getDistanceColorClass()">
+            Distanz: {{ getFormattedDistance() }}
+          </div>
 
           @if (isWithinTargetDistance) {
             <div class="success-message">
@@ -52,16 +47,14 @@
           @if (locationError) {
             <div class="error-message">
               {{ locationError }}
-              <button class="retry-button" type="button" (click)="retryLocationPermission()">
+              <button class="retry-button" (click)="retryLocationPermission()">
                 Erneut versuchen
               </button>
             </div>
           }
 
           @if (isTrackingLocation && !isWithinTargetDistance) {
-            <div class="status-message">
-              Standort wird verfolgt
-            </div>
+            <div class="status-message">Standort wird verfolgt</div>
           }
 
           @if (isWithinTargetDistance) {
@@ -71,228 +64,17 @@
           }
 
           @if (!isWithinTargetDistance) {
-            <button class="skip" type="button" (click)="onSkip()">
+            <app-button variant="text" (click)="onSkip()">
               Überspringen
-            </button>
+            </app-button>
           }
         </div>
 
+      </section>
     </div>
 
-    <!-- bottom button always visible -->
     <app-button class="bottom" variant="outline-icon">
       <p>Abbrechen</p>
     </app-button>
-
-
-  <style>
-    /* page background + center */
-    .screen {
-      min-height: 100%;
-      padding: 26px 18px 18px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 18px;
-      background: #ffffff;
-    }
-
-    /* main rounded card */
-    .card {
-      width: min(420px, 100%);
-      background: #f7f7f7;
-      border-radius: 30px;
-      padding: 18px 16px 18px;
-      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.15);
-    }
-
-    /* dots */
-    .dots {
-      display: flex;
-      justify-content: center;
-      gap: 6px;
-      margin-top: 4px;
-      margin-bottom: 10px;
-    }
-
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: #cfcfcf;
-      opacity: 0.9;
-    }
-
-    .dot.active {
-      background: #c97a3e;
-    }
-
-    /* title + stats */
-    .title {
-      text-align: center;
-      font-size: 18px;
-      margin: 0 0 10px;
-      font-weight: 700;
-      color: #222;
-    }
-
-    .stats {
-      font-size: 14px;
-      color: #222;
-      line-height: 1.55;
-      margin-bottom: 12px;
-      padding: 0 6px;
-    }
-
-    .stats b {
-      font-weight: 700;
-    }
-
-    /* map frame inside card */
-    .map-frame {
-      width: 100%;
-      background: #fff;
-      border-radius: 18px;
-      overflow: hidden;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
-      border: 1px solid rgba(0, 0, 0, 0.06);
-    }
-
-    .map-frame iframe {
-      width: 100%;
-      height: 320px;
-      border: 0;
-      display: block;
-    }
-
-    /* mission text area */
-    .mission {
-      background: #fff;
-      border-radius: 18px;
-      padding: 16px 14px 12px;
-      margin-top: 14px;
-      border: 1px solid rgba(0, 0, 0, 0.06);
-    }
-
-    .mission h2 {
-      margin: 0;
-      font-size: 22px;
-      font-weight: 700;
-      color: #111;
-    }
-
-    .hint {
-      margin: 8px 0 14px;
-      color: #333;
-      font-size: 13px;
-      line-height: 1.35;
-    }
-
-    /* Distance text colors */
-    .redline {
-      color: #e53935;
-      font-size: 13px;
-      margin: 10px 0;
-      font-weight: 600;
-    }
-
-    .greenline {
-      color: #2e7d32;
-      font-size: 13px;
-      margin: 10px 0;
-      font-weight: 600;
-    }
-
-    /* Success message */
-    .success-message {
-      background: #e8f5e9;
-      color: #2e7d32;
-      padding: 12px;
-      border-radius: 8px;
-      margin: 12px 0;
-      font-size: 14px;
-      font-weight: 600;
-      text-align: center;
-    }
-
-    /* Error message */
-    .error-message {
-      background: #ffebee;
-      color: #c62828;
-      padding: 12px;
-      border-radius: 8px;
-      margin: 12px 0;
-      font-size: 13px;
-      line-height: 1.4;
-    }
-
-    /* Status message */
-    .status-message {
-      background: #e3f2fd;
-      color: #1565c0;
-      padding: 12px;
-      border-radius: 8px;
-      margin: 12px 0;
-      font-size: 13px;
-      font-weight: 600;
-      text-align: center;
-    }
-
-    /* Retry button */
-    .retry-button {
-      width: 100%;
-      margin-top: 8px;
-      background: #c62828;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 10px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .retry-button:active {
-      background: #b71c1c;
-    }
-
-    /* Continue button */
-    .continue-btn {
-      width: 100%;
-      margin-top: 14px;
-    }
-
-    /* bottom back button */
-    .bottom {
-      width: min(420px, 100%);
-      display: flex;
-      justify-content: center;
-      padding-bottom: 6px;
-      text-decoration: none;
-      color: #c97a3e;
-      font-size: 16px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .chev {
-      font-size: 26px;
-      line-height: 0;
-      margin-top: -2px;
-    }
-
-    .no-scroll {
-      --overflow: hidden;
-    }
-
-    .no-scroll::part(scroll) {
-      overflow: hidden !important;
-    }
-
-    .screen {
-      overflow: hidden;
-    }
-  </style>
+  </div>
 </ion-content>
