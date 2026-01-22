@@ -27,5 +27,14 @@ export const routes: Routes = [
     path: 'qr-scanner',
     loadComponent: () => import('./qr-scanner/qr-scanner.page').then( m => m.QrScannerPage)
   },
+  {
+    path: 'rotate',
+    loadComponent: () => import('./rotate/rotate.page').then( m => m.RotatePage)
+  },
+  {
+    path: 'speedometer',
+    loadComponent: () => import('./speedometer/speedometer.page').then( m => m.SpeedoMeterPage)
+  },
+
 
 ];
