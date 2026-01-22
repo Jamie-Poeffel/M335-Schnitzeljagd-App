@@ -1,36 +1,23 @@
-<ion-header collapse="condense">
-  <ion-toolbar>
-    <ion-title size="large">Blank</ion-title>
-  </ion-toolbar>
-</ion-header>
-<ion-content [fullscreen]="true">
-  <img
-    src="assets/pictures/dancing-potato.gif"
-    alt="Dancing Potato"
-    style="
+<ion-content>
+  <img src="assets/pictures/dancing-potato.gif" alt="Dancing Potato" style="
       display: block;
       margin-left: 90px;
       margin-top: 250px;
       width: 200px;
       height: auto;
-    "
-  />
+    " />
 
-  ></ion-content
->
+</ion-content>
 <ion-footer>
   <ion-toolbar>
     <h5 style="text-align: center; font-weight: bold">
       Bitte gib deinen Name ein
     </h5>
-    <input
-      type="text"
-      class="input"
-      placeholder="name"
-      style="margin-top: 16px"
-    />
-    <app-button variant="outline-icon" (clicked)="navigateToWelcome()">
+    <input type="text" class="input" placeholder="name" style="margin-top: 16px" />
+    <app-button variant="filled" (clicked)="navigateToWelcome()">
       <p>Weiter</p>
     </app-button>
+    <div style="margin-bottom: 60px;">
+    </div>
   </ion-toolbar>
 </ion-footer>

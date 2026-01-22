@@ -1,5 +1,5 @@
 <ion-content class="home">
-  <div class="panel">
+  <div class="panel" style="margin-top: 40px;">
     <div class="welcome">
       <div class="welcome-left">
         <div class="avatar">
@@ -23,10 +23,8 @@
 
   <!-- Schnitzel cards -->
   <div class="schnitzel-list">
-    <app-schnitzel-card
-      *ngFor="let s of schnitzels"
-      [schnitzel]="s"
-      (start)="startHunt(s)"
-    ></app-schnitzel-card>
+    @for (s of schnitzels; track s.id) {
+    <app-schnitzel-card [schnitzel]="s" (start)="startHunt(s)"></app-schnitzel-card>
+    }
   </div>
 </ion-content>
