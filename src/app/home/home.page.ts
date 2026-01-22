@@ -1,9 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ButtonComponent } from "../button/button.component";
-import { IonicModule } from '@ionic/angular'
+import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+
+import { ButtonComponent } from '../button/button.component';
 
 @Component({
   standalone: true,
@@ -14,10 +15,18 @@ import { Router } from '@angular/router';
 })
 export class HomePage {
   private router = inject(Router);
-  name: string = "";
+
+  name: string = '';
 
   navigateToWelcome() {
-    this.router.navigateByUrl('/welcome').then(res => console.log(res));
-  }
+    const cleaned = this.name.trim();
 
+    if (!cleaned) {
+      alert('Bitte gib einen Namen ein.');
+      return;
+    }
+
+    localStorage.setItem('user_name', cleaned);
+    this.router.navigateByUrl('/welcome');
+  }
 }
