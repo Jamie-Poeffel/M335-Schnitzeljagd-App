@@ -3,14 +3,19 @@ import { IonicModule } from '@ionic/angular';
 import { Geolocation } from '@capacitor/geolocation';
 import { RouterLink } from '@angular/router';
 import { Capacitor } from '@capacitor/core';
-import { NativeSettings, AndroidSettings, IOSSettings } from 'capacitor-native-settings';
+import { ButtonComponent } from '../button/button.component';
+import {
+  NativeSettings,
+  AndroidSettings,
+  IOSSettings,
+} from 'capacitor-native-settings';
 
 @Component({
   selector: 'app-accept-cam-loc',
   standalone: true,
   templateUrl: './accept-cam-loc.page.html',
   styleUrls: ['./accept-cam-loc.page.scss'],
-  imports: [IonicModule, RouterLink],
+  imports: [IonicModule, RouterLink, ButtonComponent],
 })
 export class AcceptCamLocPage implements OnInit {
   camOk = false;
@@ -19,7 +24,6 @@ export class AcceptCamLocPage implements OnInit {
   toggleCam(): void {
     this.camOk = !this.camOk;
   }
-
 
   async openLocationSettings() {
     const platform = Capacitor.getPlatform();
@@ -30,7 +34,7 @@ export class AcceptCamLocPage implements OnInit {
       });
     } else if (platform === 'ios') {
       NativeSettings.openIOS({
-        option: IOSSettings.App
+        option: IOSSettings.App,
       });
     } else {
       console.log('Platform not supported or running in web');
@@ -43,14 +47,12 @@ export class AcceptCamLocPage implements OnInit {
     });
   }
 
-  checkCameraPermission(): void {
-
-  }
+  checkCameraPermission(): void { }
 
   async checkLocationPermission(prompt: boolean = false): Promise<boolean> {
     const permissionStatus = await Geolocation.checkPermissions();
 
-    if (permissionStatus.location === "granted") {
+    if (permissionStatus.location === 'granted') {
       return true;
     }
 
@@ -59,7 +61,6 @@ export class AcceptCamLocPage implements OnInit {
     }
 
     if (permissionStatus.location !== "prompt") {
-      alert("Location Permissions are denied please activate them")
       await this.openLocationSettings();
       return this.checkLocationPermission();
     }

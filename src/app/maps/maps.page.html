@@ -2,7 +2,6 @@
   <div class="screen">
     <div class="main">
       <section class="card">
-
         <!-- progress dots -->
         <div class="dots">
           <span class="dot active"></span>
@@ -13,7 +12,7 @@
           <span class="dot"></span>
         </div>
 
-        <h1 class="title">Jagd den Schwein</h1>
+        <h1 class="title">Jagd das Schwein</h1>
 
         <div class="stats">
           <div>Zeit Verbleibend: <b>{{ timeRemaining }}</b></div>
@@ -23,9 +22,10 @@
         <!-- map -->
         <div class="map-frame">
           <iframe
-            src="https://www.google.com/maps/embed?pb=..."
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1527.5322560519378!2d8.29997730660276!3d47.0272103953812!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x478ffb411ab02b1d%3A0xcdc70e345e571fa9!2sMigros-Supermarkt%20-%20Kriens%20-%20Mattenhof!5e1!3m2!1sen!2sch!4v1769072600591!5m2!1sen!2sch"
             loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade">
+            referrerpolicy="no-referrer-when-downgrade"
+          >
           </iframe>
         </div>
 
@@ -39,41 +39,33 @@
           </div>
 
           @if (isWithinTargetDistance) {
-            <div class="success-message">
-              Ziel erreicht! Sie sind innerhalb von {{ TARGET_DISTANCE_THRESHOLD }}m
-            </div>
-          }
-
-          @if (locationError) {
-            <div class="error-message">
-              {{ locationError }}
-              <button class="retry-button" (click)="retryLocationPermission()">
-                Erneut versuchen
-              </button>
-            </div>
-          }
-
-          @if (isTrackingLocation && !isWithinTargetDistance) {
-            <div class="status-message">Standort wird verfolgt</div>
-          }
-
-          @if (isWithinTargetDistance) {
-            <app-button variant="filled" (click)="onContinue()">
-              <p>Weiter</p>
-            </app-button>
-          }
-
-          @if (!isWithinTargetDistance) {
-            <app-button variant="text" routerLink="/qr-scanner">
-  Überspringen
-</app-button>
+          <div class="success-message">
+            Ziel erreicht! Sie sind innerhalb von {{ TARGET_DISTANCE_THRESHOLD
+            }}m
+          </div>
+          } @if (locationError) {
+          <div class="error-message">
+            {{ locationError }}
+            <button class="retry-button" (click)="retryLocationPermission()">
+              Erneut versuchen
+            </button>
+          </div>
+          } @if (isTrackingLocation && !isWithinTargetDistance) {
+          <div class="status-message">Standort wird verfolgt</div>
+          } @if (isWithinTargetDistance) {
+          <app-button variant="filled" (click)="onContinue()">
+            <p>Weiter</p>
+          </app-button>
+          } @if (!isWithinTargetDistance) {
+          <app-button variant="text" routerLink="/qr-scanner">
+            Überspringen
+          </app-button>
           }
         </div>
-
       </section>
     </div>
 
-    <app-button class="bottom" variant="outline-icon">
+    <app-button class="bottom" variant="outline-icon" , routerLink="/welcome">
       <p>Abbrechen</p>
     </app-button>
   </div>
