@@ -64,9 +64,9 @@
 
         <!-- Skip button (hidden when target reached) -->
         @if (!isWithinTargetDistance) {
-        <button class="skip" type="button" (click)="onSkip()">
+        <app-button variant="text" (click)="onSkip()">
           Überspringen
-        </button>
+        </app-button>
         }
       </div>
     </section>
@@ -252,19 +252,6 @@
     .continue-btn {
       width: 100%;
       margin-top: 14px;
-    }
-
-    /* skip link button */
-    .skip {
-      width: 100%;
-      margin-top: 10px;
-      background: transparent;
-      border: none;
-      color: #e53935;
-      text-decoration: underline;
-      font-size: 14px;
-      padding: 10px 0 4px;
-      cursor: pointer;
     }
 
     /* bottom back button */
