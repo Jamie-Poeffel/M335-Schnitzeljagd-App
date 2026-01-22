@@ -41,6 +41,11 @@
           <div class="redline">Status: {{ status }}</div>
           <div class="redline">Last Result: {{ lastResult || '—' }}</div>
 
+<<<<<<< HEAD
+          <app-button variant="text" routerLink="/rotate">
+            Überspringen
+          </app-button>
+=======
           @if (status !== "Success") {
           <app-button variant="text" (clicked)="onSkip()">
             Überspringen
@@ -52,12 +57,13 @@
             <p>Weiter</p>
           </app-button>
           }
+>>>>>>> 8ff603714c558c3cde8d72aa75640d7e19f5220d
         </div>
       </section>
     </div>
 
     <!-- bottom button always visible -->
-    <app-button class="bottom" variant="outline-icon" routerLink="/welcome">
+    <app-button class="bottom" variant="outline-icon" routerLink="/leaderboard">
       <p>Abbrechen</p>
     </app-button>
   </div>
