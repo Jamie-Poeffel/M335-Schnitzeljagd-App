@@ -13,11 +13,16 @@
       <span class="emoji" *ngIf="!isImage">{{ schnitzel.image }}</span>
 
       <!-- image mode (if you switch to png later) -->
-      <img class="img" *ngIf="isImage" [src]="schnitzel.image" alt="schnitzel" />
+      <img
+        class="img"
+        *ngIf="isImage"
+        [src]="schnitzel.image"
+        alt="schnitzel"
+      />
     </div>
 
     <app-button variant="filled" (click)="onStart(); $event.stopPropagation()">
-      <p>Start</p>
+      <p><strong>Start</strong></p>
     </app-button>
   </div>
 </div>

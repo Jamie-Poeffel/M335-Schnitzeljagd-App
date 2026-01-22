@@ -23,7 +23,6 @@
         <!-- scanner frame -->
         <div class="scan-frame">
           <div class="scan-placeholder">
-            <div class="scan-box"></div>
             <div class="scan-text">Hold QR inside the box</div>
 
             <button class="scan-btn" type="button" (click)="onScanMock()">
@@ -43,14 +42,14 @@
           <div class="redline">Last Result: {{ lastResult || '—' }}</div>
 
           <app-button variant="text" routerLink="/rotate">
-  Überspringen
-</app-button>
+            Überspringen
+          </app-button>
         </div>
       </section>
     </div>
 
     <!-- bottom button always visible -->
-    <app-button class="bottom" variant="outline-icon" routerLink="/welcome">
+    <app-button class="bottom" variant="outline-icon" routerLink="/leaderboard">
       <p>Abbrechen</p>
     </app-button>
   </div>

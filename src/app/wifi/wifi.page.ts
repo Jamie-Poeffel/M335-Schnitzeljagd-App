@@ -41,6 +41,6 @@ export class WifiPage {
   }
 
   welcome(): void {
-    this.router.navigate(['/welcome']);
+    this.router.navigate(['/leaderboard']);
   }
 }

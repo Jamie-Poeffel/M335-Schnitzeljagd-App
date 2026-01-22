@@ -2,7 +2,6 @@
   <div class="screen">
     <div class="main">
       <section class="card">
-
         <!-- top card -->
         <div class="top-card">
           <div class="small-title">Jagd den Schwein</div>
@@ -23,24 +22,27 @@
 
         <!-- task list -->
         <div class="task-list">
-          @for (i of [].constructor(totalTasks); track $index) {
-            @let idx = $index + 1;
-            @let r = getResult(idx);
+          @for (i of [].constructor(totalTasks); track $index) { @let idx =
+          $index + 1; @let r = getResult(idx);
 
-            <div class="task-row">
-              <div class="task-left">
-                <div class="task-title">Aufgabe {{ idx }}</div>
-                <div class="task-reward">+1x</div>
+          <div class="task-row">
+            <div class="task-left">
+              <div class="task-title">Aufgabe {{ idx }}</div>
+              <div class="task-reward">+1x</div>
 
-                @if (r?.potatoEarned) {
-                  <div class="task-penalty">+1 🥔</div>
-                }
-              </div>
-
-              <div class="task-right">
-                <img class="schnitzel" src="assets/pictures/schnitzel.png" alt="Schnitzel" />
-              </div>
+              @if (r?.potatoEarned) {
+              <div class="task-penalty">+1 🥔</div>
+              }
             </div>
+
+            <div class="task-right">
+              <img
+                class="schnitzel"
+                src="assets/pictures/schnitzel.png"
+                alt="Schnitzel"
+              />
+            </div>
+          </div>
           }
         </div>
 
@@ -51,23 +53,30 @@
           <div class="account-row">
             <div class="acc-item">
               <div class="acc-value">{{ totalSchnitzel }}</div>
-              <img class="acc-icon" src="assets/pictures/schnitzel.png" alt="Schnitzel" />
+              <img
+                class="acc-icon"
+                src="assets/pictures/schnitzel.png"
+                alt="Schnitzel"
+              />
             </div>
 
             <div class="acc-item">
               <div class="acc-value">{{ totalPotatoes }}</div>
-              <img class="acc-icon" src="assets/pictures/potato.png" alt="Kartoffel" />
+              <img
+                class="acc-icon"
+                src="assets/pictures/potato.png"
+                alt="Kartoffel"
+              />
             </div>
           </div>
         </div>
-
       </section>
     </div>
 
     <!-- bottom actions -->
     <div class="actions">
       <app-button class="outline" variant="outline" (click)="goLeaderboard()">
-        <p>Platzierung</p>
+        <p>LeaderBoards</p>
       </app-button>
 
       <app-button class="filled" variant="filled" (click)="goNext()">
