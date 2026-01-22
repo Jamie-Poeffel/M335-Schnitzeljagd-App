@@ -1,26 +1,25 @@
-import { Component } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  NgZone,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { Network, ConnectionStatus } from '@capacitor/network';
+import { Haptics } from '@capacitor/haptics';
 import { ButtonComponent } from '../button/button.component';
-import { ChargingPage } from '../charging/charging.page';
-import { WelcomePage } from '../welcome/welcome.page';
 
 @Component({
   selector: 'app-wifi',
   standalone: true,
   templateUrl: './wifi.page.html',
   styleUrls: ['./wifi.page.scss'],
-  imports: [
-    CommonModule,
-    IonicModule,
-    ButtonComponent,
-    ChargingPage,
-    WelcomePage,
-  ],
+  imports: [CommonModule, IonicModule, ButtonComponent],
 })
-export class WifiPage {
-  // demo values (später ersetzt du das mit echten variablen)
+export class WifiPage implements OnInit, OnDestroy {
   timeLeft = '8min 14 sek';
   schnitzelCount = 4;
 
@@ -28,19 +27,65 @@ export class WifiPage {
   password = 'EF-3A-03-AF-08-53';
 
   connected = false;
+  hasConnected = false;
+  isFinished = false;
+  networkListener: any;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private ngZone: NgZone,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
-  onCancel(): void {
-    console.log('cancel');
-    this.router.navigate(['/home']);
+  async ngOnInit() {
+    const status = await Network.getStatus();
+    this.checkWifi(status);
+
+    this.networkListener = await Network.addListener(
+      'networkStatusChange',
+      (status) => {
+        this.ngZone.run(() => this.checkWifi(status));
+      },
+    );
   }
 
-  charging(): void {
+  ngOnDestroy() {
+    this.networkListener?.remove();
+  }
+
+  checkWifi(status: ConnectionStatus) {
+    const isWifi = status.connected && status.connectionType === 'wifi';
+
+    this.connected = isWifi;
+
+    if (isWifi) {
+      this.hasConnected = true;
+    } else {
+      if (this.hasConnected && !this.isFinished) {
+        this.triggerSuccess();
+      }
+    }
+
+    this.cdr.detectChanges();
+  }
+
+  async triggerSuccess() {
+    this.isFinished = true;
+    await Haptics.notification({ type: 'success' as any });
+  }
+
+  charging() {
     this.router.navigate(['/charging']);
   }
 
-  welcome(): void {
+  welcome() {
     this.router.navigate(['/leaderboard']);
+  }
+
+  onCancel() {
+    this.router.navigate(['/home']);
+  }
+  onContinue() {
+    this.router.navigate(['/charging']);
   }
 }

@@ -5,7 +5,7 @@
   overflow: hidden !important;
 }
 
-/* page layout like your other tasks */
+/* page layout */
 .screen {
   height: 100%;
   padding: 26px 18px 18px;
@@ -21,7 +21,7 @@
   display: flex;
 }
 
-/* card looks same as rotate/speedometer */
+/* card */
 .card {
   width: min(420px, 100%);
   margin: 0 auto;
@@ -29,7 +29,6 @@
   border-radius: 30px;
   padding: 18px 16px;
   box-shadow: 0 18px 45px rgba(0, 0, 0, 0.15);
-
   overflow: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -52,69 +51,63 @@
   background: #c97a3e;
 }
 
-/* header */
-.header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 10px;
-}
-
-.title-small {
-  font-size: 12px;
+/* title (smaller) */
+.title {
+  margin: 0 0 8px;
+  font-size: 16px;
   font-weight: 800;
-  color: #222;
-  opacity: 0.9;
-  margin-top: 2px;
+  color: #111;
+  text-align: center;
 }
 
+/* stats (left side) */
 .stats {
   font-size: 13px;
   color: #222;
   line-height: 1.45;
-  text-align: right;
+  text-align: left; /* <-- left */
+  margin-bottom: 14px;
 }
 .stats b {
   font-weight: 800;
 }
 
-/* wifi icon block (same “frame” vibe as rotate area) */
-.wifi-wrap {
-  width: 100%;
+/* image frame */
+.image-frame {
+  width: 75%;
   background: #ffffff;
   border-radius: 18px;
   padding: 14px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
   border: 1px solid rgba(0, 0, 0, 0.06);
-  margin-bottom: 14px;
+  margin: 0 auto 14px;
 
   display: grid;
   place-items: center;
 }
 
-.wifi-svg {
-  width: min(190px, 55vw);
+.image-frame img {
+  width: min(164px, 100%);
   height: auto;
   opacity: 0.95;
 }
 
-/* content block */
-.content {
+/* text area */
+.text-block {
   background: #ffffff;
   border-radius: 18px;
   padding: 16px 14px 12px;
   border: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-.content .title {
+.text-block h2 {
   margin: 0;
-  font-size: 22px;
-  font-weight: 800;
+  font-size: 18px;
+  font-weight: 900;
   color: #111;
 }
 
-.desc {
+.text-block p {
   margin: 8px 0 12px;
   color: #333;
   font-size: 13px;
@@ -169,7 +162,7 @@
   color: #c62828;
 }
 
-/* bottom button always visible */
+/* bottom button */
 .bottom {
   width: min(420px, 100%);
   margin: 12px auto 0;

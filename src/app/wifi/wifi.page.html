@@ -1,69 +1,55 @@
-<ion-content>
+<ion-content [fullscreen]="true" scroll-y="false" class="no-scroll">
   <div class="screen">
-    <section class="card">
-      <!-- progress dots -->
-      <div class="dots" aria-label="Progress">
-        <span class="dot active"></span>
-        <span class="dot active"></span>
-        <span class="dot active"></span>
-        <span class="dot active"></span>
-        <span class="dot active"></span>
-        <span class="dot"></span>
-      </div>
+    <div class="main">
+      <section class="card">
+        <!-- dots -->
+        <div class="dots">
+          <span class="dot active"></span>
+          <span class="dot active"></span>
+          <span class="dot active"></span>
+          <span class="dot active"></span>
+          <span class="dot active"></span>
+          <span class="dot"></span>
+        </div>
 
-      <div class="header">
-        <div class="title-small">Jagd das Schwein</div>
+        <!-- title (smaller) -->
+        <h1 class="title">Jagd das Schwein</h1>
 
+        <!-- stats -->
         <div class="stats">
           <div>Zeit Verbleibend: <b>{{ timeLeft }}</b></div>
           <div>Schnitzel : <b>{{ schnitzelCount }}x</b></div>
         </div>
-      </div>
 
-      <!-- big wifi icon -->
-      <div class="wifi-wrap" aria-hidden="true">
-        <svg viewBox="0 0 200 200" class="wifi-svg">
-          <path
-            d="M20 80 C60 35, 140 35, 180 80"
-            fill="none"
-            stroke="black"
-            stroke-width="24"
-            stroke-linecap="round"
-          />
-          <path
-            d="M50 115 C78 88, 122 88, 150 115"
-            fill="none"
-            stroke="black"
-            stroke-width="24"
-            stroke-linecap="round"
-          />
-          <circle cx="100" cy="150" r="22" fill="black"></circle>
-        </svg>
-      </div>
+        <!-- ONE combined wifi card -->
+        <div class="wifi-card">
+          <img src="assets/pictures/wifi.png" alt="Wifi" />
 
-      <!-- text block -->
-      <div class="content">
-        <h2 class="title">Connect to Wifi</h2>
-        <p class="desc">Verbinde dich zum SchulWLan</p>
+          <h2>Connect to Wifi</h2>
+          <p>Verbinde dich zum SchulWLan</p>
 
-        <div class="grid">
-          <div class="label">Name:</div>
-          <div class="value">{{ ssid }}</div>
+          <div class="grid">
+            <div class="label">Name:</div>
+            <div class="value">{{ ssid }}</div>
 
-          <div class="label">Passwort:</div>
-          <div class="value">{{ password }}</div>
+            <div class="label">Passwort:</div>
+            <div class="value">{{ password }}</div>
+          </div>
+
+          <div class="status" [class.good]="connected" [class.bad]="!connected">
+            {{ connected ? 'Verbunden' : 'Nicht verbunden' }}
+          </div>
+
+          <app-button variant="filled" (click)="onContinue()">
+            <p>Weiter</p>
+          </app-button>
+
+          <app-button variant="text" *ngIf="!connected" (click)="charging()">
+            Überspringen
+          </app-button>
         </div>
-
-        <div class="status" [class.bad]="!connected" [class.good]="connected">
-          {{ connected ? 'Verbunden' : 'Nicht Verbunden' }}
-        </div>
-      </div>
-
-      <!-- skip link -->
-      <app-button variant="text" (click)="charging()">
-        Überspringen
-      </app-button>
-    </section>
+      </section>
+    </div>
 
     <app-button class="bottom" variant="outline-icon" (click)="welcome()">
       <p>Abbrechen</p>
