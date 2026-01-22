@@ -2,7 +2,6 @@
   <div class="screen">
     <div class="main">
       <section class="card">
-
         <!-- progress dots -->
         <div class="dots" aria-label="Fortschritt">
           <span class="dot active"></span>
@@ -24,11 +23,10 @@
         <!-- RUN FRAME (same as rotate-frame) -->
         <div class="rotate-frame">
           <div class="rotate-placeholder run-placeholder">
-
             <!-- runner icon -->
             <div class="runner">
-  <img src="assets/pictures/run.png" alt="Runner" />
-</div>
+              <img src="assets/pictures/run.png" alt="Runner" />
+            </div>
 
             <div class="rotate-text">
               Renne <b>12 km/h</b> in einer geraden Linie
@@ -37,7 +35,6 @@
             <div class="speed-text">
               Aktuelle Geschwindigkeit: <b>{{ currentSpeed }} km/h</b>
             </div>
-
           </div>
         </div>
 
@@ -46,25 +43,22 @@
           <h2>Aufgabe</h2>
 
           <p class="hint">
-            Diese Aufgabe zählt erst, wenn du die Geschwindigkeit erreichst
-            und kurz hältst.
+            Diese Aufgabe zählt erst, wenn du die Geschwindigkeit erreichst und
+            kurz hältst.
           </p>
 
-          <div class="redline">
-            Ziel: 12 km/h
-          </div>
+          <div class="redline">Ziel: 12 km/h</div>
 
-          <app-button variant="text" routerLink="/qr-scanner">
+          <app-button variant="text" routerLink="/wifi">
             Überspringen
           </app-button>
         </div>
-
       </section>
     </div>
 
     <!-- bottom back button -->
     <app-button class="bottom" variant="outline-icon" routerLink="/welcome">
-      <p>Zurück</p>
+      <p>Abbrechen</p>
     </app-button>
   </div>
 </ion-content>

@@ -138,44 +138,12 @@ ion-content {
   color: #16a34a;
 }
 
-/* skip */
-.skip {
-  margin-top: 18px;
-  background: transparent;
-  border: none;
-  color: #c97a3e;
-  text-decoration: underline;
-  font-size: 14px;
-  padding: 10px 0 4px;
-  cursor: pointer;
-}
-
 /* bottom */
 .bottom {
   width: min(420px, 100%);
   display: flex;
   justify-content: center;
   padding-bottom: 6px;
-}
-
-.back-btn {
-  width: 100%;
-  background: #fff;
-  border: 2px solid #c97a3e;
-  color: #c97a3e;
-  border-radius: 999px;
-  height: 52px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-
-  font-size: 16px;
-  font-weight: 600;
-  text-decoration: none;
-
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
 
 .chev {

@@ -3,13 +3,21 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { ButtonComponent } from '../button/button.component';
+import { ChargingPage } from '../charging/charging.page';
+import { WelcomePage } from '../welcome/welcome.page';
 
 @Component({
   selector: 'app-wifi',
   standalone: true,
   templateUrl: './wifi.page.html',
   styleUrls: ['./wifi.page.scss'],
-  imports: [CommonModule, IonicModule, ButtonComponent],
+  imports: [
+    CommonModule,
+    IonicModule,
+    ButtonComponent,
+    ChargingPage,
+    WelcomePage,
+  ],
 })
 export class WifiPage {
   // demo values (später ersetzt du das mit echten variablen)
@@ -23,13 +31,16 @@ export class WifiPage {
 
   constructor(private router: Router) {}
 
-  onSkip(): void {
-    console.log('skip wifi');
-    // z.B. this.router.navigate(['/maps']);
-  }
-
   onCancel(): void {
     console.log('cancel');
     this.router.navigate(['/home']);
+  }
+
+  charging(): void {
+    this.router.navigate(['/charging']);
+  }
+
+  welcome(): void {
+    this.router.navigate(['/welcome']);
   }
 }
