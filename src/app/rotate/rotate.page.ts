@@ -39,9 +39,16 @@ export class RotatePage implements OnInit, OnDestroy {
   private time = inject(TimeService);
 
   private readonly TASK_INDEX = 2;
+  private readonly MAX_TIME = 0.5;
 
-  timeLeft = '1 Tag';
+  timeLeft = '0:30';
   reward = 6;
+
+  Timer() {
+    setInterval(() => {
+      this.timeLeft = this.time.getTimeRemaining(this.TASK_INDEX, this.MAX_TIME);
+    }, 1000);
+  }
 
   status: 'Bereit' | 'Warten' | 'Erledigt' = 'Bereit';
 
@@ -58,6 +65,7 @@ export class RotatePage implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.time.start(this.TASK_INDEX);
+    this.Timer();
 
     this.motionListener = await Motion.addListener('accel', (event: any) => {
       if (this.completed) return;
