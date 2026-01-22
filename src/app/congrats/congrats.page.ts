@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
+import { User } from 'src/app/types/user';
 
 import {
   IonContent,
@@ -34,13 +35,16 @@ export class CongratsPage {
   // 1..6 tasks (adjust if you use 4 tasks only)
   readonly totalTasks = 6;
 
+  // fetch user from local storage
+  user: User = JSON.parse(localStorage.getItem('user') || '{"name":"Gast"}');
+
   results = this.progress.getResults();
   totalSchnitzel = this.progress.getTotalSchnitzelOwned();
   totalPotatoes = this.progress.getTotalPotatoesOwned();
 
   // quick lookup for template
   getResult(taskIndex: number) {
-    return this.results.find(r => r.taskIndex === taskIndex);
+    return this.results.find((r) => r.taskIndex === taskIndex);
   }
 
   goLeaderboard() {

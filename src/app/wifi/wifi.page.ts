@@ -81,7 +81,6 @@ export class WifiPage implements OnInit, OnDestroy {
   welcome() {
     this.router.navigate(['/leaderboard']);
   }
-<<<<<<< HEAD
 
   onCancel() {
     this.router.navigate(['/home']);
@@ -89,14 +88,12 @@ export class WifiPage implements OnInit, OnDestroy {
   onContinue() {
     this.router.navigate(['/charging']);
   }
-=======
   getSchnitzelCount(): number {
-  return Number(localStorage.getItem('schnitzel_count') ?? 0);
-}
+    return Number(localStorage.getItem('schnitzel_count') ?? 0);
+  }
 
-addSchnitzel(amount: number = 1) {
-  const current = this.getSchnitzelCount();
-  localStorage.setItem('schnitzel_count', String(current + amount));
-}
->>>>>>> ee8c17df0ab4a65857f080e9af01f2d8e0c362f4
+  addSchnitzel(amount: number = 1) {
+    const current = this.getSchnitzelCount();
+    localStorage.setItem('schnitzel_count', String(current + amount));
+  }
 }
