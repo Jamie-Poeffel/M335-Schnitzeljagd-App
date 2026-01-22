@@ -22,10 +22,7 @@
         <div class="rotate-frame">
           <div class="rotate-placeholder">
             <div class="rotate-illustration">
-              <div
-                class="phone-icon"
-                [style.transform]="'rotate(' + phoneRotation + 'deg)'"
-              >
+              <div class="phone-icon" [style.transform]="'rotate(' + phoneRotation + 'deg)'">
                 <div class="speaker"></div>
                 <div class="screen-inner"></div>
                 <div class="home-dot"></div>
@@ -33,38 +30,46 @@
             </div>
 
             <div class="rotate-text">
-              <ng-container *ngIf="!completed; else doneTpl">
-                <ng-container *ngIf="isUpsideDown; else rotateTpl">
+              @if (!completed) {
+              <ng-container>
+                @if (isUpsideDown) {
+
+                <ng-container>
                   Halte so… <b>{{ (HOLD_DURATION - holdTime).toFixed(1) }}s</b>
                 </ng-container>
 
-                <ng-template #rotateTpl>
+                }
+                @else {
+
+                <ng-template>
                   Drehe dein Handy ins <b>aufem Kopf</b>.
                 </ng-template>
+                }
               </ng-container>
+              }
 
+              @else {
               <ng-template #doneTpl>
                 <b>Perfekt! </b> Aufgabe abgeschlossen!
               </ng-template>
+              }
             </div>
 
             <!-- Progress -->
-            <div *ngIf="isUpsideDown && !completed" class="hold-box">
+            @if (isUpsideDown && !completed) {
+
+            <div class="hold-box">
               <div class="hold-row">
                 <span>Halte Position</span>
-                <span
-                  ><b>{{ holdTime.toFixed(1) }}s</b> / {{ HOLD_DURATION
-                  }}s</span
-                >
+                <span><b>{{ holdTime.toFixed(1) }}s</b> / {{ HOLD_DURATION
+                  }}s</span>
               </div>
 
               <div class="hold-bar">
-                <div
-                  class="hold-bar-inner"
-                  [style.width.%]="progressPercent"
-                ></div>
+                <div class="hold-bar-inner" [style.width.%]="progressPercent"></div>
               </div>
             </div>
+            }
 
             <!-- Button -->
             @if (completed) {
