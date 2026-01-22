@@ -76,7 +76,6 @@ export class MapsPage implements OnInit, OnDestroy {
     this.stopLocationTracking();
   }
 
-
   async initializeLocationTracking() {
     try {
       const permissionStatus = await Geolocation.checkPermissions();
@@ -149,7 +148,6 @@ export class MapsPage implements OnInit, OnDestroy {
     }
   }
 
-<<<<<<< HEAD
   /**
    * Handle successful location update
    */
@@ -163,8 +161,6 @@ export class MapsPage implements OnInit, OnDestroy {
    * Handle successful location update
    * Wrapped in NgZone to ensure automatic change detection
    */
-=======
->>>>>>> f89f640ebecb8571cad11b28cc695023fc1122ad
   private handleLocationUpdate(position: Position | null) {
     if (!position || !position.coords) {
       console.warn('Invalid position data received');
@@ -196,12 +192,9 @@ export class MapsPage implements OnInit, OnDestroy {
     });
   }
 
-<<<<<<< HEAD
   /**
    * Handle location tracking errors
    */
-=======
->>>>>>> f89f640ebecb8571cad11b28cc695023fc1122ad
   private handleLocationError(error: any) {
     this.ngZone.run(() => {
       this.isTrackingLocation = false;
@@ -249,12 +242,9 @@ export class MapsPage implements OnInit, OnDestroy {
 
     this.distanceToTarget = Math.round(EARTH_RADIUS_METERS * haversineC);
 
-<<<<<<< HEAD
     // Check if user is within target distance
     this.isWithinTargetDistance =
       this.distanceToTarget <= this.TARGET_DISTANCE_THRESHOLD;
-=======
->>>>>>> f89f640ebecb8571cad11b28cc695023fc1122ad
     const previousStatus = this.isWithinTargetDistance;
     this.isWithinTargetDistance =
       this.distanceToTarget <= this.TARGET_DISTANCE_THRESHOLD;
