@@ -36,7 +36,10 @@ export class CongratsPage {
   readonly totalTasks = 6;
 
   // fetch user from local storage
-  user: User = JSON.parse(localStorage.getItem('user') || '{"name":"Gast"}');
+user: User = {
+  name: localStorage.getItem('user_name') || 'Gast'
+} as User;
+
 
   results = this.progress.getResults();
   totalSchnitzel = this.progress.getTotalSchnitzelOwned();
