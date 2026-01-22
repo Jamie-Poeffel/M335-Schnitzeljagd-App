@@ -17,6 +17,7 @@ import type { PluginListenerHandle } from '@capacitor/core';
 
 import { HuntProgressService } from '../hunt-progress-service';
 import { TimeService } from '../time';
+import { Storage } from '../storage';
 
 @Component({
   selector: 'app-rotate',
@@ -37,12 +38,14 @@ export class RotatePage implements OnInit, OnDestroy {
   private router = inject(Router);
   private progress = inject(HuntProgressService);
   private time = inject(TimeService);
+  private storage = inject(Storage);
 
   private readonly TASK_INDEX = 2;
+  private readonly REWARD_COUNT_ID = `rw_${this.TASK_INDEX}`
   private readonly MAX_TIME = 0.5;
 
   timeLeft = '0:30';
-  reward = 6;
+  reward = this.storage.getObject(this.REWARD_COUNT_ID);
 
   Timer() {
     setInterval(() => {

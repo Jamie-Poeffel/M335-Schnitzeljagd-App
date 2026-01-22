@@ -14,6 +14,7 @@ import {
 } from '@ionic/angular/standalone';
 import { Router, RouterLink } from '@angular/router';
 import { TimeService } from '../time';
+import { Storage } from '../storage';
 
 @Component({
   selector: 'app-qr',
@@ -33,13 +34,18 @@ import { TimeService } from '../time';
 export class QrScannerPage implements OnInit {
   private timeService = inject(TimeService);
   private router = inject(Router);
+  private storage = inject(Storage);
+
 
   timeLeft = '10:00';
 
-  reward = 1;
   private readonly TASK_INDEX = 1;
   private readonly MAX_TIME = 10;
+  private readonly REWARD_COUNT_ID = `rw_${this.TASK_INDEX}`
+
   private readonly RESULT = "djsdgzoezkhdkdgvkiwehtiugfi";
+
+  reward = this.storage.getObject(this.REWARD_COUNT_ID);
 
   Timer() {
     const intervalId = setInterval(() => {
