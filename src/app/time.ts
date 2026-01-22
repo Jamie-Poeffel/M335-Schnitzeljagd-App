@@ -17,7 +17,7 @@ export class TimeService {
     const time = Math.floor(Date.now()); // already ms
     const maxTime = maxTimeMin * 60 * 1000; // ms
 
-    const timeInSeconds = ((startTime + maxTime) - time) / 1000;
+    const  timeInSeconds = ((startTime + maxTime) - time) / 1000;
 
     return this.convertTimeToString(timeInSeconds);
   }

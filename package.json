@@ -31,7 +31,11 @@
     "@capacitor/haptics": "8.0.0",
     "@capacitor/keyboard": "8.0.0",
     "@capacitor/motion": "^7.0.2",
+<<<<<<< HEAD
     "@capacitor/network": "^7.0.3",
+=======
+    "@capacitor/preferences": "^8.0.0",
+>>>>>>> ee8c17df0ab4a65857f080e9af01f2d8e0c362f4
     "@capacitor/status-bar": "8.0.0",
     "@ionic/angular": "^8.0.0",
     "android": "^0.0.8",

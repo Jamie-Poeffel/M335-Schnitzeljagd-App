@@ -17,6 +17,7 @@ import type { PluginListenerHandle } from '@capacitor/core';
 
 import { HuntProgressService } from '../hunt-progress-service';
 import { TimeService } from '../time';
+import { Storage } from '../storage';
 
 @Component({
   selector: 'app-rotate',
@@ -37,11 +38,20 @@ export class RotatePage implements OnInit, OnDestroy {
   private router = inject(Router);
   private progress = inject(HuntProgressService);
   private time = inject(TimeService);
+  private storage = inject(Storage);
 
   private readonly TASK_INDEX = 2;
+  private readonly REWARD_COUNT_ID = `rw_${this.TASK_INDEX}`
+  private readonly MAX_TIME = 0.5;
 
-  timeLeft = '1 Tag';
-  reward = 6;
+  timeLeft = '0:30';
+  reward = this.storage.getObject(this.REWARD_COUNT_ID);
+
+  Timer() {
+    setInterval(() => {
+      this.timeLeft = this.time.getTimeRemaining(this.TASK_INDEX, this.MAX_TIME);
+    }, 1000);
+  }
 
   status: 'Bereit' | 'Warten' | 'Erledigt' = 'Bereit';
 
@@ -58,6 +68,7 @@ export class RotatePage implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.time.start(this.TASK_INDEX);
+    this.Timer();
 
     this.motionListener = await Motion.addListener('accel', (event: any) => {
       if (this.completed) return;
@@ -141,4 +152,12 @@ export class RotatePage implements OnInit, OnDestroy {
     this.motionListener?.remove();
     if (this.holdInterval) clearInterval(this.holdInterval);
   }
+  getSchnitzelCount(): number {
+  return Number(localStorage.getItem('schnitzel_count') ?? 0);
+}
+
+addSchnitzel(amount: number = 1) {
+  const current = this.getSchnitzelCount();
+  localStorage.setItem('schnitzel_count', String(current + amount));
+}
 }

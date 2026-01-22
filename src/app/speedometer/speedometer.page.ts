@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -15,6 +15,7 @@ import { Geolocation, Position } from '@capacitor/geolocation';
 import { ButtonComponent } from '../button/button.component';
 import { HuntProgressService } from '../hunt-progress-service';
 import { TimeService } from '../time';
+import { Storage } from '../storage';
 
 type Fix = {
   lat: number;
@@ -38,18 +39,32 @@ type Fix = {
     ButtonComponent,
   ],
 })
-export class SpeedoMeterPage {
+export class SpeedoMeterPage implements OnInit {
   // ===== injected services =====
   private progress = inject(HuntProgressService);
   private time = inject(TimeService);
   private router = inject(Router);
+  private storage = inject(Storage);
 
   private readonly TASK_INDEX = 3;
+  private readonly MAX_TIME = 10;
+  private readonly REWARD_COUNT_ID = `rw_${this.TASK_INDEX}`
+
+  Timer() {
+    setInterval(() => {
+      this.timeLeft = this.time.getTimeRemaining(this.TASK_INDEX, this.MAX_TIME)
+    }, 1000);
+  }
+
+  ngOnInit() {
+    this.time.start(this.TASK_INDEX);
+    this.Timer();
+  }
 
   // ===== UI data =====
-  title = 'Jagd den Schwein';
-  timeLeft = '10min 1 sek';
-  reward = '3x';
+  title = 'Jagd das Schwein';
+  timeLeft = '10:00';
+  reward = this.storage.getObject(this.REWARD_COUNT_ID);
 
   taskTitle = 'Renne 12km/h';
   taskDesc = 'Renne 12km/h in einer geraden Linie';
@@ -65,9 +80,6 @@ export class SpeedoMeterPage {
   private lastShownKmh = 0;
 
   async ionViewWillEnter() {
-    // Timer starten
-    this.time.start(this.TASK_INDEX);
-
     // Permissions
     await Geolocation.requestPermissions();
 
@@ -125,7 +137,7 @@ export class SpeedoMeterPage {
         kmh = Math.max(0, Math.min(kmh, 60)); // 60 km/h cap fürs Rennen
 
         // simples smoothing (damit UI ruhiger ist)
-        const smooth = this.lastShownKmh * 0.7 + kmh * 0.3;
+        const smooth = (this.lastShownKmh * 0.7 + kmh * 0.3) * 3.6; // m/s -> km/h
         this.lastShownKmh = smooth;
 
         this.currentSpeed = smooth.toFixed(1);
@@ -177,11 +189,19 @@ export class SpeedoMeterPage {
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos(toRad(lat1)) *
-        Math.cos(toRad(lat2)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
+      Math.cos(toRad(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
 
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
   }
+  getSchnitzelCount(): number {
+  return Number(localStorage.getItem('schnitzel_count') ?? 0);
+}
+
+addSchnitzel(amount: number = 1) {
+  const current = this.getSchnitzelCount();
+  localStorage.setItem('schnitzel_count', String(current + amount));
+}
 }
