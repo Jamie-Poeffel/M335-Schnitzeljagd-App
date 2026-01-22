@@ -43,4 +43,12 @@ export class WifiPage {
   welcome(): void {
     this.router.navigate(['/leaderboard']);
   }
+  getSchnitzelCount(): number {
+  return Number(localStorage.getItem('schnitzel_count') ?? 0);
+}
+
+addSchnitzel(amount: number = 1) {
+  const current = this.getSchnitzelCount();
+  localStorage.setItem('schnitzel_count', String(current + amount));
+}
 }
