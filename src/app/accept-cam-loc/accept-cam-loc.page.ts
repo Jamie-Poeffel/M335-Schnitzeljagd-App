@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { Geolocation } from '@capacitor/geolocation';
 import { RouterLink } from '@angular/router';
@@ -11,7 +10,7 @@ import { NativeSettings, AndroidSettings, IOSSettings } from 'capacitor-native-s
   standalone: true,
   templateUrl: './accept-cam-loc.page.html',
   styleUrls: ['./accept-cam-loc.page.scss'],
-  imports: [CommonModule, IonicModule, RouterLink],
+  imports: [IonicModule, RouterLink],
 })
 export class AcceptCamLocPage implements OnInit {
   camOk = false;
@@ -27,7 +26,7 @@ export class AcceptCamLocPage implements OnInit {
 
     if (platform === 'android') {
       NativeSettings.openAndroid({
-        option: AndroidSettings.Location
+        option: AndroidSettings.ApplicationDetails
       });
     } else if (platform === 'ios') {
       NativeSettings.openIOS({
@@ -60,15 +59,17 @@ export class AcceptCamLocPage implements OnInit {
     }
 
     if (permissionStatus.location !== "prompt") {
-      this.openLocationSettings().then(async () => this.checkLocationPermission())
-      return false;
+      alert("Location Permissions are denied please activate them")
+      await this.openLocationSettings();
+      return this.checkLocationPermission();
     }
 
     return false;
   }
 
+
   toggleLoc(): void {
-    this.checkLocationPermission().then((ok) => {
+    this.checkLocationPermission(true).then((ok) => {
       this.locOk = ok;
     });
   }
