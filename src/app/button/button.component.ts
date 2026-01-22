@@ -1,8 +1,8 @@
-import { NgClass } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { addIcons } from 'ionicons';
 import { chevronBackOutline } from 'ionicons/icons';
 import { IonicModule } from "@ionic/angular";
+import { NgClass } from '@angular/common';
 @Component({
   selector: 'app-button',
   templateUrl: './button.component.html',

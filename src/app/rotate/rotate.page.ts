@@ -1,6 +1,5 @@
 // rotate.page.ts
 import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../button/button.component';
 
@@ -20,7 +19,6 @@ import { TimeService } from '../time';
     IonHeader,
     IonTitle,
     IonToolbar,
-    CommonModule,
     FormsModule,
     RouterLink,
     ButtonComponent,
@@ -44,8 +42,8 @@ export class RotatePage implements OnInit {
   }
 
   private finishTaskAndGoNext() {
-    const secondsTaken = this.time.stop(this.TASK_INDEX);
-    this.progress.completeTask(this.TASK_INDEX, secondsTaken);
+    const time = this.time.stop(this.TASK_INDEX);
+    this.progress.completeTask(this.TASK_INDEX, time);
     this.router.navigate(['/speedometer']);
   }
 

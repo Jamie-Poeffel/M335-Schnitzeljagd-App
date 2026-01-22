@@ -57,11 +57,8 @@ export class SpeedoMeterPage {
 
   // ===== actions =====
   onSkip() {
-    const secondsTaken = this.time.stop(this.TASK_INDEX);
-
-    // save reward (+1 schnitzel, +potato if >5min)
-    this.progress.completeTask(this.TASK_INDEX, secondsTaken);
-
+    const time = this.time.stop(this.TASK_INDEX);
+    this.progress.completeTask(this.TASK_INDEX, time);
     // go to next task
     this.router.navigate(['/qr-scanner']);
   }

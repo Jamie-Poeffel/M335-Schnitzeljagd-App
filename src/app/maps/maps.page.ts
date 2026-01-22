@@ -62,7 +62,14 @@ export class MapsPage implements OnInit, OnDestroy {
   ngOnInit() {
     // start task timer + start tracking
     this.time.start(this.TASK_INDEX);
+    this.Timer();
     this.initializeLocationTracking();
+  }
+
+  Timer() {
+    setInterval(() => {
+      this.timeRemaining = this.time.getTimeRemaining(this.TASK_INDEX, 5);
+    }, 1000);
   }
 
   ngOnDestroy() {
@@ -209,11 +216,11 @@ export class MapsPage implements OnInit, OnDestroy {
 
     const haversineA =
       Math.sin(latitudeDifferenceRadians / 2) *
-        Math.sin(latitudeDifferenceRadians / 2) +
+      Math.sin(latitudeDifferenceRadians / 2) +
       Math.cos(userLatitudeRadians) *
-        Math.cos(targetLatitudeRadians) *
-        Math.sin(longitudeDifferenceRadians / 2) *
-        Math.sin(longitudeDifferenceRadians / 2);
+      Math.cos(targetLatitudeRadians) *
+      Math.sin(longitudeDifferenceRadians / 2) *
+      Math.sin(longitudeDifferenceRadians / 2);
 
     const haversineC =
       2 * Math.atan2(Math.sqrt(haversineA), Math.sqrt(1 - haversineA));
@@ -247,8 +254,8 @@ export class MapsPage implements OnInit, OnDestroy {
   }
 
   private finishTaskAndGoNext() {
-    const secondsTaken = this.time.stop(this.TASK_INDEX);
-    this.progress.completeTask(this.TASK_INDEX, secondsTaken);
+    const time = this.time.stop(this.TASK_INDEX);
+    this.progress.completeTask(this.TASK_INDEX, time);
     this.router.navigate(['/qr-scanner']);
   }
 
