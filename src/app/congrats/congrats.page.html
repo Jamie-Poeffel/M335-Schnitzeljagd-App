@@ -9,43 +9,47 @@
           <div class="welcome-name">{{ user.name }} !</div>
           <div class="sub">
             Du hast die Jagd beendet und bekommst<br />
-            als Belohnung <b>6 SCHNITZELN!!</b>
+            als Belohnung {{earnedThisRun}} Schnitzel
+
           </div>
 
           <div class="trophy">
             <!-- replace with your image if you have one -->
             <img src="assets/pictures/trophy.png" alt="Trophäe" />
-            <div class="badge">6x</div>
+            <div class="badge">{{ earnedThisRun }}x</div>
+
           </div>
 
-          <div class="small-footer">Dauer: 21min 15 sek</div>
+          <div class="small-footer"></div>
         </div>
 
-        <!-- task list -->
-        <div class="task-list">
-          @for (i of [].constructor(totalTasks); track $index) { @let idx =
-          $index + 1; @let r = getResult(idx);
+<div class="task-list">
+  @for (r of rewardedTasks; track r.taskIndex) {
+    <div class="task-row">
+      <div class="task-left">
+        <div class="task-title">Aufgabe {{ r.taskIndex }}</div>
+        <div class="task-reward">+{{ r.schnitzelEarned }}x</div>
 
-          <div class="task-row">
-            <div class="task-left">
-              <div class="task-title">Aufgabe {{ idx }}</div>
-              <div class="task-reward">+1x</div>
+        @if (r.potatoEarned > 0) {
+          <div class="task-penalty">+{{ r.potatoEarned }} 🥔</div>
+        }
+      </div>
 
-              @if (r?.potatoEarned) {
-              <div class="task-penalty">+1 🥔</div>
-              }
-            </div>
+      <div class="task-right">
+        <img class="schnitzel" src="assets/pictures/schnitzel.png" alt="Schnitzel" />
+      </div>
+    </div>
+  }
 
-            <div class="task-right">
-              <img
-                class="schnitzel"
-                src="assets/pictures/schnitzel.png"
-                alt="Schnitzel"
-              />
-            </div>
-          </div>
-          }
-        </div>
+  @if (rewardedTasks.length === 0) {
+    <div class="task-row" style="justify-content:center;">
+      <div style="font-weight:700; opacity:.75;">
+        Keine Aufgabe abgeschlossen – kein Schnitzel erhalten.
+      </div>
+    </div>
+  }
+</div>
+
 
         <!-- account -->
         <div class="account">

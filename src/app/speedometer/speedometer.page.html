@@ -47,9 +47,17 @@
 
           <div class="redline">Ziel: 12 km/h</div>
 
-          <app-button variant="text" (click)="onSkip()">
+          @if (status !== "Success") {
+          <app-button variant="text" (clicked)="onSkip()">
             Überspringen
           </app-button>
+          }
+
+          @if (status === "Success") {
+          <app-button variant="filled" (clicked)="onMoveOn()">
+            <p>Weiter</p>
+          </app-button>
+          }
         </div>
       </section>
     </div>

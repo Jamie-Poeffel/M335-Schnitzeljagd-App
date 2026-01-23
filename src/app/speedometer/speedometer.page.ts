@@ -73,7 +73,14 @@ export class SpeedoMeterPage implements OnInit {
 
   // in deinem Template ist es ein string -> lassen wir so
   currentSpeed = '0.0'; // km/h
+// ===== mission status =====
+status: 'Ready' | 'Running' | 'Success' = 'Ready';
 
+// speed goal logic
+private readonly TARGET_KMH = 12;
+private readonly HOLD_MS = 1500; // must hold 12 km/h for 1.5s
+private successGiven = false;
+private holdStartMs: number | null = null;
   // ===== intern =====
   private watchId: string | null = null;
   private lastFix: Fix | null = null;
@@ -154,13 +161,28 @@ export class SpeedoMeterPage implements OnInit {
       this.watchId = null;
     }
   }
+onMoveOn() {
+  // if for some reason success wasn't processed yet, force save once
+  if (!this.successGiven) {
+    this.successGiven = true;
 
-  // ===== actions =====
-  onSkip() {
+    this.addSchnitzel(1);
+
     const t = this.time.stop(this.TASK_INDEX);
     this.progress.completeTask(this.TASK_INDEX, t);
-    this.router.navigate(['/wifi']);
   }
+
+  this.router.navigate(['/wifi']);
+}
+  // ===== actions =====
+ onSkip() {
+  // stop timer, mark task as completed/attempted (your choice)
+  const t = this.time.stop(this.TASK_INDEX);
+  this.progress.completeTask(this.TASK_INDEX, t);
+
+  // DO NOT add schnitzel here, because skipping isn't success
+  this.router.navigate(['/wifi']);
+}
 
   back() {
     history.back();
