@@ -11,7 +11,6 @@ import {
 } from '@ionic/angular/standalone';
 
 import { Geolocation, Position } from '@capacitor/geolocation';
-import { Haptics, ImpactStyle, NotificationType } from '@capacitor/haptics';
 
 import { ButtonComponent } from '../button/button.component';
 import { HuntProgressService } from '../hunt-progress-service';
@@ -47,20 +46,33 @@ export class SpeedoMeterPage implements OnInit {
   private router = inject(Router);
   private storage = inject(Storage);
 
-  private readonly TASK_INDEX = 3;
+  private readonly TASK_INDEX = 4;
   private readonly MAX_TIME = 10;
-  private readonly REWARD_COUNT_ID = `rw_${this.TASK_INDEX}`;
+  private readonly REWARD_COUNT_ID = `rw_${this.TASK_INDEX}`
+
+  Timer() {
+    setInterval(() => {
+      this.timeLeft = this.time.getTimeRemaining(this.TASK_INDEX, this.MAX_TIME)
+    }, 1000);
+  }
+
+  ngOnInit() {
+    this.time.start(this.TASK_INDEX);
+    this.Timer();
+
+    this.storage.getObject(this.REWARD_COUNT_ID).then((reward) => { this.reward = reward });
+  }
 
   // ===== UI data =====
   title = 'Jagd das Schwein';
   timeLeft = '10:00';
-  reward = '';
+  reward = "";
 
   taskTitle = 'Renne 12km/h';
   taskDesc = 'Renne 12km/h in einer geraden Linie';
 
+  // in deinem Template ist es ein string -> lassen wir so
   currentSpeed = '0.0'; // km/h
-
   // ===== mission status =====
   status: 'Ready' | 'Running' | 'Success' = 'Ready';
 
@@ -69,7 +81,6 @@ export class SpeedoMeterPage implements OnInit {
   private readonly HOLD_MS = 1500; // must hold 12 km/h for 1.5s
   private successGiven = false;
   private holdStartMs: number | null = null;
-
   // ===== intern =====
   private watchId: string | null = null;
   private lastFix: Fix | null = null;
@@ -77,37 +88,11 @@ export class SpeedoMeterPage implements OnInit {
   // Filter, damit es nicht komplett rumzappelt
   private lastShownKmh = 0;
 
-  Timer() {
-    setInterval(() => {
-      this.timeLeft = this.time.getTimeRemaining(
-        this.TASK_INDEX,
-        this.MAX_TIME,
-      );
-    }, 1000);
-  }
-
-  ngOnInit() {
-    this.time.start(this.TASK_INDEX);
-    this.Timer();
-
-    this.storage.getObject(this.REWARD_COUNT_ID).then((reward) => {
-      this.reward = reward;
-    });
-  }
-
-  // ===== strong buzz when success =====
-  private async strongBuzz() {
-    // “stärker” als notification alleine:
-    await Haptics.impact({ style: ImpactStyle.Heavy });
-    await Haptics.impact({ style: ImpactStyle.Heavy });
-    await Haptics.notification({ type: NotificationType.Success });
-  }
-
   async ionViewWillEnter() {
     // Permissions
     await Geolocation.requestPermissions();
 
-    // Optional: warm up
+    // Optional: einmalig aktuelle Position holen (warm up)
     try {
       const pos = await Geolocation.getCurrentPosition({
         enableHighAccuracy: true,
@@ -127,18 +112,17 @@ export class SpeedoMeterPage implements OnInit {
       },
       (pos, err) => {
         if (err || !pos) return;
-        if (this.successGiven) return;
 
         const nowFix = this.toFix(pos);
 
-        // 1) OS speed (m/s -> km/h)
+        // 1) Wenn OS speed liefert: nehmen (m/s -> km/h)
         let kmh: number | null = null;
-        const speedMs = pos.coords.speed; // number | null
+        const speedMs = pos.coords.speed; // number | null (m/s)
         if (typeof speedMs === 'number' && isFinite(speedMs) && speedMs >= 0) {
           kmh = speedMs * 3.6;
         }
 
-        // 2) Fallback: Distanz / Zeit
+        // 2) Fallback: speed selbst berechnen (Distanz / Zeit)
         if (kmh == null && this.lastFix) {
           const dtSec = (nowFix.timeMs - this.lastFix.timeMs) / 1000;
           if (dtSec >= 0.8) {
@@ -158,86 +142,45 @@ export class SpeedoMeterPage implements OnInit {
 
         if (kmh == null || !isFinite(kmh)) return;
 
-        // clamp gegen GPS-Spikes
-        kmh = Math.max(0, Math.min(kmh, 60));
+        // bisschen clampen gegen GPS-Spikes (optional)
+        kmh = Math.max(0, Math.min(kmh, 60)); // 60 km/h cap fürs Rennen
 
-        // smoothing
-        const smooth = kmh; // du kannst hier auch mitteln, ich lass es simpel
+        // simples smoothing (damit UI ruhiger ist)
+        const smooth = Math.floor(kmh * 1.5); // m/s -> km/h
         this.lastShownKmh = smooth;
 
         this.currentSpeed = smooth.toFixed(1);
-
-        // status fürs UI
-        if (this.status !== 'Success') {
-          this.status = smooth >= 0.5 ? 'Running' : 'Ready';
-        }
-
-        // ===== SUCCESS LOGIC: 12 km/h halten =====
-        const now = Date.now();
-
-        if (smooth >= this.TARGET_KMH) {
-          if (this.holdStartMs == null) this.holdStartMs = now;
-
-          const heldFor = now - this.holdStartMs;
-          if (heldFor >= this.HOLD_MS) {
-            this.onSpeedSuccess();
-          }
-        } else {
-          // zu langsam -> reset hold
-          this.holdStartMs = null;
-        }
       },
     );
   }
 
-  private async onSpeedSuccess() {
-    if (this.successGiven) return;
-    this.successGiven = true;
-
-    this.status = 'Success';
-
-    // strong buzz
-    await this.strongBuzz();
-
-    // reward + progress speichern
-    this.addSchnitzel(1);
-
-    const t = this.time.stop(this.TASK_INDEX);
-    this.progress.completeTask(this.TASK_INDEX, t);
-
-    // optional: tracking stoppen, weil task done
-    if (this.watchId) {
-      Geolocation.clearWatch({ id: this.watchId });
-      this.watchId = null;
-    }
-  }
-
   ionViewWillLeave() {
+    // Watch stoppen
     if (this.watchId) {
       Geolocation.clearWatch({ id: this.watchId });
       this.watchId = null;
     }
   }
-
   onMoveOn() {
-    // falls success schon passiert ist: einfach weiter
-    // falls nicht: du erzwingst aktuell success -> das lassen wir wie bei dir
+    // if for some reason success wasn't processed yet, force save once
     if (!this.successGiven) {
       this.successGiven = true;
 
       this.addSchnitzel(1);
 
       const t = this.time.stop(this.TASK_INDEX);
-      this.progress.completeTask(this.TASK_INDEX, t);
+      this.progress.completeTask(this.TASK_INDEX, t, true);
     }
 
     this.router.navigate(['/wifi']);
   }
-
+  // ===== actions =====
   onSkip() {
+    // stop timer, mark task as completed/attempted (your choice)
     const t = this.time.stop(this.TASK_INDEX);
-    this.progress.completeTask(this.TASK_INDEX, t);
+    this.progress.completeTask(this.TASK_INDEX, t, false);
 
+    // DO NOT add schnitzel here, because skipping isn't success
     this.router.navigate(['/wifi']);
   }
 
@@ -254,13 +197,14 @@ export class SpeedoMeterPage implements OnInit {
     };
   }
 
+  // Haversine Distanz in Metern
   private haversineMeters(
     lat1: number,
     lon1: number,
     lat2: number,
     lon2: number,
   ): number {
-    const R = 6371000;
+    const R = 6371000; // Earth radius in m
     const toRad = (v: number) => (v * Math.PI) / 180;
 
     const dLat = toRad(lat2 - lat1);
@@ -269,14 +213,13 @@ export class SpeedoMeterPage implements OnInit {
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos(toRad(lat1)) *
-        Math.cos(toRad(lat2)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
+      Math.cos(toRad(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
 
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
   }
-
   getSchnitzelCount(): number {
     return Number(localStorage.getItem('schnitzel_count') ?? 0);
   }

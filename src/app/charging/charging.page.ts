@@ -5,6 +5,7 @@ import { ButtonComponent } from '../button/button.component';
 import { TimeService } from '../time';
 import { Device } from '@capacitor/device';
 import { Storage } from '../storage';
+import { HuntProgressService } from '../hunt-progress-service';
 import { Haptics, NotificationType } from '@capacitor/haptics';
 
 @Component({
@@ -18,27 +19,31 @@ export class ChargingPage implements OnInit {
   private router = inject(Router);
   private timeService = inject(TimeService);
   private storage = inject(Storage);
-
-  timeLeft = '5:00';
+  private time = inject(TimeService);
+  private progress = inject(HuntProgressService);
 
   private readonly TASK_INDEX = 6;
   private readonly MAX_MINUTES = 5;
   private readonly REWARD_COUNT_ID = `rw_${this.TASK_INDEX}`;
+  private _neededTime: number = 0;
+
+  intervalId: any;
 
   reward = '';
+  timeLeft = "10:00"
 
   isCharging = false;
 
   private chargingBuzzed = false;
 
-  constructor() {}
+  constructor() { }
 
   private async vibrateSuccess() {
     await Haptics.notification({ type: NotificationType.Success });
   }
 
   Timer() {
-    setInterval(async () => {
+    this.intervalId = setInterval(async () => {
       this.timeLeft = this.timeService.getTimeRemaining(
         this.TASK_INDEX,
         this.MAX_MINUTES,
@@ -68,6 +73,14 @@ export class ChargingPage implements OnInit {
     }
   }
 
+  private finishTaskAndGoNext(skip: boolean) {
+    clearInterval(this.intervalId);
+    this._neededTime = this.time.stop(this.TASK_INDEX);
+    this.progress.setTime(300);
+    this.progress.completeTask(this.TASK_INDEX, this._neededTime, skip ? false : true);
+    this.router.navigate(['/congrats']);
+  }
+
   ngOnInit() {
     this.timeService.start(this.TASK_INDEX);
     this.Timer();
@@ -78,10 +91,11 @@ export class ChargingPage implements OnInit {
   }
 
   onSkip() {
-    this.router.navigateByUrl('congrats');
+    this.finishTaskAndGoNext(true)
   }
 
   onEnd(): void {
+<<<<<<< HEAD
     this.router.navigateByUrl('congrats');
   }
 
@@ -92,5 +106,8 @@ export class ChargingPage implements OnInit {
   addSchnitzel(amount: number = 1) {
     const current = this.getSchnitzelCount();
     localStorage.setItem('schnitzelCount', String(current + amount));
+=======
+    this.finishTaskAndGoNext(false);
+>>>>>>> 0bd5e97c5c3d9b878ba775815fa0bb438ffe45da
   }
 }
