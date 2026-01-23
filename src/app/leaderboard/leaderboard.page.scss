@@ -1,0 +1,132 @@
+.screen {
+  min-height: 100%;
+  padding: 26px 18px 18px;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 26px;
+}
+
+/* Top card */
+.top-card {
+  width: min(420px, 100%);
+  background: #f7f7f7;
+  border-radius: 30px;
+  padding: 22px 18px;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.top-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.trophy {
+  color: #c97a3e;
+  flex: 0 0 auto;
+}
+
+.top-text {
+  min-width: 0;
+}
+
+.headline {
+  font-size: 23px;
+  font-weight: 800;
+  color: #c97a3e;
+  letter-spacing: 0.2px;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.subline {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #c97a3e;
+  opacity: 0.9;
+  font-weight: 600;
+}
+
+.back-mini {
+  border: none;
+  background: transparent;
+  color: #c97a3e;
+  font-weight: 700;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.chev {
+  font-size: 22px;
+  line-height: 0;
+  margin-top: -2px;
+}
+
+/* Empty state card */
+.empty-card {
+  width: min(420px, 100%);
+  background: #f7f7f7;
+  border-radius: 30px;
+  padding: 42px 18px;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.12);
+  text-align: center;
+}
+
+.empty-icon {
+  color: #d7d7d7;
+  margin-bottom: 18px;
+}
+
+.empty-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #d1d1d1;
+  margin-bottom: 8px;
+}
+
+.empty-sub {
+  font-size: 13px;
+  color: #d1d1d1;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+/* bottom back button */
+.bottom {
+  width: min(420px, 100%);
+  margin-top: auto;
+  padding-bottom: 6px;
+  display: flex;
+  justify-content: center;
+}
+
+.back-btn {
+  width: 100%;
+  background: #fff;
+  border: 2px solid #c97a3e;
+  color: #c97a3e;
+  border-radius: 999px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}

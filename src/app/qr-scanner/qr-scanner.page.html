@@ -40,7 +40,7 @@
           </p>
 
           <div class="redline">Status: {{ status }}</div>
-          <div class="redline">letztes Ergebnis: {{ lastResult || '—' }}</div>
+          <div class="redline">letztes Ergebnis: {{ lastResult || '-' }}</div>
 
           @if (status !== "Success") {
           <app-button variant="text" (clicked)="onSkip()">

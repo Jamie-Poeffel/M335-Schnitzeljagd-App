@@ -7,10 +7,10 @@ import {
   inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Network, ConnectionStatus } from '@capacitor/network';
-import { Haptics } from '@capacitor/haptics';
+import { Haptics, NotificationType } from '@capacitor/haptics';
 import { ButtonComponent } from '../button/button.component';
 import { TimeService } from '../time';
 import { Storage } from '../storage';
@@ -20,43 +20,52 @@ import { Storage } from '../storage';
   standalone: true,
   templateUrl: './wifi.page.html',
   styleUrls: ['./wifi.page.scss'],
-  imports: [IonicModule, ButtonComponent],
+  imports: [IonicModule, ButtonComponent, CommonModule],
 })
 export class WifiPage implements OnInit, OnDestroy {
   private time = inject(TimeService);
   private storage = inject(Storage);
+  private toastCtrl = inject(ToastController);
 
   private readonly TASK_INDEX = 5;
   private readonly MAX_TIME = 5;
-  private readonly REWARD_COUNT_ID = `rw_${this.TASK_INDEX}`
+  private readonly REWARD_COUNT_ID = `rw_${this.TASK_INDEX}`;
 
   timeLeft = '5:00';
-  reward = "";
+  reward = '';
 
   ssid = 'ICT-KR6';
   password = 'EF-3A-03-AF-08-53';
 
   connected = false;
-  hasConnected = false;
-  isFinished = false;
+
+  // für "nur einmal auslösen"
+  private didShowConnectedToast = false;
+
   networkListener: any;
 
   constructor(
     private router: Router,
     private ngZone: NgZone,
     private cdr: ChangeDetectorRef,
-  ) { }
+  ) {}
 
   Timer() {
     setInterval(() => {
-      this.timeLeft = this.time.getTimeRemaining(this.TASK_INDEX, this.MAX_TIME);
+      this.timeLeft = this.time.getTimeRemaining(
+        this.TASK_INDEX,
+        this.MAX_TIME,
+      );
     }, 1000);
   }
 
   async ngOnInit() {
     this.time.start(this.TASK_INDEX);
     this.Timer();
-    this.storage.getObject(this.REWARD_COUNT_ID).then((reward) => { this.reward = reward });
+
+    this.storage.getObject(this.REWARD_COUNT_ID).then((reward) => {
+      this.reward = reward;
+    });
 
     const status = await Network.getStatus();
     this.checkWifi(status);
@@ -78,20 +87,29 @@ export class WifiPage implements OnInit, OnDestroy {
 
     this.connected = isWifi;
 
-    if (isWifi) {
-      this.hasConnected = true;
-    } else {
-      if (this.hasConnected && !this.isFinished) {
-        this.triggerSuccess();
-      }
+    // ✅ sobald verbunden (nur einmal): haptic + popup
+    if (isWifi && !this.didShowConnectedToast) {
+      this.didShowConnectedToast = true;
+      this.triggerConnected();
     }
+
+    // optional: wenn du willst, dass es bei disconnect wieder neu auslösen kann:
+    // if (!isWifi) this.didShowConnectedToast = false;
 
     this.cdr.detectChanges();
   }
 
-  async triggerSuccess() {
-    this.isFinished = true;
-    await Haptics.notification({ type: 'success' as any });
+  private async triggerConnected() {
+    // Haptic
+    await Haptics.notification({ type: NotificationType.Success });
+
+    // Popup (Toast)
+    const toast = await this.toastCtrl.create({
+      message: 'Yuhuii connected 🎉',
+      duration: 1800,
+      position: 'top',
+    });
+    await toast.present();
   }
 
   charging() {
@@ -105,9 +123,11 @@ export class WifiPage implements OnInit, OnDestroy {
   onCancel() {
     this.router.navigate(['/home']);
   }
+
   onContinue() {
     this.router.navigate(['/charging']);
   }
+
   getSchnitzelCount(): number {
     return Number(localStorage.getItem('schnitzel_count') ?? 0);
   }

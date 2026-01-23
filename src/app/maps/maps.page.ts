@@ -19,6 +19,7 @@ import {
 
 import { Router, RouterLink } from '@angular/router';
 import { Geolocation, Position, PositionOptions } from '@capacitor/geolocation';
+import { Haptics, NotificationType } from '@capacitor/haptics';
 
 import { HuntProgressService } from '../hunt-progress-service';
 import { TimeService } from '../time';
@@ -37,6 +38,7 @@ import { Storage } from '../storage';
     FormsModule,
     RouterLink,
     ButtonComponent,
+    CommonModule,
   ],
 })
 export class MapsPage implements OnInit, OnDestroy {
@@ -48,12 +50,11 @@ export class MapsPage implements OnInit, OnDestroy {
   private storage = inject(Storage);
 
   private readonly TASK_INDEX = 1;
-  private readonly REWARD_COUNT_ID = `rw_${this.TASK_INDEX}`
+  private readonly REWARD_COUNT_ID = `rw_${this.TASK_INDEX}`;
 
-  reward = ""
+  reward = '';
 
-
-  // Target destination ()
+  // Target destination
   readonly TARGET_LATITUDE = 47.02745752832616;
   readonly TARGET_LONGITUDE = 8.30138651362293;
   readonly TARGET_DISTANCE_THRESHOLD = 10; // meters
@@ -72,13 +73,25 @@ export class MapsPage implements OnInit, OnDestroy {
 
   isWithinTargetDistance = false;
 
+  // damit es nicht bei jedem GPS update vibriert
+  private reachedBuzzed = false;
+
+  constructor() {}
+
   ngOnInit() {
     // start task timer + start tracking
     this.time.start(this.TASK_INDEX);
     this.Timer();
 
-    this.storage.getObject(this.REWARD_COUNT_ID).then((reward) => { this.reward = reward });
+    this.storage.getObject(this.REWARD_COUNT_ID).then((reward) => {
+      this.reward = reward;
+    });
+
     this.initializeLocationTracking();
+  }
+
+  ngOnDestroy() {
+    this.stopLocationTracking();
   }
 
   Timer() {
@@ -87,8 +100,8 @@ export class MapsPage implements OnInit, OnDestroy {
     }, 1000);
   }
 
-  ngOnDestroy() {
-    this.stopLocationTracking();
+  private async vibrateSuccess() {
+    await Haptics.notification({ type: NotificationType.Success });
   }
 
   async initializeLocationTracking() {
@@ -163,19 +176,6 @@ export class MapsPage implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Handle successful location update
-   */
-  /**
-   * Handle successful location update
-   * Wrapped in NgZone to ensure automatic change detection
-   */ /**
-* Handle location tracking errors
-*/
-  /**
-   * Handle successful location update
-   * Wrapped in NgZone to ensure automatic change detection
-   */
   private handleLocationUpdate(position: Position | null) {
     if (!position || !position.coords) {
       console.warn('Invalid position data received');
@@ -206,23 +206,13 @@ export class MapsPage implements OnInit, OnDestroy {
       this.cdr.detectChanges();
     });
   }
-  getSchnitzelCount(): number {
-    return Number(localStorage.getItem('schnitzel_count') ?? 0);
-  }
 
-  addSchnitzel(amount: number = 1) {
-    const current = this.getSchnitzelCount();
-    localStorage.setItem('schnitzel_count', String(current + amount));
-  }
-  /**
-   * Handle location tracking errors
-   */
   private handleLocationError(error: any) {
     this.ngZone.run(() => {
       this.isTrackingLocation = false;
       console.error('Location error:', error);
 
-      if (error.message) {
+      if (error?.message) {
         this.locationError = `Standortfehler: ${error.message}`;
       } else {
         this.locationError = 'Fehler beim Abrufen des Standorts.';
@@ -237,6 +227,7 @@ export class MapsPage implements OnInit, OnDestroy {
       console.warn('Cannot calculate distance: coordinates not available');
       this.distanceToTarget = null;
       this.isWithinTargetDistance = false;
+      this.reachedBuzzed = false; // reset
       return;
     }
 
@@ -253,28 +244,32 @@ export class MapsPage implements OnInit, OnDestroy {
 
     const haversineA =
       Math.sin(latitudeDifferenceRadians / 2) *
-      Math.sin(latitudeDifferenceRadians / 2) +
+        Math.sin(latitudeDifferenceRadians / 2) +
       Math.cos(userLatitudeRadians) *
-      Math.cos(targetLatitudeRadians) *
-      Math.sin(longitudeDifferenceRadians / 2) *
-      Math.sin(longitudeDifferenceRadians / 2);
+        Math.cos(targetLatitudeRadians) *
+        Math.sin(longitudeDifferenceRadians / 2) *
+        Math.sin(longitudeDifferenceRadians / 2);
 
     const haversineC =
       2 * Math.atan2(Math.sqrt(haversineA), Math.sqrt(1 - haversineA));
 
     this.distanceToTarget = Math.round(EARTH_RADIUS_METERS * haversineC);
 
+    const previousStatus = this.isWithinTargetDistance;
+
     // Check if user is within target distance
     this.isWithinTargetDistance =
       this.distanceToTarget <= this.TARGET_DISTANCE_THRESHOLD;
-    const previousStatus = this.isWithinTargetDistance;
-    this.isWithinTargetDistance =
-      this.distanceToTarget <= this.TARGET_DISTANCE_THRESHOLD;
 
-    if (previousStatus !== this.isWithinTargetDistance) {
-      console.log(
-        `Distance status changed: ${this.isWithinTargetDistance ? 'WITHIN' : 'OUTSIDE'} target range`,
-      );
+    // OUTSIDE -> WITHIN (nur einmal vibrieren)
+    if (!previousStatus && this.isWithinTargetDistance && !this.reachedBuzzed) {
+      this.reachedBuzzed = true;
+      this.vibrateSuccess();
+    }
+
+    // optional: wenn wieder raus, dann darf es später wieder buzz geben
+    if (previousStatus && !this.isWithinTargetDistance) {
+      this.reachedBuzzed = false;
     }
   }
 
@@ -322,5 +317,14 @@ export class MapsPage implements OnInit, OnDestroy {
 
   onSkip() {
     this.finishTaskAndGoNext();
+  }
+
+  getSchnitzelCount(): number {
+    return Number(localStorage.getItem('schnitzel_count') ?? 0);
+  }
+
+  addSchnitzel(amount: number = 1) {
+    const current = this.getSchnitzelCount();
+    localStorage.setItem('schnitzel_count', String(current + amount));
   }
 }
