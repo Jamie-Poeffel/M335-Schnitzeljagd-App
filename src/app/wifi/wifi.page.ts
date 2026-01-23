@@ -25,16 +25,14 @@ import { HuntProgressService } from '../hunt-progress-service';
 })
 export class WifiPage implements OnInit, OnDestroy {
   private time = inject(TimeService);
-  private storage = inject(Storage);
   private progress = inject(HuntProgressService);
   private toastCtrl = inject(ToastController);
 
   private readonly TASK_INDEX = 5;
   private readonly MAX_TIME = 5;
-  private readonly REWARD_COUNT_ID = `rw_${this.TASK_INDEX}`;
 
   timeLeft = '5:00';
-  reward = '';
+  reward = this.progress.getTotalSchnitzelOwned();
 
   ssid = 'ICT-KR6';
   password = 'EF-3A-03-AF-08-53';
@@ -74,7 +72,6 @@ export class WifiPage implements OnInit, OnDestroy {
   async ngOnInit() {
     this.time.start(this.TASK_INDEX);
     this.Timer();
-    this.storage.getObject(this.REWARD_COUNT_ID).then((reward) => { this.reward = reward || 0 });
 
     const status = await Network.getStatus();
     this.checkWifi(status);

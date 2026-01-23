@@ -13,7 +13,6 @@ export class LeaderboardService {
     potato: number;
     time: { hours: number; minutes: number; seconds: number };
   }): Promise<void> {
-
     const url =
       'https://docs.google.com/forms/u/0/d/e/1FAIpQLSc9v68rbCckYwcIekRLOaVZ0Qdm3eeh1xCEkgpn3d7pParfLQ/formResponse';
     const body =

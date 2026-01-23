@@ -15,8 +15,8 @@
         <div class="title-small">Jagd den Schwein</div>
 
         <div class="stats">
-          <div>Zeit Verbleibend: <b>{{ timeLeft }}</b></div>
-          <div>Schnitzel : <b>{{ schnitzelCount }}x</b></div>
+          <div>Zeit Verbleibend: {{ timeLeft }}</div>
+          <div>Schnitzel: {{ reward }}x</div>
         </div>
       </div>
 
@@ -41,12 +41,7 @@
       </app-button>
       }
 
-      <button
-        class="end-btn"
-        type="button"
-        [class.filled]="isCharging"
-        (click)="onEnd()"
-      >
+      <button class="end-btn" type="button" [class.filled]="isCharging" (click)="onEnd()">
         Beenden
       </button>
     </section>

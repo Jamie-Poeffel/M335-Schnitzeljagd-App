@@ -18,18 +18,16 @@ import { Haptics, NotificationType } from '@capacitor/haptics';
 export class ChargingPage implements OnInit {
   private router = inject(Router);
   private timeService = inject(TimeService);
-  private storage = inject(Storage);
   private time = inject(TimeService);
   private progress = inject(HuntProgressService);
 
   private readonly TASK_INDEX = 6;
   private readonly MAX_MINUTES = 5;
-  private readonly REWARD_COUNT_ID = `rw_${this.TASK_INDEX}`;
   private _neededTime: number = 0;
 
   intervalId: any;
 
-  reward = '';
+  reward = this.progress.getTotalSchnitzelOwned();
   timeLeft = "10:00"
 
   isCharging = false;
@@ -84,10 +82,6 @@ export class ChargingPage implements OnInit {
   ngOnInit() {
     this.timeService.start(this.TASK_INDEX);
     this.Timer();
-
-    this.storage.getObject(this.REWARD_COUNT_ID).then((reward) => {
-      this.reward = reward;
-    });
   }
 
   onSkip() {

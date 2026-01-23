@@ -44,14 +44,12 @@ export class SpeedoMeterPage implements OnInit {
   private progress = inject(HuntProgressService);
   private time = inject(TimeService);
   private router = inject(Router);
-  private storage = inject(Storage);
 
   private readonly TASK_INDEX = 4;
   private readonly MAX_TIME = 10;
-  private readonly REWARD_COUNT_ID = `rw_${this.TASK_INDEX}`
 
   Timer() {
-    setInterval(() => {
+    this.intervalId = setInterval(() => {
       this.timeLeft = this.time.getTimeRemaining(this.TASK_INDEX, this.MAX_TIME)
     }, 1000);
   }
@@ -60,13 +58,12 @@ export class SpeedoMeterPage implements OnInit {
     this.time.start(this.TASK_INDEX);
     this.Timer();
 
-    this.storage.getObject(this.REWARD_COUNT_ID).then((reward) => { this.reward = reward });
   }
 
   // ===== UI data =====
   title = 'Jagd das Schwein';
   timeLeft = '10:00';
-  reward = "";
+  reward = this.progress.getTotalSchnitzelOwned();
 
   taskTitle = 'Renne 12km/h';
   taskDesc = 'Renne 12km/h in einer geraden Linie';
@@ -75,6 +72,9 @@ export class SpeedoMeterPage implements OnInit {
   currentSpeed = '0.0'; // km/h
   // ===== mission status =====
   status: 'Ready' | 'Running' | 'Success' = 'Ready';
+
+  private _neededTime = 0;
+  intervalId: any;
 
   // speed goal logic
   private readonly TARGET_KMH = 12;
@@ -161,27 +161,21 @@ export class SpeedoMeterPage implements OnInit {
       this.watchId = null;
     }
   }
-  onMoveOn() {
-    // if for some reason success wasn't processed yet, force save once
-    if (!this.successGiven) {
-      this.successGiven = true;
 
-      this.addSchnitzel(1);
-
-      const t = this.time.stop(this.TASK_INDEX);
-      this.progress.completeTask(this.TASK_INDEX, t, true);
-    }
-
+  private finishTaskAndGoNext(skip: boolean) {
+    clearInterval(this.intervalId);
+    this._neededTime = this.time.stop(this.TASK_INDEX);
+    this.progress.setTime(30);
+    this.progress.completeTask(this.TASK_INDEX, this._neededTime, skip ? false : true);
     this.router.navigate(['/wifi']);
   }
-  // ===== actions =====
-  onSkip() {
-    // stop timer, mark task as completed/attempted (your choice)
-    const t = this.time.stop(this.TASK_INDEX);
-    this.progress.completeTask(this.TASK_INDEX, t, false);
 
-    // DO NOT add schnitzel here, because skipping isn't success
-    this.router.navigate(['/wifi']);
+  onSkip() {
+    this.finishTaskAndGoNext(true);
+  }
+
+  onDone() {
+    this.finishTaskAndGoNext(false);
   }
 
   back() {

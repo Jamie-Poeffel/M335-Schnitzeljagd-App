@@ -12,13 +12,15 @@ import {
 
 import { ButtonComponent } from '../button/button.component';
 import { HuntProgressService, TaskResult } from '../hunt-progress-service';
+import { LeaderboardService } from '../leaderboard.service';
+import { tick } from '@angular/core/testing';
 const LEADERBOARD_KEY = 'leaderboard_v1';
 
 type LeaderboardEntry = {
   name: string;
   schnitzelEarnedRun: number;
   runtimeSeconds: number;
-  finishedAt: number; 
+  finishedAt: number;
 };
 @Component({
   selector: 'app-congrats',
@@ -38,6 +40,7 @@ type LeaderboardEntry = {
 export class CongratsPage {
   private progress = inject(HuntProgressService);
   private router = inject(Router);
+  private leaderboardService = inject(LeaderboardService);
 
   user: User = {
     name: localStorage.getItem('user_name') || 'Gast',
@@ -51,43 +54,62 @@ export class CongratsPage {
   totalSchnitzel = this.progress.getTotalSchnitzelOwned();
   totalPotatoes = this.progress.getTotalPotatoesOwned();
 
-  // ✅ earned this run (sum, not just length in case you ever change rewards)
+  totalTime = this.progress.getTotalTime();
+
   earnedThisRun = this.rewardedTasks.reduce(
     (sum, r) => sum + r.schnitzelEarned,
     0,
   );
 
   goLeaderboard() {
+    this.leaderboardService.submitRun(
+      {
+        name: this.user.name,
+        schnitzel: this.totalSchnitzel,
+        potato: this.totalPotatoes,
+        time: {
+          hours: this.totalTime.h,
+          minutes: this.totalTime.m,
+          seconds: this.totalTime.s,
+        }
+      },
+    )
     this.router.navigate(['/leaderboard']);
   }
 
   goBeginning() {
-    this.router.navigate(['/home']);
+    this.leaderboardService.submitRun(
+      {
+
+      }
+    )
+    this.router.navigate(['/maps']);
   }
+
   private saveLeaderboardEntry() {
-  const raw = localStorage.getItem(LEADERBOARD_KEY);
-  const list: LeaderboardEntry[] = raw ? JSON.parse(raw) : [];
+    const raw = localStorage.getItem(LEADERBOARD_KEY);
+    const list: LeaderboardEntry[] = raw ? JSON.parse(raw) : [];
 
-  const entry: LeaderboardEntry = {
-    name: this.user.name || 'Gast',
-    schnitzelEarnedRun: this.earnedThisRun,
-    runtimeSeconds: this.progress.getResults().reduce((sum, r) => sum + r.secondsTaken, 0),
-    finishedAt: Date.now(),
-  };
+    const entry: LeaderboardEntry = {
+      name: this.user.name || 'Gast',
+      schnitzelEarnedRun: this.earnedThisRun,
+      runtimeSeconds: this.progress.getResults().reduce((sum, r) => sum + r.secondsTaken, 0),
+      finishedAt: Date.now(),
+    };
 
-  list.push(entry);
+    list.push(entry);
 
-  // sort: most schnitzels first, then fastest time
-  list.sort((a, b) => {
-    if (b.schnitzelEarnedRun !== a.schnitzelEarnedRun) {
-      return b.schnitzelEarnedRun - a.schnitzelEarnedRun;
-    }
-    return a.runtimeSeconds - b.runtimeSeconds;
-  });
+    // sort: most schnitzels first, then fastest time
+    list.sort((a, b) => {
+      if (b.schnitzelEarnedRun !== a.schnitzelEarnedRun) {
+        return b.schnitzelEarnedRun - a.schnitzelEarnedRun;
+      }
+      return a.runtimeSeconds - b.runtimeSeconds;
+    });
 
-  localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(list));
-}
-ionViewWillEnter() {
-  this.saveLeaderboardEntry();
-}
+    localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(list));
+  }
+  ionViewWillEnter() {
+    this.saveLeaderboardEntry();
+  }
 }

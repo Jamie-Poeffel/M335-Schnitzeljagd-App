@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Storage } from './storage';
+import { h } from 'ionicons/dist/types/stencil-public-runtime';
 
 export type TaskResult = {
   taskIndex: number;        // 1..6
@@ -25,6 +26,21 @@ export class HuntProgressService {
   setTime(time: number) {
     this._time = time;
   }
+
+  getTotalTime() {
+    let totalSeconds = 0;
+
+    this.state.results.forEach(r => {
+      totalSeconds += r.secondsTaken;
+    });
+
+    const h = Math.floor(totalSeconds / 3600);
+    const m = Math.floor((totalSeconds % 3600) / 60);
+    const s = totalSeconds % 60;
+
+    return { h, m, s };
+  }
+
 
   completeTask(taskIndex: number, secondsTaken: number, completed: boolean) {
     // prevent duplicates
