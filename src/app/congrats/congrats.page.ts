@@ -7,7 +7,14 @@ import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/stan
 
 import { ButtonComponent } from '../button/button.component';
 import { HuntProgressService, TaskResult } from '../hunt-progress-service';
+const LEADERBOARD_KEY = 'leaderboard_v1';
 
+type LeaderboardEntry = {
+  name: string;
+  schnitzelEarnedRun: number;
+  runtimeSeconds: number;
+  finishedAt: number; 
+};
 @Component({
   selector: 'app-congrats',
   standalone: true,
@@ -50,4 +57,30 @@ export class CongratsPage {
   goNext() {
     this.router.navigate(['/welcome']);
   }
+  private saveLeaderboardEntry() {
+  const raw = localStorage.getItem(LEADERBOARD_KEY);
+  const list: LeaderboardEntry[] = raw ? JSON.parse(raw) : [];
+
+  const entry: LeaderboardEntry = {
+    name: this.user.name || 'Gast',
+    schnitzelEarnedRun: this.earnedThisRun,
+    runtimeSeconds: this.progress.getResults().reduce((sum, r) => sum + r.secondsTaken, 0),
+    finishedAt: Date.now(),
+  };
+
+  list.push(entry);
+
+  // sort: most schnitzels first, then fastest time
+  list.sort((a, b) => {
+    if (b.schnitzelEarnedRun !== a.schnitzelEarnedRun) {
+      return b.schnitzelEarnedRun - a.schnitzelEarnedRun;
+    }
+    return a.runtimeSeconds - b.runtimeSeconds;
+  });
+
+  localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(list));
+}
+ionViewWillEnter() {
+  this.saveLeaderboardEntry();
+}
 }

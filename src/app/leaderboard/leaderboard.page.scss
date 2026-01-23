@@ -1,0 +1,63 @@
+.list-card {
+  width: min(420px, 100%);
+  background: #f7f7f7;
+  border-radius: 30px;
+  padding: 14px 14px;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.12);
+}
+
+.row {
+  background: #fff;
+  border-radius: 18px;
+  padding: 14px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+}
+
+.row + .row {
+  margin-top: 10px;
+}
+
+.left {
+  min-width: 0;
+}
+
+.name {
+  font-size: 16px;
+  font-weight: 800;
+  color: #c97a3e;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.meta {
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #c97a3e;
+  opacity: 0.85;
+}
+
+.right {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.score {
+  font-size: 18px;
+  font-weight: 900;
+  color: #c97a3e;
+}
+
+.s-icon {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+}
