@@ -89,6 +89,19 @@ export class ChargingPage implements OnInit {
   }
 
   onEnd(): void {
+<<<<<<< HEAD
+    this.router.navigateByUrl('congrats');
+  }
+
+  getSchnitzelCount(): number {
+    return Number(localStorage.getItem('schnitzelCount') ?? 0);
+  }
+
+  addSchnitzel(amount: number = 1) {
+    const current = this.getSchnitzelCount();
+    localStorage.setItem('schnitzelCount', String(current + amount));
+=======
     this.finishTaskAndGoNext(false);
+>>>>>>> 0bd5e97c5c3d9b878ba775815fa0bb438ffe45da
   }
 }
