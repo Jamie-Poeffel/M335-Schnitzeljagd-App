@@ -22,7 +22,10 @@
         <div class="rotate-frame">
           <div class="rotate-placeholder">
             <div class="rotate-illustration">
-              <div class="phone-icon" [style.transform]="'rotate(' + phoneRotation + 'deg)'">
+              <div
+                class="phone-icon"
+                [style.transform]="'rotate(' + phoneRotation + 'deg)'"
+              >
                 <div class="speaker"></div>
                 <div class="screen-inner"></div>
                 <div class="home-dot"></div>
@@ -38,17 +41,14 @@
                   Halte so… <b>{{ (HOLD_DURATION - holdTime).toFixed(1) }}s</b>
                 </ng-container>
 
-                }
-                @else {
+                } @else {
 
                 <ng-template>
                   Drehe dein Handy ins <b>aufem Kopf</b>.
                 </ng-template>
                 }
               </ng-container>
-              }
-
-              @else {
+              } @else {
               <ng-template #doneTpl>
                 <b>Perfekt! </b> Aufgabe abgeschlossen!
               </ng-template>
@@ -61,12 +61,17 @@
             <div class="hold-box">
               <div class="hold-row">
                 <span>Halte Position</span>
-                <span><b>{{ holdTime.toFixed(1) }}s</b> / {{ HOLD_DURATION
-                  }}s</span>
+                <span
+                  ><b>{{ holdTime.toFixed(1) }}s</b> / {{ HOLD_DURATION
+                  }}s</span
+                >
               </div>
 
               <div class="hold-bar">
-                <div class="hold-bar-inner" [style.width.%]="progressPercent"></div>
+                <div
+                  class="hold-bar-inner"
+                  [style.width.%]="progressPercent"
+                ></div>
               </div>
             </div>
             }
@@ -80,10 +85,8 @@
 
         <!-- Mission -->
         <div class="mission">
-          <h2>Aufgabe</h2>
-          <p class="hint">
-            Diese Aufgabe zählt erst, wenn du das Gerät drehst und kurz wartest.
-          </p>
+          <h2>Ein Handy?</h2>
+          <p class="hint">Tipp: Dreh mal dein Handy um.</p>
 
           <div class="redline">Status: {{ status }}</div>
 

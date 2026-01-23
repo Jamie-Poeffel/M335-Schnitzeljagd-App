@@ -38,11 +38,10 @@
 
         <!-- mission -->
         <div class="mission">
-          <h2>Aufgabe</h2>
+          <h2>Renn!</h2>
 
           <p class="hint">
-            Diese Aufgabe zählt erst, wenn du die Geschwindigkeit erreichst und
-            kurz hältst.
+            Bist du schnell genügend? Renn mit deinem Handy in der Hand
           </p>
 
           <div class="redline">Ziel: 12 km/h</div>
@@ -51,9 +50,7 @@
           <app-button variant="text" (clicked)="onSkip()">
             Überspringen
           </app-button>
-          }
-
-          @if (status === "Success") {
+          } @if (status === "Success") {
           <app-button variant="filled" (clicked)="onMoveOn()">
             <p>Weiter</p>
           </app-button>

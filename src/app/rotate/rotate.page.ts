@@ -15,6 +15,8 @@ import { ButtonComponent } from '../button/button.component';
 import { Motion } from '@capacitor/motion';
 import type { PluginListenerHandle } from '@capacitor/core';
 
+import { Haptics, NotificationType } from '@capacitor/haptics';
+
 import { HuntProgressService } from '../hunt-progress-service';
 import { TimeService } from '../time';
 import { Storage } from '../storage';
@@ -141,11 +143,13 @@ export class RotatePage implements OnInit, OnDestroy {
     this.holdTime = 0;
   }
 
-  private completeTask() {
+  private async completeTask() {
     if (this.holdInterval) {
       clearInterval(this.holdInterval);
       this.holdInterval = undefined;
     }
+
+    if (this.completed) return;
 
     this.completed = true;
     this.status = 'Erledigt';
@@ -161,6 +165,7 @@ export class RotatePage implements OnInit, OnDestroy {
     this.motionListener?.remove();
     if (this.holdInterval) clearInterval(this.holdInterval);
   }
+
   getSchnitzelCount(): number {
     return Number(localStorage.getItem('schnitzel_count') ?? 0);
   }

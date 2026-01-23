@@ -6,6 +6,7 @@ import { TimeService } from '../time';
 import { Device } from '@capacitor/device';
 import { Storage } from '../storage';
 import { HuntProgressService } from '../hunt-progress-service';
+import { Haptics, NotificationType } from '@capacitor/haptics';
 
 @Component({
   selector: 'app-charging',
@@ -16,7 +17,6 @@ import { HuntProgressService } from '../hunt-progress-service';
 })
 export class ChargingPage implements OnInit {
   private router = inject(Router);
-  timeLeft = '5:00';
   private timeService = inject(TimeService);
   private storage = inject(Storage);
   private time = inject(TimeService);
@@ -29,7 +29,18 @@ export class ChargingPage implements OnInit {
 
   intervalId: any;
 
-  reward = ""
+  reward = '';
+  timeLeft = "10:00"
+
+  isCharging = false;
+
+  private chargingBuzzed = false;
+
+  constructor() { }
+
+  private async vibrateSuccess() {
+    await Haptics.notification({ type: NotificationType.Success });
+  }
 
   Timer() {
     this.intervalId = setInterval(async () => {
@@ -37,21 +48,30 @@ export class ChargingPage implements OnInit {
         this.TASK_INDEX,
         this.MAX_MINUTES,
       );
-      this.checkBatteryStatus();
+
+      await this.checkBatteryStatus();
     }, 1000);
   }
-  schnitzelCount = 5;
 
   async checkBatteryStatus() {
-    const batteryStatus = await Device.getBatteryInfo();
+    try {
+      const batteryStatus = await Device.getBatteryInfo();
+      const previous = this.isCharging;
 
-    batteryStatus.isCharging
-      ? (this.isCharging = true)
-      : (this.isCharging = false);
+      this.isCharging = !!batteryStatus.isCharging;
+
+      if (!previous && this.isCharging && !this.chargingBuzzed) {
+        this.chargingBuzzed = true;
+        await this.vibrateSuccess();
+      }
+
+      if (previous && !this.isCharging) {
+        this.chargingBuzzed = false;
+      }
+    } catch (e) {
+      console.error('Battery check failed:', e);
+    }
   }
-
-  // toggle this to see both designs
-  isCharging = false;
 
   private finishTaskAndGoNext(skip: boolean) {
     clearInterval(this.intervalId);
@@ -64,7 +84,10 @@ export class ChargingPage implements OnInit {
   ngOnInit() {
     this.timeService.start(this.TASK_INDEX);
     this.Timer();
-    this.storage.getObject(this.REWARD_COUNT_ID).then((reward) => { this.reward = reward });
+
+    this.storage.getObject(this.REWARD_COUNT_ID).then((reward) => {
+      this.reward = reward;
+    });
   }
 
   onSkip() {
