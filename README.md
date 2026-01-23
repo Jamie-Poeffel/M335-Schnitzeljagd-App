@@ -125,7 +125,10 @@ Die Aufgaben werden in dieser Reihenfolge umgesetzt:
 Für dieses Projekt wurde ein **manuelles Testkonzept** erstellt, welches alle zentralen Funktionen der App abdeckt (Namenseingabe, Aufgaben, Vibration, WLAN-Popup, Skip-Funktion, Leaderboard usw.).
 
 📄 **Testkonzept herunterladen (Word-Dokument):**  
+
+After Pressing the Link press 'view raw'
 [👉 Testkonzept - Schnitzeljagd App](./TestKonzept_SchnitzelJagd_Jamie_Gregory_Kush.docx)
+
 
 ---
 
