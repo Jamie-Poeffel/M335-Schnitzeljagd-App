@@ -86,11 +86,11 @@ export class ChargingPage implements OnInit {
   }
 
   getSchnitzelCount(): number {
-    return Number(localStorage.getItem('schnitzel_count') ?? 0);
+    return Number(localStorage.getItem('schnitzelCount') ?? 0);
   }
 
   addSchnitzel(amount: number = 1) {
     const current = this.getSchnitzelCount();
-    localStorage.setItem('schnitzel_count', String(current + amount));
+    localStorage.setItem('schnitzelCount', String(current + amount));
   }
 }
