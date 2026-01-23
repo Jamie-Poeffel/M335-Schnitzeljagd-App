@@ -3,8 +3,13 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../button/button.component';
-import { CapacitorBarcodeScanner, CapacitorBarcodeScannerScanResult, CapacitorBarcodeScannerTypeHintALLOption } from '@capacitor/barcode-scanner';
+import {
+  CapacitorBarcodeScanner,
+  CapacitorBarcodeScannerScanResult,
+  CapacitorBarcodeScannerTypeHintALLOption,
+} from '@capacitor/barcode-scanner';
 
+import { Haptics, ImpactStyle, NotificationType } from '@capacitor/haptics';
 
 import {
   IonContent,
@@ -36,63 +41,77 @@ export class QrScannerPage implements OnInit {
   private router = inject(Router);
   private storage = inject(Storage);
 
-
   timeLeft = '10:00';
 
   private readonly TASK_INDEX = 1;
   private readonly MAX_TIME = 10;
-  private readonly REWARD_COUNT_ID = `rw_${this.TASK_INDEX}`
-  reward = "";
+  private readonly REWARD_COUNT_ID = `rw_${this.TASK_INDEX}`;
+  reward = '';
 
-  private readonly RESULT = "djsdgzoezkhdkdgvkiwehtiugfi";
+  private readonly RESULT = 'djsdgzoezkhdkdgvkiwehtiugfi';
 
   Timer() {
     const intervalId = setInterval(() => {
-      this.timeLeft = this.timeService.getTimeRemaining(this.TASK_INDEX, this.MAX_TIME);
+      this.timeLeft = this.timeService.getTimeRemaining(
+        this.TASK_INDEX,
+        this.MAX_TIME,
+      );
 
-      if (this.status == "Success") {
+      if (this.status == 'Success') {
         this.timeService.stop(this.TASK_INDEX);
 
-        this.timeLeft = this.timeService.getTimeRemaining(this.TASK_INDEX, this.MAX_TIME);
+        this.timeLeft = this.timeService.getTimeRemaining(
+          this.TASK_INDEX,
+          this.MAX_TIME,
+        );
 
         clearInterval(intervalId);
       }
     }, 1000);
   }
-  status: 'Ready' | 'Scanning' | 'Success' | 'Error' = 'Ready';
+  status: 'Bereit' | 'Scanning' | 'Success' | 'Error' = 'Bereit';
   lastResult = '';
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {
     this.timeService.start(this.TASK_INDEX);
     this.Timer();
 
-    this.storage.getObject(this.REWARD_COUNT_ID).then((reward) => { this.reward = reward });
+    this.storage.getObject(this.REWARD_COUNT_ID).then((reward) => {
+      this.reward = reward;
+    });
+  }
 
+  private async vibrateSuccess() {
+    await Haptics.notification({ type: NotificationType.Success });
   }
 
   async scanQR() {
     const result = await CapacitorBarcodeScanner.scanBarcode({
-      hint: CapacitorBarcodeScannerTypeHintALLOption.ALL
+      hint: CapacitorBarcodeScannerTypeHintALLOption.ALL,
     });
 
     if (result.ScanResult) {
       this.lastResult = result.ScanResult;
+
       if (this.lastResult === this.RESULT) {
-        this.status = "Success";
+        this.status = 'Success';
+        await this.vibrateSuccess(); // <— HIER
         this.timeService.stop(this.TASK_INDEX);
+      } else {
+        this.status = 'Error';
+        await Haptics.notification({ type: NotificationType.Error }); // optional
       }
     }
   }
 
-
   onSkip() {
-    this.router.navigateByUrl('rotate')
+    this.router.navigateByUrl('rotate');
   }
 
   onMoveOn() {
-    this.router.navigateByUrl('rotate')
+    this.router.navigateByUrl('rotate');
   }
 
   onScanMock() {

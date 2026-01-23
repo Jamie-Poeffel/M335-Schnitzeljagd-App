@@ -15,6 +15,8 @@ import { ButtonComponent } from '../button/button.component';
 import { Motion } from '@capacitor/motion';
 import type { PluginListenerHandle } from '@capacitor/core';
 
+import { Haptics, NotificationType } from '@capacitor/haptics';
+
 import { HuntProgressService } from '../hunt-progress-service';
 import { TimeService } from '../time';
 import { Storage } from '../storage';
@@ -41,15 +43,18 @@ export class RotatePage implements OnInit, OnDestroy {
   private storage = inject(Storage);
 
   private readonly TASK_INDEX = 2;
-  private readonly REWARD_COUNT_ID = `rw_${this.TASK_INDEX}`
+  private readonly REWARD_COUNT_ID = `rw_${this.TASK_INDEX}`;
   private readonly MAX_TIME = 0.5;
 
   timeLeft = '0:30';
-  reward = "";
+  reward = '';
 
   Timer() {
     setInterval(() => {
-      this.timeLeft = this.time.getTimeRemaining(this.TASK_INDEX, this.MAX_TIME);
+      this.timeLeft = this.time.getTimeRemaining(
+        this.TASK_INDEX,
+        this.MAX_TIME,
+      );
     }, 1000);
   }
 
@@ -70,7 +75,9 @@ export class RotatePage implements OnInit, OnDestroy {
     this.time.start(this.TASK_INDEX);
     this.Timer();
 
-    this.storage.getObject(this.REWARD_COUNT_ID).then((reward) => { this.reward = reward });
+    this.storage.getObject(this.REWARD_COUNT_ID).then((reward) => {
+      this.reward = reward;
+    });
 
     this.motionListener = await Motion.addListener('accel', (event: any) => {
       if (this.completed) return;
@@ -97,6 +104,10 @@ export class RotatePage implements OnInit, OnDestroy {
     });
   }
 
+  private async vibrateSuccess() {
+    await Haptics.notification({ type: NotificationType.Success });
+  }
+
   private finishTask() {
     const time = this.time.stop(this.TASK_INDEX);
     this.progress.completeTask(this.TASK_INDEX, time);
@@ -105,7 +116,6 @@ export class RotatePage implements OnInit, OnDestroy {
   onSkip() {
     this.finishTask();
     this.router.navigate(['/speedometer']);
-
   }
 
   onDone() {
@@ -134,14 +144,18 @@ export class RotatePage implements OnInit, OnDestroy {
     this.holdTime = 0;
   }
 
-  private completeTask() {
+  private async completeTask() {
     if (this.holdInterval) {
       clearInterval(this.holdInterval);
       this.holdInterval = undefined;
     }
 
+    if (this.completed) return;
+
     this.completed = true;
     this.status = 'Erledigt';
+
+    await this.vibrateSuccess(); // <<< HIER die Vibration nach 5 Sekunden
 
     this.finishTask();
   }
@@ -154,6 +168,7 @@ export class RotatePage implements OnInit, OnDestroy {
     this.motionListener?.remove();
     if (this.holdInterval) clearInterval(this.holdInterval);
   }
+
   getSchnitzelCount(): number {
     return Number(localStorage.getItem('schnitzel_count') ?? 0);
   }
