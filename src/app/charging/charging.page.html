@@ -12,7 +12,7 @@
       </div>
 
       <div class="header">
-        <div class="title-small">Jagd den Schwein</div>
+        <div class="title-small">Jagd das Schwein</div>
 
         <div class="stats">
           <div>Zeit Verbleibend: {{ timeLeft }}</div>
@@ -41,7 +41,12 @@
       </app-button>
       }
 
-      <button class="end-btn" type="button" [class.filled]="isCharging" (click)="onEnd()">
+      <button
+        class="end-btn"
+        type="button"
+        [class.filled]="isCharging"
+        (click)="onEnd()"
+      >
         Beenden
       </button>
     </section>
