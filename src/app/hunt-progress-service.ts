@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { Storage } from './storage';
 
 export type TaskResult = {
   taskIndex: number;        // 1..6
@@ -17,14 +18,19 @@ type State = {
 
 @Injectable({ providedIn: 'root' })
 export class HuntProgressService {
+  private storageServie = inject(Storage);
   private state: State = this.load();
+  private _time: number = 300;
 
-  completeTask(taskIndex: number, secondsTaken: number) {
+  setTime(time: number) {
+    this._time = time;
+  }
+
+  completeTask(taskIndex: number, secondsTaken: number, completed: boolean) {
     // prevent duplicates
-    if (this.state.results.some(r => r.taskIndex === taskIndex)) return;
-
-    const schnitzelEarned = 1;
-    const potatoEarned = secondsTaken > 300 ? 1 : 0; // > 5 min
+    // if (this.state.results.some(r => r.taskIndex === taskIndex)) return;
+    const schnitzelEarned = completed ? 1 : 0;
+    const potatoEarned = secondsTaken > this._time ? 1 : 0; // > 5 min
 
     this.state.results.push({
       taskIndex,
@@ -52,14 +58,15 @@ export class HuntProgressService {
   }
 
   private save() {
-    localStorage.setItem(KEY, JSON.stringify(this.state));
+    this.storageServie.setObject(KEY, this.state).catch((e) => { console.log("error" + e) });
   }
 
   private load(): State {
-    const raw = localStorage.getItem(KEY);
+    let raw;
+    this.storageServie.getObject(KEY).then((obj) => { raw = obj });
     if (!raw) return { totalSchnitzelOwned: 0, totalPotatoesOwned: 0, results: [] };
     try {
-      return JSON.parse(raw) as State;
+      return raw as State;
     } catch {
       return { totalSchnitzelOwned: 0, totalPotatoesOwned: 0, results: [] };
     }

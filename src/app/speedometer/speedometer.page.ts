@@ -46,7 +46,7 @@ export class SpeedoMeterPage implements OnInit {
   private router = inject(Router);
   private storage = inject(Storage);
 
-  private readonly TASK_INDEX = 3;
+  private readonly TASK_INDEX = 4;
   private readonly MAX_TIME = 10;
   private readonly REWARD_COUNT_ID = `rw_${this.TASK_INDEX}`
 
@@ -73,14 +73,14 @@ export class SpeedoMeterPage implements OnInit {
 
   // in deinem Template ist es ein string -> lassen wir so
   currentSpeed = '0.0'; // km/h
-// ===== mission status =====
-status: 'Ready' | 'Running' | 'Success' = 'Ready';
+  // ===== mission status =====
+  status: 'Ready' | 'Running' | 'Success' = 'Ready';
 
-// speed goal logic
-private readonly TARGET_KMH = 12;
-private readonly HOLD_MS = 1500; // must hold 12 km/h for 1.5s
-private successGiven = false;
-private holdStartMs: number | null = null;
+  // speed goal logic
+  private readonly TARGET_KMH = 12;
+  private readonly HOLD_MS = 1500; // must hold 12 km/h for 1.5s
+  private successGiven = false;
+  private holdStartMs: number | null = null;
   // ===== intern =====
   private watchId: string | null = null;
   private lastFix: Fix | null = null;
@@ -161,28 +161,28 @@ private holdStartMs: number | null = null;
       this.watchId = null;
     }
   }
-onMoveOn() {
-  // if for some reason success wasn't processed yet, force save once
-  if (!this.successGiven) {
-    this.successGiven = true;
+  onMoveOn() {
+    // if for some reason success wasn't processed yet, force save once
+    if (!this.successGiven) {
+      this.successGiven = true;
 
-    this.addSchnitzel(1);
+      this.addSchnitzel(1);
 
-    const t = this.time.stop(this.TASK_INDEX);
-    this.progress.completeTask(this.TASK_INDEX, t);
+      const t = this.time.stop(this.TASK_INDEX);
+      this.progress.completeTask(this.TASK_INDEX, t, true);
+    }
+
+    this.router.navigate(['/wifi']);
   }
-
-  this.router.navigate(['/wifi']);
-}
   // ===== actions =====
- onSkip() {
-  // stop timer, mark task as completed/attempted (your choice)
-  const t = this.time.stop(this.TASK_INDEX);
-  this.progress.completeTask(this.TASK_INDEX, t);
+  onSkip() {
+    // stop timer, mark task as completed/attempted (your choice)
+    const t = this.time.stop(this.TASK_INDEX);
+    this.progress.completeTask(this.TASK_INDEX, t, false);
 
-  // DO NOT add schnitzel here, because skipping isn't success
-  this.router.navigate(['/wifi']);
-}
+    // DO NOT add schnitzel here, because skipping isn't success
+    this.router.navigate(['/wifi']);
+  }
 
   back() {
     history.back();

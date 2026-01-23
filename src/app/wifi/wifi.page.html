@@ -44,14 +44,16 @@
             <p>Weiter</p>
           </app-button>
 
-          <app-button variant="text" *ngIf="!connected" (click)="charging()">
+          @if (!connected) {
+          <app-button variant="text" (click)="onSkip()">
             Überspringen
           </app-button>
+          }
         </div>
       </section>
     </div>
 
-    <app-button class="bottom" variant="outline-icon" (click)="welcome()">
+    <app-button class="bottom" variant="outline-icon" (click)="onCancel()">
       <p>Abbrechen</p>
     </app-button>
   </div>

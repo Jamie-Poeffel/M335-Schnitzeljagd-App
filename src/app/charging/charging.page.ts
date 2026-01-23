@@ -5,6 +5,7 @@ import { ButtonComponent } from '../button/button.component';
 import { TimeService } from '../time';
 import { Device } from '@capacitor/device';
 import { Storage } from '../storage';
+import { HuntProgressService } from '../hunt-progress-service';
 
 @Component({
   selector: 'app-charging',
@@ -17,15 +18,21 @@ export class ChargingPage implements OnInit {
   private router = inject(Router);
   timeLeft = '5:00';
   private timeService = inject(TimeService);
-  private storage = inject(Storage)
+  private storage = inject(Storage);
+  private time = inject(TimeService);
+  private progress = inject(HuntProgressService);
+
   private readonly TASK_INDEX = 6;
   private readonly MAX_MINUTES = 5;
   private readonly REWARD_COUNT_ID = `rw_${this.TASK_INDEX}`;
+  private _neededTime: number = 0;
+
+  intervalId: any;
 
   reward = ""
 
   Timer() {
-    setInterval(async () => {
+    this.intervalId = setInterval(async () => {
       this.timeLeft = this.timeService.getTimeRemaining(
         this.TASK_INDEX,
         this.MAX_MINUTES,
@@ -46,6 +53,14 @@ export class ChargingPage implements OnInit {
   // toggle this to see both designs
   isCharging = false;
 
+  private finishTaskAndGoNext(skip: boolean) {
+    clearInterval(this.intervalId);
+    this._neededTime = this.time.stop(this.TASK_INDEX);
+    this.progress.setTime(300);
+    this.progress.completeTask(this.TASK_INDEX, this._neededTime, skip ? false : true);
+    this.router.navigate(['/congrats']);
+  }
+
   ngOnInit() {
     this.timeService.start(this.TASK_INDEX);
     this.Timer();
@@ -53,18 +68,10 @@ export class ChargingPage implements OnInit {
   }
 
   onSkip() {
-    this.router.navigateByUrl('congrats');
+    this.finishTaskAndGoNext(true)
   }
 
   onEnd(): void {
-    this.router.navigateByUrl('congrats');
-  }
-  getSchnitzelCount(): number {
-    return Number(localStorage.getItem('schnitzel_count') ?? 0);
-  }
-
-  addSchnitzel(amount: number = 1) {
-    const current = this.getSchnitzelCount();
-    localStorage.setItem('schnitzel_count', String(current + amount));
+    this.finishTaskAndGoNext(false);
   }
 }

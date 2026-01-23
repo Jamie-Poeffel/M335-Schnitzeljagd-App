@@ -49,6 +49,7 @@ export class MapsPage implements OnInit, OnDestroy {
 
   private readonly TASK_INDEX = 1;
   private readonly REWARD_COUNT_ID = `rw_${this.TASK_INDEX}`
+  private readonly MAX_TIME = 5;
 
   reward = ""
 
@@ -71,19 +72,26 @@ export class MapsPage implements OnInit, OnDestroy {
   permissionStatus: string = 'checking';
 
   isWithinTargetDistance = false;
+  private intervalId: any;
+  private _neededTime: number = 0;
 
   ngOnInit() {
     // start task timer + start tracking
     this.time.start(this.TASK_INDEX);
     this.Timer();
 
-    this.storage.getObject(this.REWARD_COUNT_ID).then((reward) => { this.reward = reward });
+    this.storage.getObject(this.REWARD_COUNT_ID).then((reward) => { this.reward = reward || 0 });
     this.initializeLocationTracking();
   }
 
   Timer() {
-    setInterval(() => {
-      this.timeRemaining = this.time.getTimeRemaining(this.TASK_INDEX, 5);
+    this.intervalId = setInterval(() => {
+      this.timeRemaining = this.time.getTimeRemaining(this.TASK_INDEX, this.MAX_TIME);
+
+      if (this.isWithinTargetDistance) {
+        clearInterval(this.intervalId);
+        this._neededTime = this.time.stop(this.TASK_INDEX);
+      }
     }, 1000);
   }
 
@@ -296,9 +304,11 @@ export class MapsPage implements OnInit, OnDestroy {
     await this.initializeLocationTracking();
   }
 
-  private finishTaskAndGoNext() {
-    const time = this.time.stop(this.TASK_INDEX);
-    this.progress.completeTask(this.TASK_INDEX, time);
+  private finishTaskAndGoNext(skip: boolean) {
+    clearInterval(this.intervalId);
+    this._neededTime = this.time.stop(this.TASK_INDEX);
+    this.progress.setTime(300);
+    this.progress.completeTask(this.TASK_INDEX, this._neededTime, skip ? false : true);
     this.router.navigate(['/qr-scanner']);
   }
 
@@ -317,10 +327,10 @@ export class MapsPage implements OnInit, OnDestroy {
   }
 
   onContinue() {
-    this.finishTaskAndGoNext();
+    this.finishTaskAndGoNext(false);
   }
 
   onSkip() {
-    this.finishTaskAndGoNext();
+    this.finishTaskAndGoNext(true);
   }
 }

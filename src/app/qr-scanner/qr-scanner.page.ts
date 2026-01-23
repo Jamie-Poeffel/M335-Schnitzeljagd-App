@@ -15,6 +15,7 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import { TimeService } from '../time';
 import { Storage } from '../storage';
+import { HuntProgressService } from '../hunt-progress-service';
 
 @Component({
   selector: 'app-qr',
@@ -35,30 +36,28 @@ export class QrScannerPage implements OnInit {
   private timeService = inject(TimeService);
   private router = inject(Router);
   private storage = inject(Storage);
+  private progress = inject(HuntProgressService);
+  private time = inject(TimeService);
 
 
   timeLeft = '10:00';
 
-  private readonly TASK_INDEX = 1;
+  private readonly TASK_INDEX = 2;
   private readonly MAX_TIME = 10;
   private readonly REWARD_COUNT_ID = `rw_${this.TASK_INDEX}`
   reward = "";
 
+  intervalId: any;
+  private _neededTime = 0;
+
   private readonly RESULT = "djsdgzoezkhdkdgvkiwehtiugfi";
 
   Timer() {
-    const intervalId = setInterval(() => {
+    this.intervalId = setInterval(() => {
       this.timeLeft = this.timeService.getTimeRemaining(this.TASK_INDEX, this.MAX_TIME);
-
-      if (this.status == "Success") {
-        this.timeService.stop(this.TASK_INDEX);
-
-        this.timeLeft = this.timeService.getTimeRemaining(this.TASK_INDEX, this.MAX_TIME);
-
-        clearInterval(intervalId);
-      }
     }, 1000);
   }
+
   status: 'Ready' | 'Scanning' | 'Success' | 'Error' = 'Ready';
   lastResult = '';
 
@@ -68,7 +67,7 @@ export class QrScannerPage implements OnInit {
     this.timeService.start(this.TASK_INDEX);
     this.Timer();
 
-    this.storage.getObject(this.REWARD_COUNT_ID).then((reward) => { this.reward = reward });
+    this.storage.getObject(this.REWARD_COUNT_ID).then((reward) => { this.reward = reward || 0 });
 
   }
 
@@ -81,35 +80,24 @@ export class QrScannerPage implements OnInit {
       this.lastResult = result.ScanResult;
       if (this.lastResult === this.RESULT) {
         this.status = "Success";
-        this.timeService.stop(this.TASK_INDEX);
       }
     }
   }
 
+  private finishTaskAndGoNext(skip: boolean) {
+    clearInterval(this.intervalId);
+    this._neededTime = this.time.stop(this.TASK_INDEX);
+    this.progress.setTime(600);
+    this.progress.completeTask(this.TASK_INDEX, this._neededTime, skip ? false : true);
+    this.router.navigate(['/rotate']);
+  }
+
 
   onSkip() {
-    this.router.navigateByUrl('rotate')
+    this.finishTaskAndGoNext(true)
   }
 
   onMoveOn() {
-    this.router.navigateByUrl('rotate')
-  }
-
-  onScanMock() {
-    this.status = 'Scanning';
-
-    setTimeout(() => {
-      this.lastResult = 'demo:QR-CODE-12345';
-      this.status = 'Success';
-      console.log('scan result:', this.lastResult);
-    }, 700);
-  }
-  getSchnitzelCount(): number {
-    return Number(localStorage.getItem('schnitzel_count') ?? 0);
-  }
-
-  addSchnitzel(amount: number = 1) {
-    const current = this.getSchnitzelCount();
-    localStorage.setItem('schnitzel_count', String(current + amount));
+    this.finishTaskAndGoNext(false);
   }
 }

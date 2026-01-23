@@ -40,16 +40,21 @@ export class RotatePage implements OnInit, OnDestroy {
   private time = inject(TimeService);
   private storage = inject(Storage);
 
-  private readonly TASK_INDEX = 2;
+  private readonly TASK_INDEX = 3;
   private readonly REWARD_COUNT_ID = `rw_${this.TASK_INDEX}`
   private readonly MAX_TIME = 0.5;
 
   timeLeft = '0:30';
   reward = "";
+  private _neededTime = 0;
 
   Timer() {
-    setInterval(() => {
+    this.intervalId = setInterval(() => {
       this.timeLeft = this.time.getTimeRemaining(this.TASK_INDEX, this.MAX_TIME);
+
+      if (this.status === "Erledigt") {
+        clearInterval(this.intervalId);
+      }
     }, 1000);
   }
 
@@ -58,6 +63,7 @@ export class RotatePage implements OnInit, OnDestroy {
   isUpsideDown = false;
   holdTime = 0;
   completed = false;
+  intervalId: any;
 
   readonly HOLD_DURATION = 5;
 
@@ -70,7 +76,7 @@ export class RotatePage implements OnInit, OnDestroy {
     this.time.start(this.TASK_INDEX);
     this.Timer();
 
-    this.storage.getObject(this.REWARD_COUNT_ID).then((reward) => { this.reward = reward });
+    this.storage.getObject(this.REWARD_COUNT_ID).then((reward) => { this.reward = reward || 0 });
 
     this.motionListener = await Motion.addListener('accel', (event: any) => {
       if (this.completed) return;
@@ -97,21 +103,22 @@ export class RotatePage implements OnInit, OnDestroy {
     });
   }
 
-  private finishTask() {
-    const time = this.time.stop(this.TASK_INDEX);
-    this.progress.completeTask(this.TASK_INDEX, time);
+
+  private finishTaskAndGoNext(skip: boolean) {
+    clearInterval(this.intervalId);
+    this._neededTime = this.time.stop(this.TASK_INDEX);
+    this.progress.setTime(30);
+    this.progress.completeTask(this.TASK_INDEX, this._neededTime, skip ? false : true);
+    this.router.navigate(['/speedometer']);
   }
 
   onSkip() {
-    this.finishTask();
-    this.router.navigate(['/speedometer']);
-
+    this.finishTaskAndGoNext(true);
   }
 
   onDone() {
     if (!this.completed) return;
-    this.finishTask();
-    this.router.navigate(['/speedometer']);
+    this.finishTaskAndGoNext(false);
   }
 
   private startHoldTimer() {
@@ -143,7 +150,7 @@ export class RotatePage implements OnInit, OnDestroy {
     this.completed = true;
     this.status = 'Erledigt';
 
-    this.finishTask();
+    this.finishTaskAndGoNext(false);
   }
 
   get progressPercent() {

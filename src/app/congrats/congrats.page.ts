@@ -31,7 +31,6 @@ export class CongratsPage {
     name: localStorage.getItem('user_name') || 'Gast',
   } as User;
 
-  // ✅ only tasks that actually gave schnitzel
   rewardedTasks: TaskResult[] = this.progress
     .getResults()
     .filter(r => r.schnitzelEarned > 0);

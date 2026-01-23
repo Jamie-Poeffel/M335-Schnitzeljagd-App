@@ -14,6 +14,7 @@ import { Haptics } from '@capacitor/haptics';
 import { ButtonComponent } from '../button/button.component';
 import { TimeService } from '../time';
 import { Storage } from '../storage';
+import { HuntProgressService } from '../hunt-progress-service';
 
 @Component({
   selector: 'app-wifi',
@@ -25,6 +26,7 @@ import { Storage } from '../storage';
 export class WifiPage implements OnInit, OnDestroy {
   private time = inject(TimeService);
   private storage = inject(Storage);
+  private progress = inject(HuntProgressService);
 
   private readonly TASK_INDEX = 5;
   private readonly MAX_TIME = 5;
@@ -40,6 +42,8 @@ export class WifiPage implements OnInit, OnDestroy {
   hasConnected = false;
   isFinished = false;
   networkListener: any;
+  intervalId: any;
+  private _neededTime: number = 0;
 
   constructor(
     private router: Router,
@@ -53,10 +57,18 @@ export class WifiPage implements OnInit, OnDestroy {
     }, 1000);
   }
 
+  private finishTaskAndGoNext(skip: boolean) {
+    clearInterval(this.intervalId);
+    this._neededTime = this.time.stop(this.TASK_INDEX);
+    this.progress.setTime(300);
+    this.progress.completeTask(this.TASK_INDEX, this._neededTime, skip ? false : true);
+    this.router.navigate(['/charging']);
+  }
+
   async ngOnInit() {
     this.time.start(this.TASK_INDEX);
     this.Timer();
-    this.storage.getObject(this.REWARD_COUNT_ID).then((reward) => { this.reward = reward });
+    this.storage.getObject(this.REWARD_COUNT_ID).then((reward) => { this.reward = reward || 0 });
 
     const status = await Network.getStatus();
     this.checkWifi(status);
@@ -94,20 +106,18 @@ export class WifiPage implements OnInit, OnDestroy {
     await Haptics.notification({ type: 'success' as any });
   }
 
-  charging() {
-    this.router.navigate(['/charging']);
-  }
-
-  welcome() {
-    this.router.navigate(['/leaderboard']);
+  onSkip() {
+    this.finishTaskAndGoNext(true);
   }
 
   onCancel() {
-    this.router.navigate(['/home']);
+    this.router.navigate(['/leaderboard']);
   }
+
   onContinue() {
-    this.router.navigate(['/charging']);
+    this.finishTaskAndGoNext(false);
   }
+
   getSchnitzelCount(): number {
     return Number(localStorage.getItem('schnitzel_count') ?? 0);
   }
