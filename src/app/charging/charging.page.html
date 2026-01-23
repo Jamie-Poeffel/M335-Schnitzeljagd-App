@@ -27,11 +27,11 @@
 
       <!-- text -->
       <div class="content">
-        <h2 class="title">Lade Dein Händy</h2>
+        <h2 class="title">Hast du genügend Akku?</h2>
         <p class="desc">Lade dein Händy auf</p>
 
         <div class="status" [class.bad]="!isCharging" [class.good]="isCharging">
-          {{ isCharging ? 'Charging' : 'NOT CHARGING' }}
+          {{ isCharging ? 'Ladet' : 'Ladet NICHT' }}
         </div>
       </div>
 
@@ -41,8 +41,12 @@
       </app-button>
       }
 
-
-      <button class="end-btn" type="button" [class.filled]="isCharging" (click)="onEnd()">
+      <button
+        class="end-btn"
+        type="button"
+        [class.filled]="isCharging"
+        (click)="onEnd()"
+      >
         Beenden
       </button>
     </section>

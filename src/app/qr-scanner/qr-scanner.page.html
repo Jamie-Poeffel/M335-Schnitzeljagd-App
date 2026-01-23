@@ -23,7 +23,7 @@
         <!-- scanner frame -->
         <div class="scan-frame">
           <div class="scan-placeholder">
-            <div class="scan-text">Hold QR inside the box</div>
+            <div class="scan-text">Zum Scannen, Knopf drücken</div>
 
             <button class="scan-btn" type="button" (click)="scanQR()">
               Scan
@@ -33,21 +33,20 @@
 
         <!-- mission -->
         <div class="mission">
-          <h2>Scan the QR Code</h2>
+          <h2>Scan den QR Code</h2>
           <p class="hint">
-            Find the QR code at the location and scan it to continue.
+            Finden Sie den QR-Code an diesem Ort und scannen Sie ihn, um
+            fortzufahren.
           </p>
 
           <div class="redline">Status: {{ status }}</div>
-          <div class="redline">Last Result: {{ lastResult || '—' }}</div>
+          <div class="redline">letztes Ergebnis: {{ lastResult || '—' }}</div>
 
           @if (status !== "Success") {
           <app-button variant="text" (clicked)="onSkip()">
             Überspringen
           </app-button>
-          }
-
-          @if (status === "Success") {
+          } @if (status === "Success") {
           <app-button variant="filled" (clicked)="onMoveOn()">
             <p>Weiter</p>
           </app-button>

@@ -4,16 +4,20 @@
       <section class="card">
         <!-- top card -->
         <div class="top-card">
-          <div class="small-title">Jagd den Schwein</div>
+          <div class="small-title">Jagd das Schwein</div>
           <h1 class="headline">Glückwunsch</h1>
-          <div class="welcome-name">{{ user.name }} !</div>
+          <div
+            class="welcome-name"
+            style="font-weight: bold; text-transform: uppercase"
+          >
+            {{ user.name }}
+          </div>
           <div class="sub">
             Du hast die Jagd beendet und bekommst<br />
             als Belohnung {{earnedThisRun}} Schnitzel
           </div>
 
           <div class="trophy">
-            <!-- replace with your image if you have one -->
             <img src="assets/pictures/trophy.png" alt="Trophäe" />
             <div class="badge">{{ earnedThisRun }}x</div>
           </div>
