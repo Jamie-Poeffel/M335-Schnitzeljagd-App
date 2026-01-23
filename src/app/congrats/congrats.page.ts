@@ -80,8 +80,15 @@ export class CongratsPage {
   goBeginning() {
     this.leaderboardService.submitRun(
       {
-
-      }
+        name: this.user.name,
+        schnitzel: this.totalSchnitzel,
+        potato: this.totalPotatoes,
+        time: {
+          hours: this.totalTime.h,
+          minutes: this.totalTime.m,
+          seconds: this.totalTime.s,
+        }
+      },
     )
     this.router.navigate(['/maps']);
   }
