@@ -3,15 +3,10 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { User } from 'src/app/types/user';
 
-import {
-  IonContent,
-  IonHeader,
-  IonTitle,
-  IonToolbar,
-} from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
 
 import { ButtonComponent } from '../button/button.component';
-import { HuntProgressService } from '../hunt-progress-service';
+import { HuntProgressService, TaskResult } from '../hunt-progress-service';
 
 @Component({
   selector: 'app-congrats',
@@ -32,30 +27,27 @@ export class CongratsPage {
   private progress = inject(HuntProgressService);
   private router = inject(Router);
 
-  // 1..6 tasks (adjust if you use 4 tasks only)
-  readonly totalTasks = 6;
+  user: User = {
+    name: localStorage.getItem('user_name') || 'Gast',
+  } as User;
 
-  // fetch user from local storage
-user: User = {
-  name: localStorage.getItem('user_name') || 'Gast'
-} as User;
+  // ✅ only tasks that actually gave schnitzel
+  rewardedTasks: TaskResult[] = this.progress
+    .getResults()
+    .filter(r => r.schnitzelEarned > 0);
 
-
-  results = this.progress.getResults();
+  // totals from service (already persisted)
   totalSchnitzel = this.progress.getTotalSchnitzelOwned();
   totalPotatoes = this.progress.getTotalPotatoesOwned();
 
-  // quick lookup for template
-  getResult(taskIndex: number) {
-    return this.results.find((r) => r.taskIndex === taskIndex);
-  }
+  // ✅ earned this run (sum, not just length in case you ever change rewards)
+  earnedThisRun = this.rewardedTasks.reduce((sum, r) => sum + r.schnitzelEarned, 0);
 
   goLeaderboard() {
     this.router.navigate(['/leaderboard']);
   }
 
   goNext() {
-    // go wherever you want after congratulations
     this.router.navigate(['/welcome']);
   }
 }
